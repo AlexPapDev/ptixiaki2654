@@ -1,0 +1,36 @@
+CREATE DATABASE monuma
+
+CREATE TABLE Users (
+  userId SERIAL PRIMARY KEY,
+  firstname VARCHAR(255),
+  lastname VARCHAR(255),
+  hashedPassword VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  profilePicture TEXT,
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  otp VARCHAR(6),
+  otpExpiry TIMESTAMP
+);
+
+CREATE TABLE Monuments (
+  monumentId SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description VARCHAR(255),
+  address VARCHAR(255),
+  city VARCHAR(255),
+  municipality VARCHAR(255),
+  latitude	DECIMAL(9, 6),
+  longitude	DECIMAL(9, 6),
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Comments (
+  commentId SERIAL PRIMARY KEY,
+  userId INT NOT NULL REFERENCES Users(userId) ON DELETE CASCADE,
+  monumentId INT NOT NULL REFERENCES Monuments(monumentId) ON DELETE CASCADE,
+  commentText VARCHAR(500),
+  createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
