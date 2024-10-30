@@ -7,7 +7,7 @@ import useAppStore from '../utils/AppStore'
 
 const Monuments = () => {
   const { searchTerm } = useAppStore()
-  const [monuments, setMonuments] = useState([])
+  const [monuments, setMonuments] = useState({data: []})
   useEffect(() => {
     const fetchData = async () => {
       console.log('searchTerm: ' + searchTerm)
@@ -22,10 +22,11 @@ const Monuments = () => {
   return (
     <div style={{display:'flex', justifyContent: 'space-between'}}>
       <section>
-        {monuments?.data?.map(monument => {
+        {monuments?.data?.map((monument, i) => {
           const { name, description, longitude, latitude } = monument
+          const id = 'monumentMap' + i + name + description
           return (
-            <div style={{marginBottom: '1em'}}>
+            <div style={{marginBottom: '1em'}} key={id}>
               <div>{name}</div>
               <div>{longitude + '1, ' +latitude}</div>
             </div>

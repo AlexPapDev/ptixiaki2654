@@ -7,7 +7,7 @@ const NavSearchBar = () => {
     setSearchTerm(inputTerm)
   }
   return (
-    <div class="relative">
+    <div className="relative">
       <input type="search" onChange={(e) => setInputTerm(e.target.value)} value={inputTerm} />
       <button type="submit" onClick={onClickButton} >Search</button>
     </div>
