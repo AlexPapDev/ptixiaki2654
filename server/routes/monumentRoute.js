@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
 })
 
 // get all monuments
-router.get('/', async (req, res) => {
+router.get('/', async (_, res) => {
   try {
     const allMonuments = await db.query(`
       SELECT description

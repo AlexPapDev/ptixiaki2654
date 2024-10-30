@@ -1,22 +1,29 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import useAppStore from '../utils/AppStore'
 
 // import './Navbar.css' // External CSS for navbar
 
-const Login = () => {
+const Login = ({setState}) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-
+  const [loginError, setLoginError] = useState({})
+  const { loginUser } = useAppStore()
   const handleSubmit = async (e) => {
     e.preventDefault()
     // Handle login logic here
-    console.log("Email:", email)
-    console.log("Password:", password)
-    const result = await axios.post('http://localhost:5001/api/users/login', {
-      email, password
-    })
-    console.log(result)
+
+    try  {
+      const result = await axios.post('http://localhost:5001/api/users/login', {
+        email, password
+      })
+      loginUser(result.data)
+      debugger
+    } catch (e) {
+      setLoginError(e)
+      debugger
+    } 
   }
   return (
     <div>
@@ -37,6 +44,7 @@ const Login = () => {
         <button type="submit">
           Login
         </button>
+        {!!Object.keys(loginError).length && <p>{JSON.stringify(loginError)}</p>}
       </form>
     </div>
   )
