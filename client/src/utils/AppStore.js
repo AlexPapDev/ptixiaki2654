@@ -1,5 +1,6 @@
 // useAppStore.js
-import { create } from 'zustand';
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 const useAppStore = create((set) => ({
   // Search State
@@ -12,7 +13,9 @@ const useAppStore = create((set) => ({
   loginUser: (user) => set({ isLoggedIn: true, userInfo: user }),
   logoutUser: () => set({ isLoggedIn: false, userInfo: null }),
 
-  // Any additional app-wide states can be added here
-}));
+  // Map position
+  mapBounds: null,
+  setMapBounds: (bounds) => set({ mapBounds: bounds }),
+}))
 
 export default useAppStore;
