@@ -1,6 +1,6 @@
 import React from 'react'
 import { Popup } from 'react-map-gl'
-const MapPopup = ({markerPopupInfo, setMarkerPopupInfo}) => {
+const MapMarkerPopup = ({markerPopupInfo, setMarkerPopupInfo}) => {
   const { longitude, latitude, name, description, image } = markerPopupInfo || {}
 
   return (
@@ -18,4 +18,4 @@ const MapPopup = ({markerPopupInfo, setMarkerPopupInfo}) => {
   )
 }
 
-export default MapPopup
+export default MapMarkerPopup

@@ -9,16 +9,37 @@ const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 
 // GET all users
-router.get('/', (req, res) => {
-
+router.get('/', async (req, res) => {
+  try {
+    let sql = `
+      SELECT *
+      FROM users
+    `
+    const users = await db.query(sql)
+    console.log('/users')
+    res.json(users)
+  } catch (e) {
+    console.log(e)
+    res.status(500).send({ error: 'Error during login' })
+  }
 })
 
 // GET a user by ID
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const userId = parseInt(req.params.id)
-  // const user = users.find(u => u.id === userId)
-  // if (!user) return res.status(404).json({ message: 'User not found' })
-  // res.json(user)
+  console.log('/api/user/id', req.params.id.toString())
+  try {
+    let sql = `
+      SELECT *
+      FROM users
+      WHERE userId = $1
+    `
+    const user = await db.query(sql, [userId])
+    res.json(user)
+  } catch (e) {
+    console.log(e)
+    res.status(500).send({ error: 'Error during login' })
+  }
 })
 
 // POST a new user
@@ -85,7 +106,7 @@ router.post('/login', async (req, res) => {
       return res.status(401).send({ error: 'Invalid credentials' })
     }
     const token = jwt.sign({ id: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' })
-    res.send({ token })
+    res.send({ user, token })
   } catch (err) {
     console.log(err)
     res.status(500).send({ error: 'Error during login' })

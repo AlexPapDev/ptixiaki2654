@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useAppStore from '../utils/AppStore'
 
@@ -10,6 +10,8 @@ const Login = ({setState}) => {
   const [password, setPassword] = useState("")
   const [loginError, setLoginError] = useState({})
   const { loginUser } = useAppStore()
+  const navigate = useNavigate()
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     // Handle login logic here
@@ -19,7 +21,7 @@ const Login = ({setState}) => {
         email, password
       })
       loginUser(result.data)
-      debugger
+      navigate(`/user/${result.data.user.userid}`)
     } catch (e) {
       setLoginError(e)
       debugger

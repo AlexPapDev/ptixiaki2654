@@ -1,68 +1,97 @@
-import { useState, useMemo } from 'react'
-import Map, {Marker, GeolocateControl, NavigationControl } from 'react-map-gl'
-// import './Navbar.css' // External CSS for navbar
-import Pin from './Pin'
+import { useState, useRef, useMemo, useCallback, useEffect } from 'react'
+import Map, {GeolocateControl, NavigationControl } from 'react-map-gl'
 import MapMarkerPopup from './MapMarkerPopup'
 import MapMarkerButton from './MapMarkerButton'
+import MapMarkers from './MapMarkers'
+import GenericMap from './GenericMap'
+import useAppStore from '../utils/AppStore'
+import { INIT_MAP_STATE, MAPBOX_ACCESS_TOKEN } from '../utils/constants'
+import { useNavigate } from 'react-router-dom'
+import Supercluster from 'supercluster';
 
-const mapboxAccessToken = "pk.eyJ1IjoiYWxleHBhcDI2NTQiLCJhIjoiY20ybHY0OTJoMGZqNjJycXQyZ2xkcHg0NCJ9._2RgcG5-F50whsMU4b-6Ig"
-const thessalonikiInitialState = {
-  longitude: 22.947412,
-  latitude: 40.629269,
-  zoom: 12,
-}
-
-const MapComp = ({monuments}) => {
+const MapComp = ({data = []}) => {
+  const { mapBounds, setMapBounds, isLoggedIn, setClickedSpot } = useAppStore()
+  const mapRef = useRef(null)
+  const navigate = useNavigate()
+  const [bounds, setBounds] = useState({})
   const [markerPopupInfo, setMarkerPopupInfo] = useState(null)
-  const [popupButtonInfo, setPopupButton] = useState(false)
-  const pins = useMemo(
-    () =>
-      monuments.data.map((city, index) => (
-        <Marker
-          key={`marker-${index}`}
-          longitude={city.longitude}
-          latitude={city.latitude}
-          anchor="bottom"
-          onClick={e => {
-            // If we let the click event propagates to the map, it will immediately close the popup
-            // with `closeOnClick: true`
-            e.originalEvent.stopPropagation()
-            setMarkerPopupInfo(city)
-          }}
-        >
-          <Pin />
-        </Marker>
-      )),
-    [monuments.data]
+  const [popupButtonInfo, setPopupButtonInfo] = useState(false)
+
+  const supercluster = useRef(
+    new Supercluster({
+      radius: 40,
+      maxZoom: 16,
+    })
   )
 
+  const [clusters, setClusters] = useState([]);
+  const [zoom, setZoom] = useState(INIT_MAP_STATE.zoom)
+
   const onMapRightClickHandler = (e) => {
-    setPopupButton(e.lngLat)
+    setPopupButtonInfo(e.lngLat)
   }
 
-  const onMoveEndHandler = (e) => {
-    // reload markers here
+  const onRedoSearch = () => {
+    setMapBounds(bounds)
+  }
+  // Convert data points into GeoJSON format
+  const points = useMemo(() => data.map((monument, i) => ({
+    type: 'Feature',
+    properties: { cluster: false, id: monument.monumentid },
+    geometry: {
+      type: 'Point',
+      coordinates: [monument.longitude, monument.latitude],
+    },
+    data: monument,
+    pointIndexId: i + 1,
+  })), [data])
+
+  useEffect(() => {
+    if (!points?.length) return
+    const bounds = mapRef.current.getBounds()
+    const sw = bounds.getSouthWest();
+    const ne = bounds.getNorthEast();
+    supercluster.current.load(points);
+    setClusters(
+      supercluster.current.getClusters(
+        [sw.lng, sw.lat, ne.lng, ne.lat],
+        zoom,
+      )
+    )
+  }, [points, bounds, zoom])
+
+  const handleMapLoadOrMove = useCallback(async () => {
+    if (mapRef) {
+      const bounds = mapRef.current.getBounds()
+      setBounds(bounds)
+      if (!mapBounds) setMapBounds(bounds)
+    }
+  }, [mapRef, setBounds, setMapBounds, mapBounds])
+
+  const onClickNewMonumentButton = () => {
+    if (isLoggedIn) {
+      setClickedSpot(popupButtonInfo)
+      navigate('/monuments/new')
+    }
   }
 
+  return (<>
+    <GenericMap
+      mapRef={mapRef}
+      onContextMenu={onMapRightClickHandler}
+      onMoveEnd={handleMapLoadOrMove}
+      onLoad={handleMapLoadOrMove}
+      onZoom={(e) => { setZoom(e.viewState.zoom) }}
+    >
+      <GeolocateControl position="top-left" />
+      <NavigationControl position="top-left" />
+      <MapMarkers clusters={clusters} points={points} setMarkerPopupInfo={setMarkerPopupInfo} />
 
-  return (
-    <div style={{direction:'flex'}}>
-      <Map
-        mapboxAccessToken={mapboxAccessToken}
-        initialViewState={thessalonikiInitialState}
-        style={{width: 400, height: 400}}
-        mapStyle="mapbox://styles/mapbox/streets-v9"
-        onContextMenu={onMapRightClickHandler}
-        onMoveEnd={onMoveEndHandler}
-      >
-        <GeolocateControl position="top-left" />
-        <NavigationControl position="top-left" />
-        {pins}
-
-        <MapMarkerPopup markerPopupInfo={markerPopupInfo} setMarkerPopupInfo={setMarkerPopupInfo} />
-        <MapMarkerButton popupButtonInfo={popupButtonInfo} setPopupButton={setPopupButton} />       
-      </Map>
-    </div>
+      <MapMarkerPopup markerPopupInfo={markerPopupInfo} setMarkerPopupInfo={setMarkerPopupInfo} />
+      <MapMarkerButton onClickHandler={onClickNewMonumentButton} popupButtonInfo={popupButtonInfo} setPopupButtonInfo={setPopupButtonInfo} />
+      <button onClick={onRedoSearch} style={{position: 'absolute', zIndex: 999, right: 0}}>Redo search</button>
+    </GenericMap>
+    </>
   )
 }
 

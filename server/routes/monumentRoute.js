@@ -32,14 +32,46 @@ router.post('/', async (req, res) => {
   }
 })
 
-// get all monuments
-router.get('/', async (_, res) => {
+// get  monuments
+router.get('/:query', async (req, res) => {
+  const { query } = req.params
+
   try {
     const allMonuments = await db.query(`
-      SELECT description
+      SELECT monumentId, name, description, latitude, longitude
       FROM monuments
-    `)
+      WHERE name LIKE '%$1%'
+    `,
+      [query]
+    )
     res.json(allMonuments.rows)
+  } catch (err) {
+    console.error(err.message)
+  }
+})
+
+router.get('/', async (req, res) => {
+  console.log('api/monuments/')
+
+  const { query, mapBounds } = req?.query
+  const { sw, ne } = mapBounds || {}
+
+  try {
+    let sql = `
+      SELECT monumentId, name, description, latitude, longitude
+      FROM monuments
+      WHERE latitude BETWEEN $1 AND $2
+        AND longitude BETWEEN $3 AND $4
+    `
+    const values = [sw.lat, ne.lat, sw.lng, ne.lng]
+
+    if (query) {
+      sql += ' AND name ILIKE $5'
+      values.push(`%${query}%`)
+    }
+    const monuments = await db.query(sql, values)
+    monuments.rows.sort((a, b) => b.latitude - a.latitude || a.longitude - b.longitude)
+    res.json(monuments.rows)
   } catch (err) {
     console.error(err.message)
   }

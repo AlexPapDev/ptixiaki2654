@@ -1,6 +1,6 @@
 import React from 'react'
 import { Popup } from 'react-map-gl'
-const MapMarkerButton = ({popupButtonInfo, setPopupButton}) => {
+const MapMarkerButton = ({popupButtonInfo, setPopupButtonInfo, onClickHandler}) => {
   const { lng, lat } = popupButtonInfo || {}
 
   return (
@@ -8,9 +8,9 @@ const MapMarkerButton = ({popupButtonInfo, setPopupButton}) => {
       anchor="top"
       longitude={lng}
       latitude={lat}
-      onClose={() => setPopupButton(null)}
+      onClose={() => setPopupButtonInfo(null)}
     >
-      <button>Click</button>
+      <button onClick={onClickHandler}>Click</button>
     </Popup>
   )
 }
