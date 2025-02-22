@@ -70,15 +70,34 @@ router.post('/', async (req, res) => {
 })
 
 // PUT (update) a user by ID
-router.put('/:id', (req, res) => {
+router.patch('/:userId', async (req, res) => {
+  const { userId } = req.params
+  const updatedFields = req.body
+  const setClause = Object.keys(updatedFields)
+    .map((key, index) => `"${key}" = $${index + 1}`)
+    .join(", ")
+
+  const values = Object.values(updatedFields);
+
+  if (!setClause) {
+    return res.status(400).json({ error: "No fields to update" });
+  }
+
+  const query = `
+    UPDATE users
+    SET ${setClause}
+    WHERE userid = $${values.length + 1}
+    RETURNING *;
+  `
+
+  const result = await db.query(query, [...values, userId]);
   // const userId = parseInt(req.params.id)
   // const user = users.find(u => u.id === userId)
-  if (!user) return res.status(404).json({ message: 'User not found' })
+  if (result.rows.length === 0) {
+    return res.status(404).json({ error: "User not found" });
+  }
 
-  user.name = req.body.name || user.name
-  user.email = req.body.email || user.email
-  
-  res.json(user)
+  res.json({ message: "Profile updated successfully", user: result.rows[0] })
 })
 
 // DELETE a user by ID

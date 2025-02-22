@@ -47,6 +47,7 @@ const Monuments = () => {
               <div>{i+1}</div>
               <div>{name}</div>
               <div>{longitude + '1, ' +latitude}</div>
+              <div>- - - </div>
             </div>
           )
         })}
