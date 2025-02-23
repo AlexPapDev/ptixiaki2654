@@ -1,24 +1,60 @@
 const express = require('express')
 const router = express.Router()
 const db = require('../db')
+const axios = require('axios')
+const GEOCODE_API_URL = 'https://nominatim.openstreetmap.org/reverse'
+// router.post('/testgeo', async (req, res) => {
+//   const { latitude, longitude } = req.body
+//   try {
+//     const response = await axios.get(GEOCODE_API_URL, {
+//       params: {
+//         lat: latitude,
+//         lon: longitude,
+//         format: 'json',
+//       }
+//     })
+
+//     const data = response.data
+//     res.status(200).json({
+//       status: "success",
+//       data,
+//     })
+//   } catch (error) {
+//     console.error('Error fetching address:', error)
+//     return { address: null, city: null, municipality: null }
+//   }
+// })
+const getAddressDetails = async (lat, lon) => {
+  try {
+    const response = await axios.get(GEOCODE_API_URL, {
+      params: {
+        lat,
+        lon,
+        format: 'json',
+      }
+    })
+    return response.data.address
+  } catch (error) {
+    console.error('Error fetching address:', error)
+    return { street: null, house_number: null, city: null, postcode: null }
+  }
+}
 
 // create monument
 router.post('/', async (req, res) => {
   try {
     const { 
       name,
-      description, 
-      address,
-      city,
-      municipality,
+      description,
       latitude,
       longitude 
     } = req.body
+    const address = await getAddressDetails(latitude, longitude)
     const newMonument = await db.query(`
-      INSERT INTO monuments (name, description, address, city, municipality, latitude, longitude)
-      VALUES($1, $2, $3, $4, $5, $6, $7) 
+      INSERT INTO monuments (name, description, address, latitude, longitude)
+      VALUES($1, $2, $3, $4, $5) 
       RETURNING *`,
-      [name, description, address, city, municipality, latitude, longitude],
+      [name, description, address, latitude, longitude],
     )
     res.status(200).json({
       status: "success",
