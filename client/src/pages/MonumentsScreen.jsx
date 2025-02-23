@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Map from '../components/Map'
 import axios from 'axios'
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 // import { search } from '../../../server/routes/monumentRoute'
 
@@ -45,7 +45,8 @@ const Monuments = () => {
           return (
             <div style={{marginBottom: '1em'}} key={id}>
               <div>{i+1}</div>
-              <div>{name}</div>
+              <div>{'name: ' + name}</div>
+              <div>{'description: ' + description}</div>
               <div>{longitude + '1, ' +latitude}</div>
               <div>- - - </div>
             </div>
