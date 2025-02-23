@@ -12,8 +12,17 @@ const NewMonument = () => {
   const { clickedSpot } = useAppStore()
   const [markerPosition, setMarkerPosition] = useState({ ...clickedSpot });
   const [isDragging, setIsDragging] = useState(false);
-  const onSubmitForm = (e) => {
+  const onSubmitForm = async (e) => {
     e.preventDefault()
+    const { lat: latitude, lng: longitude }= markerPosition
+    console.log(markerPosition)
+    const formData = new FormData(e.target)
+    const name = formData.get('name')
+
+    const result = await axios.post('http://localhost:5001/api/monuments/', {
+      name, latitude, longitude
+    })
+    console.log(result)
   }
 
   const handleMarkerDragStart = useCallback(() => {
@@ -30,12 +39,16 @@ const NewMonument = () => {
 
   return (
     <div style={{display:'flex'}}>
-      <form style={{width:'1200px'}}>
+      <form style={{width:'1200px'}} onSubmit={onSubmitForm}>
         <div>
           <label>name</label>
-          <input></input>
+          <input name="name"></input>
         </div>
-        <button onClick={onSubmitForm}>Create</button>
+        <div>
+          <label>description</label>
+          <input name="description"></input>
+        </div>
+        <button>Create</button>
       </form>
       <GenericMap>
         <GeolocateControl position="top-left" />
