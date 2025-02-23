@@ -9,7 +9,7 @@ import useAppStore from '../utils/AppStore'
 
 const Monuments = () => {
   const { searchTerm, mapBounds } = useAppStore()
-  const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams()
   const passedTerm = searchParams.get('q') || searchTerm
 
   const [monuments, setMonuments] = useState({data: []})
