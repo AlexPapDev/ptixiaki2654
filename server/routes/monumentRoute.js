@@ -3,27 +3,8 @@ const router = express.Router()
 const db = require('../db')
 const axios = require('axios')
 const GEOCODE_API_URL = 'https://nominatim.openstreetmap.org/reverse'
-// router.post('/testgeo', async (req, res) => {
-//   const { latitude, longitude } = req.body
-//   try {
-//     const response = await axios.get(GEOCODE_API_URL, {
-//       params: {
-//         lat: latitude,
-//         lon: longitude,
-//         format: 'json',
-//       }
-//     })
+// TODO add meaningful error handling on all routes
 
-//     const data = response.data
-//     res.status(200).json({
-//       status: "success",
-//       data,
-//     })
-//   } catch (error) {
-//     console.error('Error fetching address:', error)
-//     return { address: null, city: null, municipality: null }
-//   }
-// })
 const getAddressDetails = async (lat, lon) => {
   try {
     const response = await axios.get(GEOCODE_API_URL, {
@@ -40,6 +21,21 @@ const getAddressDetails = async (lat, lon) => {
   }
 }
 
+router.post('/get-address', async (req, res) => {
+  try {
+    const { latitude, longitude } = req.body
+    console.log(req.body)
+    const address = await getAddressDetails(latitude, longitude)
+    res.status(200).json({
+      status: "success",
+      data: {
+        address
+      },
+    })
+  } catch (error) {
+    console.error(err)
+  }
+})
 // create monument
 router.post('/', async (req, res) => {
   try {
