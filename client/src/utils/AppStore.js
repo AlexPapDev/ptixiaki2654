@@ -12,7 +12,7 @@ const useAppStore = create(
       // User Authentication State
       isLoggedIn: false,
       userInfo: null,
-      loginUser: (user) => set({ isLoggedIn: true, userInfo: user }),
+      loginUser: (userInfo) => set({ isLoggedIn: true, userInfo }),
       logoutUser: () => set({ isLoggedIn: false, userInfo: null }),
 
       // Map position

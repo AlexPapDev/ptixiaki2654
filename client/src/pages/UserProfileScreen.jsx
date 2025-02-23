@@ -7,19 +7,23 @@ import UserProfileView from '../components/UserProfileView'
 
 const UserProfile = ({}) => {
   // logged in user
-  const { userInfo, isLoggedIn } = useAppStore()
+  const { userInfo, isLoggedIn, loginUser } = useAppStore()
   // url user id
   const { userId } = useParams()
   const [pageUser, setPageUser] = useState()
   const [isEditMode, setIsEditMode] = useState(false)
 
   useEffect(() => {
-    if (userId !== userInfo?.user?.userid) fetchUser(userId)
+    if (Number(userId) !== Number(userInfo?.user?.userid)) fetchUser(userId)
   }, [userId, userInfo])
 
   const fetchUser = async (userId) => {
     const result = await axios.get(`http://localhost:5001/api/users/${userId}`)
+    const user = result.data.rows[0]
+    // TODO: Check if this is not needed because maybe loginUser already covers this?
     setPageUser(result.data.rows[0])
+    // update app store
+    loginUser({ ...userInfo, user })
   }
 
   //TODO: implment this on the server
