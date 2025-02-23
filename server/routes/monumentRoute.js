@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
       data: {
         monuments: newMonument.rows,
       },
-    });
+    })
   } catch (err) {
     console.error(err)
   }
@@ -159,4 +159,4 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-module.exports = router;
+module.exports = router
