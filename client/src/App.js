@@ -7,6 +7,8 @@ import UserProfile from './pages/UserProfileScreen'
 import Monuments from './pages/MonumentsScreen'
 import ProfileRedirect from './utils/ProfileRedirect'
 import NewMonument from './pages/NewMonumentScreen'
+import SignUp from './pages/SignUpScreen'
+import OTPVerification from './pages/OTPVerificationScreen'
 function App() {
   return (
     <Router>
@@ -17,6 +19,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />                                       {/* Home page */}
           <Route path="/login" element={<Login />} />{/* Login page */}
+          <Route path="/signup" element={<SignUp />} />{/* Login page */}
+          <Route path="/otpverification" element={<OTPVerification />} />{/* Login page */}
           <Route path="/profile" element={<ProfileRedirect/>} />{/* Login page */}
           <Route path="/monuments/new" element={<NewMonument />} />                         Login page
           <Route path="/monuments/" element={<Monuments />} />                         {/* Login page */}
