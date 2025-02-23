@@ -45,11 +45,15 @@ router.get('/:id', async (req, res) => {
 // POST a new user
 router.post('/', async (req, res) => {
   const { firstname, lastname, password, email } = req.body
+  const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email]);
+  if (existingUser.rows.length > 0) {
+    return res.status(400).json({ error: 'Email already in use' });
+  }
 
   const hashedPassword = await bcrypt.hash(password, 10)
   const otp = randomInt(100000, 999999).toString()
   const otpExpiry = new Date(Date.now() + 30 * 60 * 1000) // 30 minutes
-
+  
   try {
     // Start a transaction
     await db.query('BEGIN')
@@ -65,6 +69,7 @@ router.post('/', async (req, res) => {
     res.status(201).send({ message: 'Signup successful. OTP sent.' })
   } catch (error) {
     await db.query('ROLLBACK')
+    console.log(error)
     res.status(500).send({ error: 'Error during signup' })
   }
 })
