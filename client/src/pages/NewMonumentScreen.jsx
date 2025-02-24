@@ -2,7 +2,8 @@ import { useState, useCallback, useEffect } from 'react'
 import axios from 'axios'
 import GenericMap from '../components/GenericMap'
 import Pin from '../components/Pin'
-import {Marker} from 'react-map-gl'
+import { Marker } from 'react-map-gl'
+import useAppStore from '../utils/AppStore'
 import { GeolocateControl, NavigationControl } from 'react-map-gl'
 import { useSearchParams } from 'react-router-dom'
 
@@ -13,6 +14,9 @@ const NewMonument = () => {
   const [address, setAddress] = useState({})
   // const [isDragging, setIsDragging] = useState(false)
   const [loading, setLoading] = useState(false)
+  const { userInfo } = useAppStore()
+
+  const fullStreetName = (address?.road || '') + ' '+ (address?.house_number || '')
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -41,7 +45,7 @@ const NewMonument = () => {
     const name = formData.get('name')
     const description = formData.get('description')
     const result = await axios.post('http://localhost:5001/api/monuments/', {
-      name, latitude: lat, longitude: lng, description
+      name, latitude: lat, longitude: lng, description, userid: userInfo?.user.userid
     })
     console.log(result)
   }
@@ -68,7 +72,7 @@ const NewMonument = () => {
         </div>
         <div>
           <label>road</label>
-          <input name="road" disabled value={address?.road + ' '+ (address?.house_number || '')}></input>
+          <input name="road" disabled value={fullStreetName}></input>
         </div>
         <div>
           <label>city</label>
@@ -80,7 +84,7 @@ const NewMonument = () => {
         </div>
         <button>Create</button>
       </form>
-      <GenericMap>
+      <GenericMap overrideOriginalCoordinates={{longitude: lng, latitude: lat}}>
         <GeolocateControl position="top-left" />
         <NavigationControl position="top-left" />
         <Marker
