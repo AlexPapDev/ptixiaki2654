@@ -56,7 +56,7 @@ const OTPVerificationScreen = () => {
     // Check if the OTP has a length of 6
     if (otpValue.length === 6) {
       try {
-        const response = await axios.post('/verify-otp', { email, otp: otpValue })
+        const response = await axios.post('http://localhost:5001/api/users/validate-otp', { email, otp: otpValue })
 
         if (response.status !== 500) {
           // TODO: login user as well
