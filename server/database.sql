@@ -1,5 +1,9 @@
 CREATE DATABASE monuma
 
+CREATE ROLE normal_user;
+CREATE ROLE ambassador;
+CREATE ROLE admin;
+
 CREATE TABLE Users (
   userId SERIAL PRIMARY KEY,
   firstname VARCHAR(255),
@@ -9,9 +13,13 @@ CREATE TABLE Users (
   profilePicture TEXT,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  role VARCHAR(20) CHECK (role IN ('user', 'ambassador', 'admin')) NOT NULL,
   otp VARCHAR(6),
   otpExpiry TIMESTAMP
 );
+
+-- ALTER TABLE users 
+-- ADD COLUMN role VARCHAR(20) CHECK (role IN ('normal_users', 'ambassador', 'admin')) NOT NULL DEFAULT 'normal_user';
 
 CREATE TABLE Monuments (
   monumentId SERIAL PRIMARY KEY,
