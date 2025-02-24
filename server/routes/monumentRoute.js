@@ -43,7 +43,8 @@ router.post('/', async (req, res) => {
       name,
       description,
       latitude,
-      longitude 
+      longitude,
+      userid,
     } = req.body
     const address = await getAddressDetails(latitude, longitude)
     const newMonument = await db.query(`

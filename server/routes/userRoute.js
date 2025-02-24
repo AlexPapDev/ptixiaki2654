@@ -8,43 +8,57 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 
-// GET all users
-router.get('/', async (req, res) => {
-  try {
-    let sql = `
-      SELECT *
-      FROM users
-    `
-    const users = await db.query(sql)
-    console.log('/users')
-    res.json(users)
-  } catch (e) {
-    console.log(e)
-    res.status(500).send({ error: 'Error during login' })
-  }
-})
+const getAllUsers = async () => {
+  let sql = `
+    SELECT *
+    FROM users
+  `
+  return await db.query(sql)
+}
 
 // GET a user by ID
-router.get('/:id', async (req, res) => {
-  const userId = parseInt(req.params.id)
-  console.log('/api/user/id', req.params.id.toString())
+const getUserByColumn = async (columnName, value) => {
+  let sql = `
+    SELECT *
+    FROM users
+    WHERE ${columnName} = $1
+  `
+  return await db.query(sql, [value])
+}
+
+const getProcessedUsers = (users) => {
+  return users.map(user => ({
+    userId: user.userId,
+    email: user.email,
+    firstname: user.firstname,
+    lastname: user.lastname,
+    hasVerifiedOtp: !user.otpExpiry,
+    role: user.role,
+  }))
+}
+
+// GET all users
+router.get('/', async (req, res) => {
+  const userId = parseInt(req.query.id)
+  const email = req.query.email
+  console.log(req.params, userId, email)
+  let users = []
   try {
-    let sql = `
-      SELECT *
-      FROM users
-      WHERE userId = $1
-    `
-    const user = await db.query(sql, [userId])
-    res.json(user)
+    if (!userId && !email) users = await getAllUsers()
+    if (userId) users = await getUserByColumn('userId', userId)
+    if (email) users = await getUserByColumn('email', email)
+    
+    const processedUsers = getProcessedUsers(users)
+    res.json(processedUsers)
   } catch (e) {
     console.log(e)
-    res.status(500).send({ error: 'Error during login' })
+    res.status(500).send({ error: e.message })
   }
 })
 
 // POST a new user
 router.post('/', async (req, res) => {
-  const { firstname, lastname, password, email } = req.body
+  const { firstname, lastname, password, email, role } = req.body
   const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email]);
   if (existingUser.rows.length > 0) {
     return res.status(400).json({ error: 'Email already in use' });
@@ -57,12 +71,12 @@ router.post('/', async (req, res) => {
   try {
     // Start a transaction
     await db.query('BEGIN')
-
+    console.log(role)
     const newUser = await db.query(`
-      INSERT INTO users (firstname, lastname, email, hashedPassword, otp, otpExpiry) 
-      VALUES($1, $2, $3, $4, $5, $6) 
+      INSERT INTO users (firstname, lastname, email, hashedPassword, otp, otpExpiry, role) 
+      VALUES($1, $2, $3, $4, $5, $6, $7) 
       RETURNING *`,
-      [firstname, lastname, email, hashedPassword, otp, otpExpiry],
+      [firstname, lastname, email, hashedPassword, otp, otpExpiry, role],
     )
     await sendOtp(email, otp)
     await db.query('COMMIT')
@@ -76,6 +90,7 @@ router.post('/', async (req, res) => {
 
 // PUT (update) a user by ID
 router.patch('/:userId', async (req, res) => {
+  console.log(req.params)
   const { userId } = req.params
   const updatedFields = req.body
   const setClause = Object.keys(updatedFields)
@@ -106,8 +121,21 @@ router.patch('/:userId', async (req, res) => {
 })
 
 // DELETE a user by ID
-router.delete('/:id', (req, res) => {
-  
+router.delete('/:userId', async (req, res) => {
+  const { userId } = req.params
+  try {
+    const query = 'DELETE FROM users WHERE userId = $1 RETURNING *';
+    const result = await db.query(query, [userId]);
+
+    if (result.rowCount > 0) {
+      res.json({ message: 'Record deleted successfully', deleted: result.rows[0] });
+    } else {
+      res.status(404).json({ message: 'Record not found' });
+    }
+  } catch (err) {
+    console.error('Error deleting record:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 })
 
 router.post('/login', async (req, res) => {
