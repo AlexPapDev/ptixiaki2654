@@ -70,8 +70,10 @@ const MapComp = ({data = []}) => {
 
   const onClickNewMonumentButton = () => {
     if (isLoggedIn) {
-      setClickedSpot(popupButtonInfo)
-      navigate('/monuments/new')
+      // setClickedSpot(popupButtonInfo)
+      navigate({ pathname: '/monuments/new', 
+        search: `?lat=${popupButtonInfo.lat}&lng=${popupButtonInfo.lng}`
+      })
     }
   }
 
