@@ -57,7 +57,7 @@ const NewMonument = () => {
 
   return (
     <div style={{display:'flex'}}>
-      <form style={{width:'1200px'}} onSubmit={onSubmitForm}>
+      <form onSubmit={onSubmitForm}>
         <div>
           <label>name</label>
           <input name="name" required></input>
@@ -68,7 +68,7 @@ const NewMonument = () => {
         </div>
         <div>
           <label>road</label>
-          <input name="road" disabled value={address?.road + ' '+ address?.street_number}></input>
+          <input name="road" disabled value={address?.road + ' '+ (address?.house_number || '')}></input>
         </div>
         <div>
           <label>city</label>
