@@ -6,8 +6,8 @@ import useAppStore from '../utils/AppStore'
 // import './Navbar.css' // External CSS for navbar
 
 const Login = ({setState}) => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState({})
   const { loginUser } = useAppStore()
   const navigate = useNavigate()
@@ -20,6 +20,15 @@ const Login = ({setState}) => {
       const result = await axios.post('http://localhost:5001/api/users/login', {
         email, password
       })
+      const { user } = result.data
+      // case where user hasn't validated
+      if (user.email) {
+        return navigate({
+          pathname: '/otpverification',
+          search: `?email=${user.email}`,
+        })
+      }
+
       loginUser(result.data)
       navigate(`/user/${result.data.user.userid}`)
     } catch (e) {
@@ -32,18 +41,18 @@ const Login = ({setState}) => {
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input
-          type="email"
-          placeholder="Email"
+          type='email'
+          placeholder='Email'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
-          type="password"
-          placeholder="Password"
+          type='password'
+          placeholder='Password'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">
+        <button type='submit'>
           Login
         </button>
         {!!Object.keys(loginError).length && <p>{JSON.stringify(loginError)}</p>}
