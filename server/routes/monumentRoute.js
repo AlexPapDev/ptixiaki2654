@@ -2,6 +2,14 @@ const express = require('express')
 const router = express.Router()
 const db = require('../db')
 const axios = require('axios')
+const userService = require('../utils/userService')
+// const { INSTANT_CREATION_ROLES } = require('../utils/serverConstants')
+const USER_ROLES = {
+  NORMAL: 'normal_user',
+  AMBASSADOR: 'ambassador',
+  ADMIN: 'admin',
+}
+const INSTANT_CREATION_ROLES = [USER_ROLES.AMBASSADOR, USER_ROLES.ADMIN]
 const GEOCODE_API_URL = 'https://nominatim.openstreetmap.org/reverse'
 // TODO add meaningful error handling on all routes
 
@@ -46,12 +54,16 @@ router.post('/', async (req, res) => {
       longitude,
       userid,
     } = req.body
+    // check that this is not an array
+    const user = userService.getUserByColumn('userid', userid)
+    console.log('user', user)
+    const isapproved = !!INSTANT_CREATION_ROLES.includes(user.role)
     const address = await getAddressDetails(latitude, longitude)
     const newMonument = await db.query(`
-      INSERT INTO monuments (name, description, address, latitude, longitude)
-      VALUES($1, $2, $3, $4, $5) 
+      INSERT INTO monuments (name, description, address, latitude, longitude, isapproved)
+      VALUES($1, $2, $3, $4, $5, $6) 
       RETURNING *`,
-      [name, description, address, latitude, longitude],
+      [name, description, address, latitude, longitude, isapproved],
     )
     res.status(200).json({
       status: "success",
