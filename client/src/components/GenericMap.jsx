@@ -8,26 +8,36 @@ const GenericMap = ({
   onLoad = () => {}, 
   onZoom = () => {},
   onClick = () => {},
+  overrideOriginalCoordinates = {},
   mapRef,
-  children
+  children,
 }) => {
 
-
+  const initMapState = {
+    ...INIT_MAP_STATE,
+    ...overrideOriginalCoordinates
+  }
   return (
-    <Map
-      ref={mapRef}
-      mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
-      initialViewState={INIT_MAP_STATE}
-      style={{width: 400, height: 400}}
-      mapStyle="mapbox://styles/mapbox/streets-v9"
-      onContextMenu={onContextMenu}
-      onMoveEnd={onMoveEnd}
-      onLoad={onLoad}
-      onZoom={onZoom}
-      onClick={onClick}
-    >
-      {children}
-    </Map>
+    <div style={{ position: "absolute", right: "0%", width: "50%", height: "100%" }}>
+      <Map
+        ref={mapRef}
+        mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
+        initialViewState={initMapState}
+        style={{  position: 'absolute',
+          right: '0%',
+          width: '50%',
+          height: '80%'
+        }}
+        mapStyle="mapbox://styles/mapbox/streets-v9"
+        onContextMenu={onContextMenu}
+        onMoveEnd={onMoveEnd}
+        onLoad={onLoad}
+        onZoom={onZoom}
+        onClick={onClick}
+      >
+        {children}
+      </Map>
+    </div>
   )
 }
 export default GenericMap
