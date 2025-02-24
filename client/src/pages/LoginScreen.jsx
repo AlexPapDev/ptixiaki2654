@@ -22,7 +22,7 @@ const Login = ({setState}) => {
       })
       const { user } = result.data
       // case where user hasn't validated
-      if (user.email) {
+      if (!user.hasVerifiedOtp) {
         return navigate({
           pathname: '/otpverification',
           search: `?email=${user.email}`,
@@ -30,7 +30,7 @@ const Login = ({setState}) => {
       }
 
       loginUser(result.data)
-      navigate(`/user/${result.data.user.userid}`)
+      navigate(`/user/${user.userid}`)
     } catch (e) {
       setLoginError(e)
       debugger
