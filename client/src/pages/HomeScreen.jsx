@@ -12,9 +12,10 @@ const Home = () => {
     fetchData()
   }, [])
   
-  return (
-    <div>Hello this is the home page!</div>
-  )
+  return (<>
+    <div>Discover Greece's rich history</div>
+    <div>Recent activity</div>
+  </>)
 }
 
 export default Home
