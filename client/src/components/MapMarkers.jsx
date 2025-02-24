@@ -14,6 +14,7 @@ const MapMarkers = ({clusters, points, setMarkerPopupInfo}) => {
           key={`cluster-${cluster.id}`}
           longitude={longitude}
           latitude={latitude}
+          style={{cursor: 'pointer'}}
         >
           <div
             style={{
