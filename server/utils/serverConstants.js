@@ -1,0 +1,11 @@
+const USER_ROLES = {
+  NORMAL: 'normal_user',
+  AMBASSADOR: 'ambassador',
+  ADMIN: 'admin',
+}
+const INSTANT_CREATION_ROLES = [USER_ROLES.AMBASSADOR, USER_ROLES.ADMIN]
+
+export {
+  USER_ROLES,
+  INSTANT_CREATION_ROLES,
+}
