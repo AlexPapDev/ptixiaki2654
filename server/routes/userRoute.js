@@ -2,7 +2,7 @@ require("dotenv").config()
 const express = require('express')
 const router = express.Router()
 const db = require('../db')
-
+const userService = require('../utils/userService')
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
@@ -16,19 +16,9 @@ const getAllUsers = async () => {
   return await db.query(sql)
 }
 
-// GET a user by ID
-const getUserByColumn = async (columnName, value) => {
-  let sql = `
-    SELECT *
-    FROM users
-    WHERE ${columnName} = $1
-  `
-  return await db.query(sql, [value])
-}
-
 const getProcessedUsers = (users) => {
   return users.map(user => ({
-    userId: user.userId,
+    userid: user.userid,
     email: user.email,
     firstname: user.firstname,
     lastname: user.lastname,
@@ -42,13 +32,12 @@ router.get('/', async (req, res) => {
   const userId = parseInt(req.query.id)
   const email = req.query.email
   console.log(req.params, userId, email)
-  let users = []
+  let result = {}
   try {
-    if (!userId && !email) users = await getAllUsers()
-    if (userId) users = await getUserByColumn('userId', userId)
-    if (email) users = await getUserByColumn('email', email)
-    
-    const processedUsers = getProcessedUsers(users)
+    if (!userId && !email) result = await getAllUsers()
+    if (userId) result = await userService.getUserByColumn('userId', userId)
+    if (email) result = await userService.getUserByColumn('email', email)
+    const processedUsers = getProcessedUsers(result.rows)
     res.json(processedUsers)
   } catch (e) {
     console.log(e)
@@ -66,7 +55,7 @@ router.post('/', async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10)
   const otp = randomInt(100000, 999999).toString()
-  const otpExpiry = new Date(Date.now() + 30 * 60 * 1000) // 30 minutes
+  const otpExpiry = minutesFromNow(30)
   
   try {
     // Start a transaction
@@ -142,23 +131,20 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body 
 
   try {
-    const result = await db.query(
-      'SELECT * FROM users WHERE email = $1',
-      [email]
-    )
+    const result = await userService.getUserByColumn('email', email)
 
     if (result.rowCount === 0) {
       return res.status(401).send({ error: 'Invalid credentials' })
     }
-    
-    const user = result.rows[0]
-    const isMatch = await bcrypt.compare(password, user.hashedpassword)
+    const userWithPrivateFields = result.rows[0]
+    const processedUser = getProcessedUsers(result.rows)[0]
+    const isMatch = await bcrypt.compare(password, userWithPrivateFields.hashedpassword)
 
     if (!isMatch) {
       return res.status(401).send({ error: 'Invalid credentials' })
     }
-    const token = jwt.sign({ id: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' })
-    res.send({ user, token })
+    const token = jwt.sign({ id: processedUser.userId }, process.env.JWT_SECRET, { expiresIn: '1h' })
+    res.send({ user: processedUser, token })
   } catch (err) {
     console.log(err)
     res.status(500).send({ error: 'Error during login' })
@@ -168,13 +154,13 @@ router.post('/login', async (req, res) => {
 // Validate OTP endpoint
 router.post('/validate-otp', async (req, res) => {
   const { email, otp } = req.body
-
+  console.log(req.body)
   try {
     const result = await db.query(
       'SELECT * FROM users WHERE email = $1 AND otp = $2 AND otpExpiry > NOW()',
       [email, otp]
     )
-
+    console.log(result)
     if (result.rowCount === 0) {
       return res.status(400).send({ error: 'Invalid or expired OTP' })
     }
@@ -190,6 +176,70 @@ router.post('/validate-otp', async (req, res) => {
     res.status(500).send({ error: 'Error during OTP validation' })
   }
 })
+
+const minutesFromNow = (minutes = 60) => {
+  new Date(Date.now() + minutes * 60 * 1000)
+}
+
+router.post('/resend-otp', async (req, res) => {
+  const { email } = req.body
+  const newOtp = randomInt(100000, 999999).toString()
+  const newOtpExpiry = minutesFromNow(30)
+
+  try {
+    // Get user by email
+    const result = await userService.getUserByColumn('email', email)
+    
+    if (result.rowCount === 0) {
+      // User not found
+      return res.status(404).send({ error: 'User not found' })
+    }
+
+    const user = result.rows[0]
+
+    // Start a transaction
+    await db.query('BEGIN')
+
+    // Update OTP and OTP expiry
+    const query = `
+      UPDATE users
+      SET otp = $1, otpExpiry = $2
+      WHERE email = $3
+      RETURNING *;
+    `
+    const newUser = await db.query(query, [newOtp, newOtpExpiry, email])
+
+    if (newUser.rowCount === 0) {
+      // If no rows were updated
+      throw new Error('Failed to update OTP')
+    }
+
+    // Send OTP to user
+    await sendOtp(user.email, newOtp)
+
+    // Commit the transaction
+    await db.query('COMMIT')
+
+    // Respond with success
+    res.send({ message: 'OTP sent successfully' })
+
+  } catch (e) {
+    // Rollback in case of an error
+    await db.query('ROLLBACK')
+
+    console.error('Error during OTP resend:', e)
+
+    // Send a response with the error message
+    if (e.message === 'Failed to update OTP') {
+      res.status(500).send({ error: 'Error updating OTP in the database' })
+    } else if (e.message.includes('sendOtp')) {
+      res.status(500).send({ error: 'Error sending OTP email' })
+    } else {
+      res.status(500).send({ error: 'An unexpected error occurred' })
+    }
+  }
+})
+
 
 // helper function
 const sendOtp = async (email, otp) => {
