@@ -14,6 +14,7 @@ const OTPVerificationScreen = () => {
   useEffect(() => {
     const emailFromUrl = searchParams.get('email')
     if (emailFromUrl) {
+      
       setEmail(emailFromUrl)
     }
   }, [searchParams])

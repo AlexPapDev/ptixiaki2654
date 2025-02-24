@@ -32,7 +32,7 @@ const SignUpScreen = () => {
       })
       console.log(result.data.message)
       navigate({
-        pathname: '/validate-otp',
+        pathname: '/otpverification',
         search: `?email=${formData.email}`,
       })
     } catch (error) {
