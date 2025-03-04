@@ -8,6 +8,30 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 
+const USER_PUBLIC_FIELDS = [
+  'userid',
+  'firstname',
+  'lastname',
+  'email',
+  'profilepicture',
+  'createddate',
+  'updateddate',
+  'profilepicture',
+  'role',
+]
+
+const USER_FIELD_NAMES = [
+  'userid',
+  'firstname',
+  'lastname',
+  'email',
+  'profilepicture',
+  'createddate',
+  'updateddate',
+  'profilepicture',
+  'role',
+]
+
 const getAllUsers = async () => {
   let sql = `
     SELECT *
@@ -17,14 +41,29 @@ const getAllUsers = async () => {
 }
 
 const getProcessedUsers = (users) => {
-  return users.map(user => ({
-    userid: user.userid,
-    email: user.email,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    hasVerifiedOtp: !user.otpExpiry,
-    role: user.role,
-  }))
+  // const calculated = ['hasVerifiedOtp']
+  return users.map(user => {
+    return USER_PUBLIC_FIELDS.reduce((acc, curr) => {
+      return {
+        ...acc,
+        [curr]: user[curr],
+      }
+    }, {
+      hasVerifiedOtp: !user.otpExpiry,
+    })
+    // userid: user.userid,
+    // email: user.email,
+    // firstname: user.firstname,
+    // lastname: user.lastname,
+    // hasVerifiedOtp: !user.otpExpiry,
+    // role: user.role,
+  })
+}
+
+const getRecordWithoutCalculatedFields = (user) => {
+  const clonedUser = { ...user }
+  delete clonedUser.hasVerifiedOtp
+  return clonedUser
 }
 
 // GET all users
@@ -79,14 +118,15 @@ router.post('/', async (req, res) => {
 
 // PUT (update) a user by ID
 router.patch('/:userId', async (req, res) => {
-  console.log(req.params)
+
   const { userId } = req.params
-  const updatedFields = req.body
+  const updatedFields = getRecordWithoutCalculatedFields(req.body)
   const setClause = Object.keys(updatedFields)
+    .filter(fieldName => (USER_FIELD_NAMES.includes(fieldName)))
     .map((key, index) => `"${key}" = $${index + 1}`)
     .join(", ")
 
-  const values = Object.values(updatedFields);
+  const values = Object.values(updatedFields)
 
   if (!setClause) {
     return res.status(400).json({ error: "No fields to update" });

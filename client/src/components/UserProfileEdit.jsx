@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const UserProfileEdit = ({ user, onSave }) => {
+const UserProfileEdit = ({ user, onSave, updateUser }) => {
   const [formData, setFormData] = useState(user)
 
   const handleChange = (e) => {
@@ -9,7 +9,8 @@ const UserProfileEdit = ({ user, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    onSave(formData) // Calls parent function to update
+    const res = onSave(formData) // Calls parent function to update
+    updateUser(formData)
   }
 
   return (
