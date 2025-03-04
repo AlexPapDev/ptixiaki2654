@@ -3,6 +3,7 @@ import Map from '../components/Map'
 import axios from 'axios'
 import { useSearchParams } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
+import MonumentCard from '../components/MonumentCard'
 // import { search } from '../../../server/routes/monumentRoute'
 
 // import './Navbar.css' // External CSS for navbar
@@ -38,22 +39,8 @@ const Monuments = () => {
 
   return (
     <div style={{display:'flex'}}>
-      <section className="content_section">
-        {monuments?.map((monument, i, arr) => {
-          const isLastIteration = i === arr.length - 1
-          const style = !isLastIteration ? {marginBottom: '2em'} : {}
-          const { name, description, longitude, latitude } = monument
-          const id = 'monumentMap' + i + name + description
-          return (
-            <div style={style} key={id}>
-              <div>{i+1}</div>
-              <div>{'name: ' + name}</div>
-              <div>{'description: ' + description}</div>
-              <div>{longitude + '1, ' +latitude}</div>
-              <div>- - - </div>
-            </div>
-          )
-        })}
+      <section className="content_section grid m-t-1">
+        {monuments?.map((monument, i, arr) => <MonumentCard monument={monument} className="cell" key={'monument-card-' + {i}}></MonumentCard>)}
       </section>
       <section className="map_section">
         {<Map data={monuments} fetchData={fetchData}></Map>}
