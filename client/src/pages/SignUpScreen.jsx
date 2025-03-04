@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import useAppStore from '../utils/AppStore'
 const inputs = [
   { label: 'First Name', name: 'firstname' },
   { label: 'Last Name', name: 'lastname' },
@@ -9,6 +10,7 @@ const inputs = [
 ]
 
 const SignUpScreen = () => {
+  const { user } = useAppStore()
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -17,6 +19,12 @@ const SignUpScreen = () => {
   })
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [user, navigate])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })

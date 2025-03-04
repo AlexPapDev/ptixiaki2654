@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useAppStore from '../utils/AppStore'
@@ -9,9 +9,14 @@ const Login = ({setState}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState({})
-  const { loginUser } = useAppStore()
+  const { loginUser, user } = useAppStore()
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (user) {
+      navigate('/')
+    }
+  }, [user, navigate])
   const handleSubmit = async (e) => {
     e.preventDefault()
     // Handle login logic here
