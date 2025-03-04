@@ -59,11 +59,17 @@ router.post('/', async (req, res) => {
     console.log('user', user)
     const isapproved = !!INSTANT_CREATION_ROLES.includes(user.role)
     const address = await getAddressDetails(latitude, longitude)
+    // const newMonument = await db.query(`
+    //   INSERT INTO monuments (name, description, address, latitude, longitude, isapproved)
+    //   VALUES($1, $2, $3, $4, $5, $6) 
+    //   RETURNING *`,
+    //   [name, description, address, latitude, longitude, isapproved],
+    // )
     const newMonument = await db.query(`
-      INSERT INTO monuments (name, description, address, latitude, longitude, isapproved)
-      VALUES($1, $2, $3, $4, $5, $6) 
+      INSERT INTO monuments (name, description, address, latitude, longitude)
+      VALUES($1, $2, $3, $4, $5) 
       RETURNING *`,
-      [name, description, address, latitude, longitude, isapproved],
+      [name, description, address, latitude, longitude],
     )
     res.status(200).json({
       status: "success",

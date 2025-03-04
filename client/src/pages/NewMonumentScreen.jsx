@@ -1,22 +1,25 @@
 import { useState, useCallback, useEffect } from 'react'
 import axios from 'axios'
 import GenericMap from '../components/GenericMap'
+import { useNavigate } from 'react-router-dom'
 import Pin from '../components/Pin'
 import { Marker } from 'react-map-gl'
 import useAppStore from '../utils/AppStore'
 import { GeolocateControl, NavigationControl } from 'react-map-gl'
 import { useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const NewMonument = () => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const lat = searchParams.get('lat')
-  const lng = searchParams.get('lng')
-  const [address, setAddress] = useState({})
-  // const [isDragging, setIsDragging] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const { lat, lng } = Object.fromEntries(searchParams)
   const { user } = useAppStore()
+  const [address, setAddress] = useState({ road: '', house_number: '', city: '', postcode: ''})
 
-  const fullStreetName = (address?.road || '') + ' '+ (address?.house_number || '')
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+
+
+  const fullStreetName = address.road + ' ' + address.house_number
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -44,15 +47,25 @@ const NewMonument = () => {
     const formData = new FormData(e.target)
     const name = formData.get('name')
     const description = formData.get('description')
-    const result = await axios.post('http://localhost:5001/api/monuments/', {
-      name, latitude: lat, longitude: lng, description, userid: user?.userid
-    })
-    console.log(result)
-  }
+    try {
+      toast.info('Creating record...', { position: 'top-right' });
+      const result = await axios.post('http://localhost:5001/api/monuments/', {
+        name, latitude: lat, longitude: lng, description, userid: user?.userid
+      })
+      console.log(result)
+      toast.success('Record created successfully!', { position: 'top-right' });
+      setTimeout(() => {
+        navigate('/monuments');
+      }, 1500)
+    } catch (error) {
+      console.error('Error creating record:', error);
 
-  const handleMarkerDragStart = useCallback(() => {
-    // setIsDragging(true)
-  }, [])
+    // On failure, show error toast
+      toast.error('Error creating record. Please try again.', {
+        position: 'top-right',
+      })
+    }
+  }
 
   const handleMarkerDragEnd = useCallback((event) => {
     const { lng, lat } = event.lngLat
@@ -61,43 +74,42 @@ const NewMonument = () => {
 
   return (
     <div style={{display:'flex'}}>
-      <section className="content_section">
+      <section className='content_section'>
 
       
         <form onSubmit={onSubmitForm}>
           <div>
             <label>name</label>
-            <input name="name" required></input>
+            <input name='name' required></input>
           </div>
           <div>
             <label>description</label>
-            <input name="description" required></input>
+            <input name='description' required></input>
           </div>
           <div>
             <label>road</label>
-            <input name="road" disabled value={fullStreetName}></input>
+            <input name='road' disabled value={fullStreetName}></input>
           </div>
           <div>
             <label>city</label>
-            <input name="road" disabled value={address?.city}></input>
+            <input name='road' disabled value={address?.city}></input>
           </div>
           <div>
             <label>zip code</label>
-            <input name="road" disabled value={address?.postcode}></input>
+            <input name='road' disabled value={address?.postcode}></input>
           </div>
           <button>Create</button>
         </form>
       </section>
-      <section className="map_section">
+      <section className='map_section'>
         <GenericMap overrideOriginalCoordinates={{longitude: lng, latitude: lat}}>
-          <GeolocateControl position="top-left" />
-          <NavigationControl position="top-left" />
+          <GeolocateControl position='top-left' />
+          <NavigationControl position='top-left' />
           <Marker
             longitude={lng}
             latitude={lat}
-            anchor="bottom"
+            anchor='bottom'
             draggable
-            onDragStart={handleMarkerDragStart}
             onDragEnd={handleMarkerDragEnd}
           >
             <Pin number={1} />
