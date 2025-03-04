@@ -12,12 +12,11 @@ router.get('/', async (req, res) => {
   let result = {}
 
   try {
-    if (!userId && !email) result = await userService.getAllUsers()
-    if (userId) result = await userService.getUserByField('userId', userId)
-    if (email) result = await userService.getUserByField('email', email)
+    if (!userId && !email) users = await userService.getAllUsers()
+    if (userId) users = await userService.getUserByField('userId', userId)
+    if (email) users = await userService.getUserByField('email', email)
 
-    const processedUsers = userService.getProcessedUsers(result.rows)
-    res.json(processedUsers)
+    res.json({ data: users })
   } catch (e) {
     console.log(e)
     res.status(500).send({ error: 'Internal server error' })
@@ -36,7 +35,7 @@ router.post('/', [
     return res.status(400).json({ errors: errors.array() })
   }
 
-  const { firstname, lastname, password, email, role } = req.body
+  const { firstname, lastname, password, email, role = 'normal_user' } = req.body
 
   try {
     const newUser = await userService.createUser(firstname, lastname, email, password, role)
@@ -49,6 +48,7 @@ router.post('/', [
 
 // Route to login a user (POST /users/login)
 router.post('/login', async (req, res) => {
+  console.log('/login')
   const { email, password } = req.body 
 
   try {
@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
     if (!user) {
       return res.status(401).send({ error: 'Invalid credentials' })
     }
-    console.log('password', password, user)
+
     const isMatch = await userService.comparePasswords(password, user.hashedpassword)
 
     if (!isMatch) {
@@ -65,13 +65,9 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ id: user.userid }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION_TIME || '1h' })
-    const userWithoutPrivateFields = {
-      ...user,
-      otp: null,
-      otpExpiry: null,
-      hashedpassword: null,
-    }
-    res.send({ user: userWithoutPrivateFields, token })
+    const userPublic = userService.getUserPublicWithCalculatedFields(user)
+    console.log(user, userPublic)
+    res.send({ user: userPublic, token })
   } catch (err) {
     console.log(err)
     res.status(500).send({ error: 'Internal server error during login' })
@@ -107,20 +103,36 @@ router.delete('/:userId', async (req, res) => {
   }
 })
 
-// Route to validate OTP (POST /users/validate-otp)
 router.post('/validate-otp', async (req, res) => {
-  const { email, otp } = req.body
+  console.log('/validate-otp')
   try {
-    const result = await userService.validateOtp(email, otp)
+    const { email, otp } = req.body;
 
-    if (result) {
-      res.send({ message: 'OTP validated successfully' })
-    } else {
-      res.status(400).send({ error: 'Invalid or expired OTP' })
+    // Validate input
+    if (!email || !otp) {
+      return res.status(400).json({ error: 'Email and OTP are required' })
     }
+
+    // Validate OTP
+    const { success, user: { userid } } = await userService.validateOtp(email, otp)
+
+    if (!success) {
+      return res.status(400).json({ error: 'Invalid or expired OTP' })
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: userid }, 
+      process.env.JWT_SECRET, 
+      { expiresIn: process.env.JWT_EXPIRATION_TIME || '1h' }
+    )
+
+    const user = await userService.getUserByField('userid', userid)
+    console.log(user)
+    return res.json({ message: 'OTP validated successfully', data: { user, token } })
   } catch (error) {
-    console.log(error)
-    res.status(500).send({ error: 'Error during OTP validation' })
+    console.error('OTP Validation Error:', error);
+    return res.status(500).json({ error: 'An internal server error occurred' })
   }
 })
 
