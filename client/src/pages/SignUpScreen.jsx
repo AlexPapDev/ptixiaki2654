@@ -6,7 +6,7 @@ const inputs = [
   { label: 'First Name', name: 'firstname' },
   { label: 'Last Name', name: 'lastname' },
   { label: 'Email', name: 'email'},
-  { label: 'Password', name: 'Password', type: 'password'},
+  { label: 'Password', name: 'password', type: 'password'},
   { label: 'Confirm Password', name: 'confirmPassword', type: 'password' },
 ]
 
