@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
       userid,
     } = req.body
     // check that this is not an array
-    const user = userService.getUserByColumn('userid', userid)
+    const user = userService.getUserByField('userid', userid)
     console.log('user', user)
     const isapproved = !!INSTANT_CREATION_ROLES.includes(user.role)
     const address = await getAddressDetails(latitude, longitude)
