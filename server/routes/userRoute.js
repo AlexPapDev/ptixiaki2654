@@ -1,4 +1,4 @@
-require("dotenv").config()
+require('dotenv').config()
 const express = require('express')
 const router = express.Router()
 const db = require('../db')
@@ -123,13 +123,13 @@ router.patch('/:userId', async (req, res) => {
   const updatedFields = getRecordWithoutCalculatedFields(req.body)
   const setClause = Object.keys(updatedFields)
     .filter(fieldName => (USER_FIELD_NAMES.includes(fieldName)))
-    .map((key, index) => `"${key}" = $${index + 1}`)
-    .join(", ")
+    .map((key, index) => `'${key}' = $${index + 1}`)
+    .join(', ')
 
   const values = Object.values(updatedFields)
 
   if (!setClause) {
-    return res.status(400).json({ error: "No fields to update" });
+    return res.status(400).json({ error: 'No fields to update' });
   }
 
   const query = `
@@ -143,10 +143,10 @@ router.patch('/:userId', async (req, res) => {
   // const userId = parseInt(req.params.id)
   // const user = users.find(u => u.id === userId)
   if (result.rows.length === 0) {
-    return res.status(404).json({ error: "User not found" });
+    return res.status(404).json({ error: 'User not found' });
   }
 
-  res.json({ message: "Profile updated successfully", user: result.rows[0] })
+  res.json({ message: 'Profile updated successfully', user: result.rows[0] })
 })
 
 // DELETE a user by ID
@@ -285,12 +285,12 @@ router.post('/resend-otp', async (req, res) => {
 const sendOtp = async (email, otp) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
-    host: "smtp.gmail.com",
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: {
-      user: "ptixiaki2654@gmail.com",
-      pass: "awco ozhh qzgm ilib",
+      user: 'ptixiaki2654@gmail.com',
+      pass: 'awco ozhh qzgm ilib',
     },
   })
 
@@ -313,7 +313,7 @@ const randomInt = (min, max) => {
     throw new Error('Both min and max values must be defined')
   }
   if (min >= max) {
-    throw new RangeError("The min value must be less than the max value.")
+    throw new RangeError('The min value must be less than the max value.')
   }
 
   const range = max - min
