@@ -61,43 +61,49 @@ const NewMonument = () => {
 
   return (
     <div style={{display:'flex'}}>
-      <form onSubmit={onSubmitForm}>
-        <div>
-          <label>name</label>
-          <input name="name" required></input>
-        </div>
-        <div>
-          <label>description</label>
-          <input name="description" required></input>
-        </div>
-        <div>
-          <label>road</label>
-          <input name="road" disabled value={fullStreetName}></input>
-        </div>
-        <div>
-          <label>city</label>
-          <input name="road" disabled value={address?.city}></input>
-        </div>
-        <div>
-          <label>zip code</label>
-          <input name="road" disabled value={address?.postcode}></input>
-        </div>
-        <button>Create</button>
-      </form>
-      <GenericMap overrideOriginalCoordinates={{longitude: lng, latitude: lat}}>
-        <GeolocateControl position="top-left" />
-        <NavigationControl position="top-left" />
-        <Marker
-          longitude={lng}
-          latitude={lat}
-          anchor="bottom"
-          draggable
-          onDragStart={handleMarkerDragStart}
-          onDragEnd={handleMarkerDragEnd}
-        >
-          <Pin number={1} />
-        </Marker>
-      </GenericMap>
+      <section className="content_section">
+
+      
+        <form onSubmit={onSubmitForm}>
+          <div>
+            <label>name</label>
+            <input name="name" required></input>
+          </div>
+          <div>
+            <label>description</label>
+            <input name="description" required></input>
+          </div>
+          <div>
+            <label>road</label>
+            <input name="road" disabled value={fullStreetName}></input>
+          </div>
+          <div>
+            <label>city</label>
+            <input name="road" disabled value={address?.city}></input>
+          </div>
+          <div>
+            <label>zip code</label>
+            <input name="road" disabled value={address?.postcode}></input>
+          </div>
+          <button>Create</button>
+        </form>
+      </section>
+      <section className="map_section">
+        <GenericMap overrideOriginalCoordinates={{longitude: lng, latitude: lat}}>
+          <GeolocateControl position="top-left" />
+          <NavigationControl position="top-left" />
+          <Marker
+            longitude={lng}
+            latitude={lat}
+            anchor="bottom"
+            draggable
+            onDragStart={handleMarkerDragStart}
+            onDragEnd={handleMarkerDragEnd}
+          >
+            <Pin number={1} />
+          </Marker>
+        </GenericMap>
+      </section>
     </div>
   )
 }

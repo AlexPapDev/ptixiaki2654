@@ -14,7 +14,7 @@ const Navbar = ({token}) => {
   }
   const loggedIn = isLoggedIn()
   return (
-    <nav className="navbar">
+    <nav className="navbar" id="navbar">
       <ul style={{display:'flex', flexDirection:'row', gap: '1em'}}>
         <li><Link to="/">Home</Link></li>
         {!loggedIn && <li><Link to="/login">Login</Link></li>}

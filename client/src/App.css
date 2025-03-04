@@ -28,11 +28,17 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.content_section {
+  margin-left: 24px;
+  margin-right: 24px;
+  width: 65vw;
+}
+
+.map_section {
+  position: sticky;
+  width: 35vw;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
 }

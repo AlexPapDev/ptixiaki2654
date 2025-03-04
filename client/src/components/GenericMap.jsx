@@ -18,15 +18,13 @@ const GenericMap = ({
     ...overrideOriginalCoordinates
   }
   return (
-    <div style={{ position: "absolute", right: "0%", width: "50%", height: "100%" }}>
       <Map
         ref={mapRef}
         mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
         initialViewState={initMapState}
-        style={{  position: 'absolute',
-          right: '0%',
-          width: '50%',
-          height: '80%'
+        style={{  
+          width: '100%',
+          height: '100%'
         }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
         onContextMenu={onContextMenu}
@@ -37,7 +35,6 @@ const GenericMap = ({
       >
         {children}
       </Map>
-    </div>
   )
 }
 export default GenericMap

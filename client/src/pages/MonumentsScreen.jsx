@@ -37,13 +37,15 @@ const Monuments = () => {
   }, [passedTerm, mapBounds])
 
   return (
-    <div style={{display:'flex', justifyContent: 'space-between'}}>
-      <section>
-        {monuments?.data?.map((monument, i) => {
+    <div style={{display:'flex'}}>
+      <section className="content_section">
+        {monuments?.data?.map((monument, i, arr) => {
+          const isLastIteration = i === arr.length - 1
+          const style = !isLastIteration ? {marginBottom: '2em'} : {}
           const { name, description, longitude, latitude } = monument
           const id = 'monumentMap' + i + name + description
           return (
-            <div style={{marginBottom: '1em'}} key={id}>
+            <div style={style} key={id}>
               <div>{i+1}</div>
               <div>{'name: ' + name}</div>
               <div>{'description: ' + description}</div>
@@ -53,7 +55,10 @@ const Monuments = () => {
           )
         })}
       </section>
-      {<Map data={monuments.data} fetchData={fetchData}></Map>}
+      <section className="map_section">
+        {<Map data={monuments.data} fetchData={fetchData}></Map>}
+      </section>
+      
     </div>
   )
 }
