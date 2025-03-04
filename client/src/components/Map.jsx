@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo, useCallback, useEffect } from 'react'
-import Map, {GeolocateControl, NavigationControl } from 'react-map-gl'
+import {GeolocateControl, NavigationControl } from 'react-map-gl'
 import MapMarkerPopup from './MapMarkerPopup'
 import MapMarkerButton from './MapMarkerButton'
 import MapMarkers from './MapMarkers'
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import Supercluster from 'supercluster';
 
 const MapComp = ({data = []}) => {
-  const { mapBounds, setMapBounds, isLoggedIn, setClickedSpot } = useAppStore()
+  const { mapBounds, setMapBounds, isLoggedIn } = useAppStore()
   const mapRef = useRef(null)
   const navigate = useNavigate()
   const [bounds, setBounds] = useState({})
