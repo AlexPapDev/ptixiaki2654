@@ -7,15 +7,15 @@ import UserProfileView from '../components/UserProfileView'
 
 const UserProfile = ({}) => {
   // logged in user
-  const { userInfo, isLoggedIn, loginUser } = useAppStore()
+  const { user, isLoggedIn, loginUser, token, updateUser } = useAppStore()
   // url user id
   const { userId } = useParams()
   const [pageUser, setPageUser] = useState()
   const [isEditMode, setIsEditMode] = useState(false)
 
   useEffect(() => {
-    if (Number(userId) !== Number(userInfo?.user?.userid)) fetchUser(userId)
-  }, [userId, userInfo])
+    if (Number(userId) !== Number(user?.userid)) fetchUser(userId)
+  }, [user, userId])
 
   const fetchUser = async (userId) => {
     const result = await axios.get(`http://localhost:5001/api/users/${userId}`)
@@ -23,27 +23,27 @@ const UserProfile = ({}) => {
     // TODO: Check if this is not needed because maybe loginUser already covers this?
     setPageUser(result.data.rows[0])
     // update app store
-    loginUser({ ...userInfo, user })
+    loginUser({ user, token })
   }
 
   //TODO: implment this on the server
   const handleUpdate = async (updatedData) => {
     const res = await axios.patch(`http://localhost:5001/api/users/${userId}`, updatedData)
-    console.log(res)
     setPageUser(updatedData)
     setIsEditMode(false) // Exit edit mode after updating
+    return res
   }
 
   if (!isLoggedIn()) return <p>Log in to see this page</p>
 
-  const renderedUser = pageUser || userInfo.user
+  const renderedUser = pageUser || user
   return (
     <div>
       <button onClick={() => setIsEditMode(!isEditMode)}>
         {isEditMode ? "Cancel" : "Edit Profile"}
       </button>
       {isEditMode ? (
-        <UserProfileEdit user={userInfo.user} onSave={handleUpdate} />
+        <UserProfileEdit onSave={handleUpdate} user={user} updateUser={updateUser} />
       ) : (
         <UserProfileView user={renderedUser} />
       )}

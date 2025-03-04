@@ -14,7 +14,7 @@ const NewMonument = () => {
   const [address, setAddress] = useState({})
   // const [isDragging, setIsDragging] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { userInfo } = useAppStore()
+  const { user } = useAppStore()
 
   const fullStreetName = (address?.road || '') + ' '+ (address?.house_number || '')
 
@@ -45,7 +45,7 @@ const NewMonument = () => {
     const name = formData.get('name')
     const description = formData.get('description')
     const result = await axios.post('http://localhost:5001/api/monuments/', {
-      name, latitude: lat, longitude: lng, description, userid: userInfo?.user.userid
+      name, latitude: lat, longitude: lng, description, userid: user?.userid
     })
     console.log(result)
   }

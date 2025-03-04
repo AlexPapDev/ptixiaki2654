@@ -4,13 +4,20 @@ import { persist, createJSONStorage } from 'zustand/middleware'
 
 const useAppStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       // Search State
       searchTerm: '',
       setSearchTerm: (term) => set({ searchTerm: term }),
 
       // User Authentication State
       isLoggedIn: () => !!get().token, 
+      user: null,
+      token: null,
+      loginUser: ({ user, token }) => set({ user, token }),
+      logoutUser: () => set({ user: false, token: null }),
+      updateUser: (updatedUserData) => set((state) => ({
+        user: { ...state.user, ...updatedUserData }
+      })),
 
       // Map position
       mapBounds: null,
@@ -23,8 +30,8 @@ const useAppStore = create(
     {
       name: 'monuma-storage',
       partialize: (state) => ({ 
-        isLoggedIn: state.isLoggedIn,
-        userInfo: state.userInfo,
+        user: state.user,
+        token: state.token,
       }),
     }
   ))
