@@ -26,7 +26,7 @@ const numberStyle = {
 
 const Pin = ({size = 30, number}) => {
   return (
-    <div style={{cursor: 'pointer'}}>
+    <div style={{cursor: 'pointer'}} class="pin-hover">
       <svg height={size} viewBox="0 0 24 24" style={pinStyle}>
         <path d={ICON} />
       </svg>
