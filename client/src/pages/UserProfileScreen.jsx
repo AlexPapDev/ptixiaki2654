@@ -18,12 +18,16 @@ const UserProfile = ({}) => {
   }, [user, userId])
 
   const fetchUser = async (userId) => {
-    const result = await axios.get(`http://localhost:5001/api/users/${userId}`)
-    const user = result.data.rows[0]
-    // TODO: Check if this is not needed because maybe loginUser already covers this?
-    setPageUser(result.data.rows[0])
-    // update app store
-    loginUser({ user, token })
+    const result = await axios.get(`http://localhost:5001/api/users/`, {
+      params: {
+        id: userId
+      }
+    })
+    const user = result.data.data
+    // TODO: token?
+    setPageUser(result.data.data)
+    // // update app store
+    // loginUser({ user, token })
   }
 
   //TODO: implment this on the server
@@ -39,6 +43,7 @@ const UserProfile = ({}) => {
   const renderedUser = pageUser || user
   return (
     <div>
+      {/* TODO: hide if not own user page */}
       <button onClick={() => setIsEditMode(!isEditMode)}>
         {isEditMode ? "Cancel" : "Edit Profile"}
       </button>
