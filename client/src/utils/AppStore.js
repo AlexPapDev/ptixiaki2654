@@ -10,10 +10,7 @@ const useAppStore = create(
       setSearchTerm: (term) => set({ searchTerm: term }),
 
       // User Authentication State
-      isLoggedIn: false,
-      userInfo: null,
-      loginUser: (userInfo) => set({ isLoggedIn: true, userInfo }),
-      logoutUser: () => set({ isLoggedIn: false, userInfo: null }),
+      isLoggedIn: () => !!get().token, 
 
       // Map position
       mapBounds: null,

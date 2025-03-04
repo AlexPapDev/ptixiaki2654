@@ -4,9 +4,9 @@ import useAppStore from "./AppStore"
 
 const ProfileRedirect = () => {
   const { isLoggedIn, userInfo } = useAppStore()
-  console.log(userInfo)
+
   debugger
-  if (isLoggedIn) {
+  if (isLoggedIn()) {
     // Redirect to /user/:userId if logged in
     return <Navigate to={`/user/${userInfo.user.userid}`} />
   } else {

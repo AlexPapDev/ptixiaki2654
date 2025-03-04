@@ -34,7 +34,7 @@ const UserProfile = ({}) => {
     setIsEditMode(false) // Exit edit mode after updating
   }
 
-  if (!isLoggedIn) return <p>Log in to see this page</p>
+  if (!isLoggedIn()) return <p>Log in to see this page</p>
 
   const renderedUser = pageUser || userInfo.user
   return (

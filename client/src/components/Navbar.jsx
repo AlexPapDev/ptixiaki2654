@@ -12,16 +12,17 @@ const Navbar = ({token}) => {
     logoutUser()
     navigate('/')
   }
+  const loggedIn = isLoggedIn()
   return (
     <nav className="navbar">
       <ul style={{display:'flex', flexDirection:'row', gap: '1em'}}>
         <li><Link to="/">Home</Link></li>
-        {!isLoggedIn && <li><Link to="/login">Login</Link></li>}
-        {!isLoggedIn && <li><Link to="/signup">Sign Up</Link></li>}
-        {isLoggedIn && <li><Link to='/profile'>Profile</Link></li>}
+        {!loggedIn && <li><Link to="/login">Login</Link></li>}
+        {!loggedIn && <li><Link to="/signup">Sign Up</Link></li>}
+        {loggedIn && <li><Link to='/profile'>Profile</Link></li>}
         <li><Link to="/monuments">Monuments</Link></li>
         <li><SearchInput /></li>
-        {isLoggedIn && <li><button onClick={onClickLogoutHandler}>Logout</button></li>}
+        {loggedIn && <li><button onClick={onClickLogoutHandler}>Logout</button></li>}
       </ul>
     </nav>
   )
