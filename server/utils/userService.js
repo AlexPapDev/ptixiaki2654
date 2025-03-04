@@ -17,14 +17,14 @@ const createUser = async (firstname, lastname, email, password, role) => {
 
   const hashedPassword = await bcrypt.hash(password, 10)
   const otp = randomInt(100000, 999999).toString()
-  const otpExpiry = minutesFromNow(30)
+  const otpExpiry = _minutesFromNow(30)
 
   try {
     // Start a transaction
     await db.query('BEGIN')
 
     const newUser = await db.query(`
-      INSERT INTO users (firstname, lastname, email, hashedPassword, otp, otpExpiry, role) 
+      INSERT INTO users (firstname, lastname, email, hashedpassword, otp, otpexpiry, role) 
       VALUES($1, $2, $3, $4, $5, $6, $7) 
       RETURNING *`,
       [firstname, lastname, email, hashedPassword, otp, otpExpiry, role],
@@ -68,6 +68,23 @@ const sendOtp = async (email, otp) => {
   }
 }
 
+const validateOtp = async (email, otp) => {
+  console.log('validateOtp')
+  const result = await db.query(
+    'SELECT userid FROM users WHERE email = $1 AND otp = $2 AND otpExpiry > NOW()',
+    [email, otp]
+  )
+
+  if (result.rows.length === 0) {
+    return { success: false, message: "Invalid OTP or expired" };
+  }
+
+  // Invalidate OTP after successful validation
+  await db.query('UPDATE users SET otp = NULL WHERE email = $1', [email]);
+
+  return { success: true, message: "OTP validated successfully", user: result.rows[0] };
+}
+
 // Get user by email
 const getUserByField = async (fieldName, fieldValue, includePrivateFields = false) => {
   const result = await db.query(`SELECT * FROM users WHERE ${fieldName} = $1`, [fieldValue])
@@ -76,15 +93,7 @@ const getUserByField = async (fieldName, fieldValue, includePrivateFields = fals
   if (result.rowCount === 0) return null
   
   const user = result.rows[0]
-  const userBase = {
-    userid: user.userid,
-    firstname: user.firstname,
-    lastname: user.lastname,
-    email: user.email,
-    profilepicture: user.profilepicture,
-    role: user.role,
-    hasVerifiedOtp: !user.otp || new Date(user.otpExpiry) < new Date(),
-  }
+  const userBase = getUserPublicWithCalculatedFields(user)
   // Process the user to include the calculated field
   return includePrivateFields ? { ...userBase, ...user } : userBase
 }
@@ -128,6 +137,28 @@ const comparePasswords = async (password, hashedpassword) => {
   return bcrypt.compare(password, hashedpassword)
 }
 
+const _minutesFromNow = (minutes = 60) => {
+  return new Date(Date.now() + minutes * 60 * 1000)
+}
+
+const _getHasVerifiedOtp = (user) => {
+  return !user.otp || new Date(user.otpexpiry) < new Date()
+}
+
+const getAllUsers = async () => {
+  return await db.query('SELECT * FROM users')
+}
+
+const getUserPublicWithCalculatedFields = (user) => {
+  return {
+    ...user,
+    otp: null,
+    otpexpiry: null,
+    hashedpassword: null,
+    hasVerifiedOtp: _getHasVerifiedOtp(user)
+  }
+}
+
 const randomInt = (min, max) => {
   if (min === undefined || max === undefined) {
     throw new Error('Both min and max values must be defined')
@@ -146,4 +177,4 @@ const randomInt = (min, max) => {
   return min + (randomInt % range)
 }
 
-module.exports = { createUser, getUserByField, updateUser, comparePasswords }
+module.exports = { createUser, getUserByField, updateUser, comparePasswords, getAllUsers, validateOtp, getUserPublicWithCalculatedFields }
