@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import useAppStore from '../utils/AppStore'
 
 const OTPVerificationScreen = () => {
   const [otp, setOtp] = useState(new Array(6).fill(''))
@@ -9,6 +10,7 @@ const OTPVerificationScreen = () => {
   const inputRefs = useRef([])
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const { loginUser } = useAppStore()
 
   // Get the email parameter from the URL query string
   useEffect(() => {
@@ -59,7 +61,8 @@ const OTPVerificationScreen = () => {
         const response = await axios.post('http://localhost:5001/api/users/validate-otp', { email, otp: otpValue })
 
         if (response.status !== 500) {
-          // TODO: login user as well
+          const { user, token } = response.data.data
+          loginUser({ user, token })
           navigate('/')
         } else {
           // Handle the error case
