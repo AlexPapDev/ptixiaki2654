@@ -8,18 +8,18 @@ CREATE TABLE Users (
   userId SERIAL PRIMARY KEY,
   firstname VARCHAR(255),
   lastname VARCHAR(255),
-  hashedPassword VARCHAR(255) NOT NULL,
+  hashedpassword VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   profilePicture TEXT,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   role VARCHAR(20) CHECK (role IN ('user', 'ambassador', 'admin')) NOT NULL,
   otp VARCHAR(6),
-  otpExpiry TIMESTAMP
+  otpexpiry TIMESTAMP
 );
 
 -- ALTER TABLE users 
--- ADD COLUMN role VARCHAR(20) CHECK (role IN ('normal_users', 'ambassador', 'admin')) NOT NULL DEFAULT 'normal_user';
+-- ADD COLUMN role VARCHAR(20) CHECK (role IN ('normal_user', 'ambassador', 'admin')) NOT NULL DEFAULT 'normal_user';
 
 CREATE TABLE Monuments (
   monumentId SERIAL PRIMARY KEY,
