@@ -42,3 +42,42 @@
   height: calc(100vh - 60px);
   overflow-y: auto;
 }
+
+/* grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* grid-template-rows: repeat(3, 1fr); */
+  gap: 15px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: lightblue;
+  border: 1px solid black;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.card-border {
+  border: 1px solid;
+  height: 230px;
+}
+
+.m-t-1 {
+  margin-top: 20px;
+}
+
+.pin-hover:hover {
+  border: 1px solid black;
+}
+
+.monument-card:hover {
+  cursor: pointer;
+  border: 1px solid grey;
+  background: rgb(240, 240, 240);
+}
