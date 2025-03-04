@@ -17,13 +17,13 @@ const Monuments = () => {
 
   const fetchData = async ({passedTerm, mapBounds}) => {
     if (!mapBounds) return
-    const monuments = await axios.get(`http://localhost:5001/api/monuments/`, {
+    const result = await axios.get(`http://localhost:5001/api/monuments/`, {
       params: { query: passedTerm, mapBounds: {
         ne: { ...mapBounds._ne },
         sw: { ...mapBounds._sw },
       } }
     })
-
+    const { monuments } = result.data.data
     setMonuments(monuments)
     // setMapHasLoaded(true)
   }
@@ -39,7 +39,7 @@ const Monuments = () => {
   return (
     <div style={{display:'flex'}}>
       <section className="content_section">
-        {monuments?.data?.map((monument, i, arr) => {
+        {monuments?.map((monument, i, arr) => {
           const isLastIteration = i === arr.length - 1
           const style = !isLastIteration ? {marginBottom: '2em'} : {}
           const { name, description, longitude, latitude } = monument
@@ -56,7 +56,7 @@ const Monuments = () => {
         })}
       </section>
       <section className="map_section">
-        {<Map data={monuments.data} fetchData={fetchData}></Map>}
+        {<Map data={monuments} fetchData={fetchData}></Map>}
       </section>
       
     </div>

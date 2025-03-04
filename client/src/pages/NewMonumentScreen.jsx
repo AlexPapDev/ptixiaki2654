@@ -40,7 +40,7 @@ const NewMonument = () => {
     fetchAddress()
   }, [lat, lng]) // Runs when markerPosition changes
   
-  // TODO handle submit form
+  // TODO handle result?
   const onSubmitForm = async (e) => {
     e.preventDefault()
 
