@@ -12,7 +12,7 @@ const Monuments = () => {
   const [searchParams] = useSearchParams()
   const passedTerm = searchParams.get('q') || searchTerm
 
-  const [monuments, setMonuments] = useState({data: []})
+  const [monuments, setMonuments] = useState([])
   // const [mapHasLoaded, setMapHasLoaded] = useState(false)
 
   const fetchData = async ({passedTerm, mapBounds}) => {
