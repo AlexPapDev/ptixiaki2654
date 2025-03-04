@@ -69,7 +69,7 @@ const MapComp = ({data = []}) => {
   }, [mapRef, setBounds, setMapBounds, mapBounds])
 
   const onClickNewMonumentButton = () => {
-    if (isLoggedIn) {
+    if (isLoggedIn()) {
       // setClickedSpot(popupButtonInfo)
       navigate({ pathname: '/monuments/new', 
         search: `?lat=${popupButtonInfo.lat}&lng=${popupButtonInfo.lng}`
