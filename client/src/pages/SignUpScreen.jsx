@@ -7,6 +7,7 @@ const inputs = [
   { label: 'Last Name', name: 'lastname' },
   { label: 'Email', name: 'email'},
   { label: 'Password', name: 'Password', type: 'password'},
+  { label: 'Confirm Password', name: 'confirmPassword', type: 'password' },
 ]
 
 const SignUpScreen = () => {
@@ -16,6 +17,7 @@ const SignUpScreen = () => {
     lastname: '',
     email: '',
     password: '',
+    confirmPassword: '',
   })
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
@@ -33,7 +35,12 @@ const SignUpScreen = () => {
   // TODO: handle errors
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const { firstname, lastname, email, password } = formData
+    const { firstname, lastname, email, password, confirmPassword } = formData
+    if (password !== confirmPassword) {
+      setErrorMessage('Passwords do not match!')
+      return
+    }
+
     try {
       const result = await axios.post(`http://localhost:5001/api/users/`, {
         firstname, lastname, email, password
