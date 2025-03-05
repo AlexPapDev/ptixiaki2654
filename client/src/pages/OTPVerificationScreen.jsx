@@ -4,13 +4,16 @@ import axios from 'axios'
 import useAppStore from '../utils/AppStore'
 
 const OTPVerificationScreen = () => {
+  const { loginUser } = useAppStore()
+
   const [otp, setOtp] = useState(new Array(6).fill(''))
   const [email, setEmail] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const inputRefs = useRef([])
+
   const [searchParams] = useSearchParams()
+
   const navigate = useNavigate()
-  const { loginUser } = useAppStore()
 
   // Get the email parameter from the URL query string
   useEffect(() => {
