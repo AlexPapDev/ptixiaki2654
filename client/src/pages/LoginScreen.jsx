@@ -17,12 +17,13 @@ const Login = ({setState}) => {
       navigate('/')
     }
   }, [user, navigate])
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
   const handleSubmit = async (e) => {
     e.preventDefault()
     // Handle login logic here
 
     try  {
-      const result = await axios.post('http://localhost:5001/api/users/login', {
+      const result = await axios.post(`${API_BASE_URL}/api/users/login`, {
         email, password
       })
       const { user } = result.data

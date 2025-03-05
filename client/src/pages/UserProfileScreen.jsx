@@ -16,9 +16,9 @@ const UserProfile = ({}) => {
   useEffect(() => {
     if (Number(userId) !== Number(user?.userid)) fetchUser(userId)
   }, [user, userId])
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
   const fetchUser = async (userId) => {
-    const result = await axios.get(`http://localhost:5001/api/users/`, {
+    const result = await axios.get(`${API_BASE_URL}/api/users/`, {
       params: {
         id: userId
       }
@@ -32,7 +32,7 @@ const UserProfile = ({}) => {
 
   //TODO: implment this on the server
   const handleUpdate = async (updatedData) => {
-    const res = await axios.patch(`http://localhost:5001/api/users/${userId}`, updatedData)
+    const res = await axios.patch(`${API_BASE_URL}/api/users/${userId}`, updatedData)
     setPageUser(updatedData)
     setIsEditMode(false) // Exit edit mode after updating
     return res

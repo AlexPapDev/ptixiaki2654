@@ -31,7 +31,7 @@ const SignUpScreen = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
   // TODO: handle errors
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -42,7 +42,7 @@ const SignUpScreen = () => {
     }
 
     try {
-      const result = await axios.post(`http://localhost:5001/api/users/`, {
+      const result = await axios.post(`${API_BASE_URL}/api/users/`, {
         firstname, lastname, email, password
       })
       console.log(result.data.message)

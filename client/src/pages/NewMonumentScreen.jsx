@@ -20,12 +20,12 @@ const NewMonument = () => {
 
 
   const fullStreetName = address.road + ' ' + address.house_number
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
   useEffect(() => {
     const fetchAddress = async () => {
       try {
         setLoading(true)
-        const result = await axios.post('http://localhost:5001/api/monuments/get-address', {
+        const result = await axios.post(`${API_BASE_URL}/api/monuments/get-address`, {
           longitude: lng, latitude: lat
         })
         setAddress(result.data.data.address || 'Unknown address')
@@ -49,7 +49,7 @@ const NewMonument = () => {
     const description = formData.get('description')
     try {
       toast.info('Creating record...', { position: 'top-right' });
-      const result = await axios.post('http://localhost:5001/api/monuments/', {
+      const result = await axios.post(`${API_BASE_URL}/api/monuments/`, {
         name, latitude: lat, longitude: lng, description, userid: user?.userid
       })
       console.log(result)
