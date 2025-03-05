@@ -242,7 +242,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-app.get('/ping', (req, res) => {
+router.get('/ping', (req, res) => {
   res.send('Monuments Ping!');
 })
 
