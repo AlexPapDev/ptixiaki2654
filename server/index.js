@@ -2,8 +2,7 @@ require("dotenv").config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const bcrypt = require('bcrypt')
-const nodemailer = require('nodemailer')
+const pool = require("./db");
 
 const userRoutes = require('./routes/userRoute')
 const monumentRoutes = require('./routes/monumentRoute')
