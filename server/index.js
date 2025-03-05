@@ -20,6 +20,24 @@ app.use(express.json())
 app.use('/api/users', userRoutes)
 app.use('/api/monuments', monumentRoutes)
 
+app.get('/ping', (req, res) => {
+  res.send('Main Ping!');
+})
+
+async function testDbConnection() {
+  try {
+    const res = await pool.query('SELECT NOW()'); // Query to check current time from the DB
+    console.log('Database connected successfully!')
+    console.log('Current database time:', res.rows[0].now)
+  } catch (err) {
+    console.error('Error connecting to the database:', err.message)
+    process.exit(1); // Exit the server if the DB connection fails
+  }
+}
+
+// Call the testDbConnection function before starting the server
+testDbConnection()
+
 
 const port = process.env.PORT || 5001
 app.listen(port, () => {
