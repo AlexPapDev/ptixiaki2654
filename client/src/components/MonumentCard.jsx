@@ -13,11 +13,11 @@ const MonumentCard = ({ monument }) => {
           top: '0',
           left: '0',
           width: '100%', 
-          height: '45%',
+          height: '40%',
           objectFit: 'cover', // Ensure the image covers the space without distortion
         }}>
       </img>
-      <div style={{ paddingTop: '40%', paddingLeft: '10px', textAlign: 'left' }}>
+      <div style={{ paddingTop: '42%', paddingLeft: '10px', textAlign: 'left' }}>
         <h1>{name}</h1>
         <h3>{description}</h3>
         <div>{longitude + '1, ' + latitude}</div>
