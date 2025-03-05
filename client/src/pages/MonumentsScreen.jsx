@@ -15,18 +15,25 @@ const Monuments = () => {
 
   const [monuments, setMonuments] = useState([])
   // const [mapHasLoaded, setMapHasLoaded] = useState(false)
-
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
   const fetchData = async ({passedTerm, mapBounds}) => {
     if (!mapBounds) return
-    const result = await axios.get(`http://localhost:5001/api/monuments/`, {
-      params: { query: passedTerm, mapBounds: {
-        ne: { ...mapBounds._ne },
-        sw: { ...mapBounds._sw },
-      } }
-    })
-    const { monuments } = result.data.data
-    setMonuments(monuments)
-    // setMapHasLoaded(true)
+
+    try {
+      const result = await axios.get(`${API_BASE_URL}/api/monuments/`, {
+        params: { 
+          query: passedTerm, mapBounds: {
+            ne: { ...mapBounds._ne },
+            sw: { ...mapBounds._sw },
+          }
+        }
+      })
+      const { monuments } = result.data.data
+      setMonuments(monuments)
+      // setMapHasLoaded(true)
+    } catch (error) {
+      console.error('Error fetching monuments:', error);
+    }
   }
 
   useEffect(() => {

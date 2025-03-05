@@ -135,10 +135,12 @@ router.get('/', async (req, res) => {
       })
     }
 
-    let sql = `SELECT monumentId, name, description, latitude, longitude
-               FROM monuments
-               WHERE latitude BETWEEN $1 AND $2
-                 AND longitude BETWEEN $3 AND $4`
+    let sql = `
+      SELECT monumentId, name, description, latitude, longitude
+      FROM monuments
+      WHERE latitude BETWEEN $1 AND $2
+        AND longitude BETWEEN $3 AND $4
+    `
 
     const values = [sw.lat, ne.lat, sw.lng, ne.lng]
 
