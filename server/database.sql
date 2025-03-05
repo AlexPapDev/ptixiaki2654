@@ -13,7 +13,7 @@ CREATE TABLE Users (
   profilePicture TEXT,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  role VARCHAR(20) CHECK (role IN ('user', 'ambassador', 'admin')) NOT NULL,
+  role VARCHAR(20) CHECK (role IN ('normal_user', 'ambassador', 'admin')) NOT NULL,
   otp VARCHAR(6),
   otpexpiry TIMESTAMP
 );
