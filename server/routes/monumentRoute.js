@@ -124,6 +124,7 @@ router.get('/:query', async (req, res) => {
 
 // Get monuments within map bounds and optional search query
 router.get('/', async (req, res) => {
+  console.log('monuments get')
   const { query, mapBounds } = req.query
   const { sw, ne } = mapBounds || {}
   
