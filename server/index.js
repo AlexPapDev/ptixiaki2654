@@ -24,6 +24,7 @@ app.get('/ping', (req, res) => {
 })
 
 async function testDbConnection() {
+  console.log('starting connection test....')
   try {
     const res = await pool.query('SELECT NOW()'); // Query to check current time from the DB
     console.log('Database connected successfully!')
@@ -36,7 +37,6 @@ async function testDbConnection() {
 
 // Call the testDbConnection function before starting the server
 testDbConnection()
-
 
 const port = process.env.PORT || 5001
 app.listen(port, () => {
