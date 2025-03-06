@@ -1,13 +1,15 @@
 import React from 'react'
 
 const MonumentCard = ({ monument }) => {
-  const { name, description, longitude, latitude, address: { road, } } = monument
-  const fullStreetName = road + ' '
+  const { name, description, address: { road, house_number }, images } = monument
+  const fullStreetName = `${road} ${house_number}`
+  const image = images[0] || 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000'
   return (
-    <div className="card-border monument-card" style={{position: 'relative'}}>
+    <div className='card-border monument-card' style={{position: 'relative'}}>
       <img 
-        decoding="async" 
-        src="https://lh5.googleusercontent.com/p/AF1QipPARdydXvO2-w-TQfuGh6ceQPhlUSJDaGE4R8gE=w408-h306-k-no" 
+        alt='monument-image'
+        decoding='async' 
+        src={image}
         style={{
           position: 'absolute', 
           top: '0',
