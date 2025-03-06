@@ -24,6 +24,8 @@ CREATE TABLE Users (
 CREATE TABLE Monuments (
   monumentId SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
+  name_noaccents VARCHAR(255) NOT NULL,
+  name_greeklish VARCHAR(255) NOT NULL,
   description VARCHAR(255),
   address JSONB NOT NULL,
   latitude	DECIMAL(9, 6),
