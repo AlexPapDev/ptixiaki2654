@@ -1,8 +1,8 @@
 import React from 'react'
 
 const MonumentCard = ({ monument }) => {
-  const { name, description, longitude, latitude } = monument
-
+  const { name, description, longitude, latitude, address: { road, } } = monument
+  const fullStreetName = road + ' '
   return (
     <div className="card-border monument-card" style={{position: 'relative'}}>
       <img 
@@ -19,8 +19,8 @@ const MonumentCard = ({ monument }) => {
       </img>
       <div style={{ paddingTop: '42%', paddingLeft: '10px', textAlign: 'left' }}>
         <h1>{name}</h1>
-        <h3>{description}</h3>
-        <div>{longitude + '1, ' + latitude}</div>
+        <h5 style={{color: 'grey'}}>{description}</h5>
+        <h5>{fullStreetName}</h5>
       </div>
     </div>
   )
