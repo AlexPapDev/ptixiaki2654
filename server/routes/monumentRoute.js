@@ -120,6 +120,7 @@ router.get('/', async (req, res) => {
   console.log('monuments get')
   const { query, mapBounds } = req.query
   const { sw, ne } = mapBounds || {}
+
   try {
     if (!sw || !ne) {
       return res.status(400).json({
@@ -129,23 +130,36 @@ router.get('/', async (req, res) => {
     }
 
     let sql = `
-      SELECT monumentId, name, name_noaccents, name_greeklish, description, latitude, longitude, address
-      FROM monuments
-      WHERE latitude BETWEEN $1 AND $2
-        AND longitude BETWEEN $3 AND $4
+      SELECT 
+        m.monumentId, 
+        m.name, 
+        m.name_noaccents, 
+        m.name_greeklish, 
+        m.description, 
+        m.latitude, 
+        m.longitude, 
+        m.address,
+        COALESCE(json_agg(mi.imageurl) FILTER (WHERE mi.imageurl IS NOT NULL), '[]') AS images
+      FROM monuments m
+      LEFT JOIN monumentimages mi ON m.monumentId = mi.monumentId
+      WHERE m.latitude BETWEEN $1 AND $2
+        AND m.longitude BETWEEN $3 AND $4
     `
 
     const values = [sw.lat, ne.lat, sw.lng, ne.lng]
+
     if (query) {
-      sql += ' AND (name ILIKE $5 OR name_greeklish ILIKE $5 OR name_noaccents ILIKE $5 OR name ILIKE $6)'
+      sql += ' AND (m.name ILIKE $5 OR m.name_greeklish ILIKE $5 OR m.name_noaccents ILIKE $5 OR m.name ILIKE $6)'
       values.push(`%${query}%`)
 
       const reverseGreeklishQuery = transliterateString(query)
       values.push(`%${reverseGreeklishQuery}%`)
     }
 
+    sql += ` GROUP BY m.monumentId ORDER BY m.latitude DESC, m.longitude ASC`
+
     const monuments = await db.query(sql, values)
-    monuments.rows.sort((a, b) => b.latitude - a.latitude || a.longitude - b.longitude)
+
     res.status(200).json({
       status: 'success',
       results: monuments.rows.length,
