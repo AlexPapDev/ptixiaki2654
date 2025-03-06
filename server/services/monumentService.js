@@ -15,7 +15,7 @@ const createMonument = async (name, name_noaccents, name_greeklish, description,
 
 const addMonumentImage = async (monumentId, imageUrl, isMain) => {
   await db.query(
-    `INSERT INTO monument_images (monument_id, image_url, is_main) VALUES ($1, $2, $3)`,
+    `INSERT INTO monumentimages (monumentid, imageurl, ismain) VALUES ($1, $2, $3)`,
     [monumentId, imageUrl, isMain]
   )
 }
