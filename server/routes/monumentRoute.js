@@ -1,29 +1,15 @@
-const express = require('express')
-const router = express.Router()
-const db = require('../db')
-const axios = require('axios')
-const userService = require('../utils/userService')
-const CONSTANTS = require('../utils/serverConstants')
-const uploadToCloudinary = require('../utils/cloudinaryConfig')
+import express from 'express'
+import db from '../config/db.js'
+import axios from 'axios'
+import userService from '../services/userService.js'
+import CONSTANTS from '../utils/serverConstants.js'
+import uploadToCloudinary from '../utils/cloudinaryConfig.js'
+import upload from '../utils/fileUpload.js'
+import monumentService from '../services/monumentService.js'
+import { getAddressDetails, removeGreekTonos, transliterateString } from '../utils/helpers.js'
 
 const { GEOCODE_API_URL, INSTANT_CREATION_ROLES, GREEK_TO_ENGLISH_MAP, TONOS_MAP } = CONSTANTS
-
-// Utility function to fetch address from coordinates
-const getAddressDetails = async (lat, lon) => {
-  try {
-    const response = await axios.get(GEOCODE_API_URL, {
-      params: {
-        lat,
-        lon,
-        format: 'json',
-      },
-    })
-    return response.data.address
-  } catch (error) {
-    return { street: null, house_number: null, city: null, postcode: null }
-  }
-}
-
+const router = express.Router()
 // Endpoint to get address from latitude and longitude
 router.post('/get-address', async (req, res) => {
   try {
@@ -48,14 +34,6 @@ router.post('/get-address', async (req, res) => {
   }
 })
 
-// TODO: put these on a different file
-const transliterateString = (str) => {
-  return str.split('').map(char => GREEK_TO_ENGLISH_MAP[char] || char).join('');
-}
-
-const removeGreekTonos = (str) => {
-  return str.split('').map(char => TONOS_MAP[char] || char).join('');
-}
 // Create a new monument
 router.post('/', async (req, res) => {
   try {
@@ -81,6 +59,8 @@ router.post('/', async (req, res) => {
     const address = await getAddressDetails(latitude, longitude)
     const name_noaccents = removeGreekTonos(name)
     const name_greeklish = transliterateString(name)
+    const imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
+        
     const newMonument = await db.query(
       `INSERT INTO monuments (name, name_noaccents, name_greeklish, description, address, latitude, longitude, isapproved)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
@@ -249,7 +229,7 @@ router.put('/:id', async (req, res) => {
 })
 
 router.get('/ping', (req, res) => {
-  res.send('Monuments Ping!');
+  res.send('Monuments Ping!')
 })
 
-module.exports = router
+export default router

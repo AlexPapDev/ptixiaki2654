@@ -1,7 +1,8 @@
-const bcrypt = require('bcrypt')
-const crypto = require('crypto')
-const db = require('../db')
-const nodemailer = require('nodemailer')
+import bcrypt from 'bcrypt'
+import crypto from 'crypto'
+import db from '../config/db.js'
+import nodemailer from 'nodemailer'
+
 const USER_FIELD_NAMES = [
   'firstname',
   'lastname',
@@ -177,4 +178,4 @@ const randomInt = (min, max) => {
   return min + (randomInt % range)
 }
 
-module.exports = { createUser, getUserByField, updateUser, comparePasswords, getAllUsers, validateOtp, getUserPublicWithCalculatedFields }
+export default { createUser, getUserByField, updateUser, comparePasswords, getAllUsers, validateOtp, getUserPublicWithCalculatedFields }

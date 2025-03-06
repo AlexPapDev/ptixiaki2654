@@ -24,7 +24,7 @@ const TONOS_MAP = {
   'ΐ': 'ι', 'ΰ': 'υ'
 }
 
-export {
+export default {
   USER_ROLES,
   INSTANT_CREATION_ROLES,
   GEOCODE_API_URL,

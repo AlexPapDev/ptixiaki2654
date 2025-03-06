@@ -1,17 +1,15 @@
-require("dotenv").config()
-const express = require('express')
+import dotenv from 'dotenv'
+import express from 'express'
+import cors from 'cors'
+import pool from './config/db.js' // Use the correct extension
+import userRoutes from './routes/userRoute.js' // Use the correct extension
+import monumentRoutes from './routes/monumentRoute.js' // Use the correct extension
+
+dotenv.config() // Load environment variables
+
 const app = express()
-const cors = require('cors')
-const pool = require("./db");
 
-const userRoutes = require('./routes/userRoute')
-const monumentRoutes = require('./routes/monumentRoute')
-
-/**
- * middleware
- * cors():
- * express.json()
-**/ 
+// Middleware
 app.use(cors())
 app.use(express.json())
 
@@ -20,18 +18,18 @@ app.use('/api/users', userRoutes)
 app.use('/api/monuments', monumentRoutes)
 
 app.get('/ping', (req, res) => {
-  res.send('Main Ping!');
+  res.send('Main Ping!')
 })
 
 async function testDbConnection() {
   console.log('starting connection test....')
   try {
-    const res = await pool.query('SELECT NOW()'); // Query to check current time from the DB
+    const res = await pool.query('SELECT NOW()')
     console.log('Database connected successfully!')
     console.log('Current database time:', res.rows[0].now)
   } catch (err) {
     console.error('Error connecting to the database:', err.message)
-    process.exit(1); // Exit the server if the DB connection fails
+    process.exit(1)
   }
 }
 
@@ -40,5 +38,5 @@ testDbConnection()
 
 const port = process.env.PORT || 5001
 app.listen(port, () => {
-  console.log('aaaaa 5001')
+  console.log(`Server running on port ${port}`)
 })

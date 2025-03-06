@@ -1,9 +1,11 @@
-require('dotenv').config()
-const express = require('express')
+import dotenv from 'dotenv'
+import express from 'express'
+import userService from '../services/userService.js'
+import { body, validationResult } from 'express-validator'
+import jwt from 'jsonwebtoken'
+
+dotenv.config()
 const router = express.Router()
-const userService = require('../utils/userService')
-const { body, validationResult } = require('express-validator')
-const jwt = require('jsonwebtoken')
 
 // Route to get all users (GET /users)
 router.get('/', async (req, res) => {
@@ -107,7 +109,7 @@ router.delete('/:userId', async (req, res) => {
 router.post('/validate-otp', async (req, res) => {
   console.log('/validate-otp')
   try {
-    const { email, otp } = req.body;
+    const { email, otp } = req.body
 
     // Validate input
     if (!email || !otp) {
@@ -132,7 +134,7 @@ router.post('/validate-otp', async (req, res) => {
     console.log(user)
     return res.json({ message: 'OTP validated successfully', data: { user, token } })
   } catch (error) {
-    console.error('OTP Validation Error:', error);
+    console.error('OTP Validation Error:', error)
     return res.status(500).json({ error: 'An internal server error occurred' })
   }
 })
@@ -155,4 +157,4 @@ router.post('/resend-otp', async (req, res) => {
   }
 })
 
-module.exports = router
+export default router

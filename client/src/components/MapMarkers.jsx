@@ -5,8 +5,8 @@ const MAX_CLUSTER_NUMBER = 20
 const MapMarkers = ({clusters, points, setMarkerPopupInfo}) => {
   const getClusterNumber = num => num <= MAX_CLUSTER_NUMBER ? num : `${MAX_CLUSTER_NUMBER}+`
   return clusters.map((cluster, i) => {
-    const [longitude, latitude] = cluster.geometry.coordinates;
-    const { cluster: isCluster, point_count: pointCount } = cluster.properties;
+    const [longitude, latitude] = cluster.geometry.coordinates
+    const { cluster: isCluster, point_count: pointCount } = cluster.properties
     if (isCluster) {
       // Render cluster marker with point count
       return (

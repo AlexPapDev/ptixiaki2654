@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState } from "react"
 
 const UserProfileEdit = ({ user, onSave, updateUser }) => {
   const [formData, setFormData] = useState(user)
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   const handleSubmit = (e) => {
