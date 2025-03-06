@@ -11,7 +11,7 @@ cloudinary.config({
     api_secret: CLOUDINARY_API_SECRET
 });
 
-export default cloudinary;
+export default cloudinary
 
 // (async function() {
 

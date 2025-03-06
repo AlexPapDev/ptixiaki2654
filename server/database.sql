@@ -37,7 +37,7 @@ CREATE TABLE Monuments (
 
 CREATE TABLE MonumentImages (
   monumentimageid SERIAL PRIMARY KEY,
-  monumentid UUID REFERENCES places(monumentimageid) ON DELETE CASCADE,
+  monumentid INT NOT NULL REFERENCES monuments(monumentId) ON DELETE CASCADE,
   imageurl TEXT NOT NULL,
   ismain BOOLEAN DEFAULT FALSE,
   createdat TIMESTAMP DEFAULT now()

@@ -68,6 +68,7 @@ const MapComp = ({data = []}) => {
     }
   }, [mapRef, setBounds, setMapBounds, mapBounds])
 
+  // TODO: if not logged in redirect to log in with message?
   const onClickNewMonumentButton = () => {
     if (isLoggedIn()) {
       // setClickedSpot(popupButtonInfo)
