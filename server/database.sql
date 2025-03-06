@@ -11,6 +11,7 @@ CREATE TABLE Users (
   hashedpassword VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   profilePicture TEXT,
+  profileimageurl TEXT
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   role VARCHAR(20) CHECK (role IN ('normal_user', 'ambassador', 'admin')) NOT NULL,
@@ -32,6 +33,14 @@ CREATE TABLE Monuments (
   longitude	DECIMAL(9, 6),
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE MonumentImages (
+  monumentimageid SERIAL PRIMARY KEY,
+  monumentid UUID REFERENCES places(monumentimageid) ON DELETE CASCADE,
+  imageurl TEXT NOT NULL,
+  ismain BOOLEAN DEFAULT FALSE,
+  createdat TIMESTAMP DEFAULT now()
 );
 
 CREATE TABLE Comments (
