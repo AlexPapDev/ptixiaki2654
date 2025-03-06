@@ -30,6 +30,7 @@ router.post('/', [
   body('firstname').notEmpty().withMessage('Firstname is required'),
   body('lastname').notEmpty().withMessage('Lastname is required'),
 ], async (req, res) => {
+  console.log('post user')
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
@@ -137,6 +138,7 @@ router.post('/validate-otp', async (req, res) => {
 })
 
 // Route to resend OTP (POST /users/resend-otp)
+// TODO implement resendOtp
 router.post('/resend-otp', async (req, res) => {
   const { email } = req.body
   try {
