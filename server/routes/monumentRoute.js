@@ -3,10 +3,9 @@ import db from '../config/db.js'
 import axios from 'axios'
 import userService from '../services/userService.js'
 import CONSTANTS from '../utils/serverConstants.js'
-import uploadToCloudinary from '../utils/cloudinaryConfig.js'
 import upload from '../utils/fileUpload.js'
 import monumentService from '../services/monumentService.js'
-import { getAddressDetails, removeGreekTonos, transliterateString } from '../utils/helpers.js'
+import { getAddressDetails, removeGreekTonos, transliterateString, uploadToCloudinary } from '../utils/helpers.js'
 
 const { GEOCODE_API_URL, INSTANT_CREATION_ROLES, GREEK_TO_ENGLISH_MAP, TONOS_MAP } = CONSTANTS
 const router = express.Router()
