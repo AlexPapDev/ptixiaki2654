@@ -52,6 +52,32 @@ router.post('/get-address', async (req, res) => {
   }
 })
 
+// TODO: put these on a different file
+const transliterateString = (str) => {
+  const greekToEnglishMap = {
+    'Α': 'A', 'Β': 'B', 'Γ': 'G', 'Δ': 'D', 'Ε': 'E', 'Ζ': 'Z', 'Η': 'H', 'Θ': 'Th',
+    'Ι': 'I', 'Κ': 'K', 'Λ': 'L', 'Μ': 'M', 'Ν': 'N', 'Ξ': 'X', 'Ο': 'O', 'Π': 'P',
+    'Ρ': 'R', 'Σ': 'S', 'Τ': 'T', 'Υ': 'Y', 'Φ': 'F', 'Χ': 'Ch', 'Ψ': 'Ps', 'Ω': 'O',
+    'α': 'a', 'β': 'b', 'γ': 'g', 'δ': 'd', 'ε': 'e', 'ζ': 'z', 'η': 'h', 'θ': 'th',
+    'ι': 'i', 'κ': 'k', 'λ': 'l', 'μ': 'm', 'ν': 'n', 'ξ': 'x', 'ο': 'o', 'π': 'p',
+    'ρ': 'r', 'σ': 's', 'ς': 's', 'τ': 't', 'υ': 'y', 'φ': 'f', 'χ': 'ch', 'ψ': 'ps', 'ω': 'o',
+    'Ά': 'A', 'Έ': 'E', 'Ή': 'H', 'Ί': 'I', 'Ό': 'O', 'Ύ': 'Y', 'Ώ': 'O',
+    'ά': 'a', 'έ': 'e', 'ή': 'h', 'ί': 'i', 'ό': 'o', 'ύ': 'y', 'ώ': 'o', 'ϊ': 'i', 'ϋ': 'y',
+    'ΐ': 'i', 'ΰ': 'y'
+  }
+
+  return str.split('').map(char => greekToEnglishMap[char] || char).join('');
+}
+
+const removeGreekTonos = (str) => {
+  const tonosMap = {
+      'Ά': 'Α', 'Έ': 'Ε', 'Ή': 'Η', 'Ί': 'Ι', 'Ό': 'Ο', 'Ύ': 'Υ', 'Ώ': 'Ω',
+      'ά': 'α', 'έ': 'ε', 'ή': 'η', 'ί': 'ι', 'ό': 'ο', 'ύ': 'υ', 'ώ': 'ω', 'ϊ': 'ι', 'ϋ': 'υ',
+      'ΐ': 'ι', 'ΰ': 'υ'
+  };
+
+  return str.split('').map(char => tonosMap[char] || char).join('');
+}
 // Create a new monument
 router.post('/', async (req, res) => {
   try {
@@ -74,11 +100,12 @@ router.post('/', async (req, res) => {
 
     const isapproved = INSTANT_CREATION_ROLES.includes(user.role)
     const address = await getAddressDetails(latitude, longitude)
-
+    const name_noaccents = removeGreekTonos(name)
+    const name_greeklish = transliterateString(name)
     const newMonument = await db.query(
-      `INSERT INTO monuments (name, description, address, latitude, longitude, isapproved)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [name, description, address, latitude, longitude, isapproved]
+      `INSERT INTO monuments (name, name_noaccents, name_greeklish, description, address, latitude, longitude, isapproved)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
+      [name, name_noaccents, name_greeklish, description, address, latitude, longitude, isapproved]
     )
 
     res.status(201).json({
@@ -96,9 +123,9 @@ router.post('/', async (req, res) => {
 })
 
 // Get monuments by search query
+// TODO this isnt used currently
 router.get('/:query', async (req, res) => {
   const { query } = req.params
-
   try {
     const searchQuery = `%${query}%`
     const allMonuments = await db.query(
@@ -127,7 +154,6 @@ router.get('/', async (req, res) => {
   console.log('monuments get')
   const { query, mapBounds } = req.query
   const { sw, ne } = mapBounds || {}
-  
   try {
     if (!sw || !ne) {
       return res.status(400).json({
@@ -137,22 +163,23 @@ router.get('/', async (req, res) => {
     }
 
     let sql = `
-      SELECT monumentId, name, description, latitude, longitude
+      SELECT monumentId, name, name_noaccents, name_greeklish, description, latitude, longitude, address
       FROM monuments
       WHERE latitude BETWEEN $1 AND $2
         AND longitude BETWEEN $3 AND $4
     `
 
     const values = [sw.lat, ne.lat, sw.lng, ne.lng]
-
     if (query) {
-      sql += ' AND name ILIKE $5'
+      sql += ' AND (name ILIKE $5 OR name_greeklish ILIKE $5 OR name_noaccents ILIKE $5 OR name ILIKE $6)'
       values.push(`%${query}%`)
+
+      const reverseGreeklishQuery = transliterateString(query)
+      values.push(`%${reverseGreeklishQuery}%`)
     }
 
     const monuments = await db.query(sql, values)
     monuments.rows.sort((a, b) => b.latitude - a.latitude || a.longitude - b.longitude)
-
     res.status(200).json({
       status: 'success',
       results: monuments.rows.length,
