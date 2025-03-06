@@ -35,11 +35,9 @@ router.post('/get-address', async (req, res) => {
 })
 
 // Create a new monument
-router.post('/', async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
   try {
     const { name, description, latitude, longitude, userid } = req.body
-    const { buffer } = req.file
-
     if (!name || !description || !latitude || !longitude || !userid) {
       return res.status(400).json({
         status: 'error',
@@ -47,37 +45,47 @@ router.post('/', async (req, res) => {
       })
     }
 
-    const user = await userService.getUserByField('userid', userid) // Assuming async operation
+    const user = await userService.getUserByField('userid', userid)
     if (!user) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'User not found.',
-      })
+      return res.status(404).json({ status: 'error', message: 'User not found.' })
     }
 
     const isapproved = INSTANT_CREATION_ROLES.includes(user.role)
     const address = await getAddressDetails(latitude, longitude)
     const name_noaccents = removeGreekTonos(name)
     const name_greeklish = transliterateString(name)
-    const imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
-        
-    const newMonument = await db.query(
-      `INSERT INTO monuments (name, name_noaccents, name_greeklish, description, address, latitude, longitude, isapproved)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-      [name, name_noaccents, name_greeklish, description, address, latitude, longitude, isapproved]
+
+    await db.query('BEGIN') // Start transaction
+
+    // Insert monument first
+    const newMonument = await monumentService.createMonument(
+      name,
+      name_noaccents,
+      name_greeklish,
+      description,
+      address,
+      latitude,
+      longitude,
+      isapproved
     )
+
+    // Upload image to Cloudinary
+    const imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
+
+    // Insert monument image
+    console.log(newMonument)
+    await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
+
+    await db.query('COMMIT') // Commit transaction
 
     res.status(201).json({
       status: 'success',
-      results: newMonument.rows.length,
-      data: { monuments: newMonument.rows },
+      data: { monument: newMonument, imageUrl },
     })
   } catch (error) {
+    await db.query('ROLLBACK') // Rollback if anything fails
     console.error(`Error in monument creation: ${error.message}`)
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to create monument.',
-    })
+    res.status(500).json({ status: 'error', message: 'Failed to create monument.' })
   }
 })
 
