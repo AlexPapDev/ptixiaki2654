@@ -10,7 +10,6 @@ CREATE TABLE Users (
   lastname VARCHAR(255),
   hashedpassword VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
-  profilePicture TEXT,
   profileimageurl TEXT
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
