@@ -3,6 +3,8 @@ import express from 'express'
 import userService from '../services/userService.js'
 import { body, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
+import upload from '../utils/fileUpload.js'
+import { uploadToCloudinary } from '../utils/helpers.js'
 
 dotenv.config()
 const router = express.Router()
@@ -78,15 +80,54 @@ router.post('/login', async (req, res) => {
 })
 
 // Route to update user information (PATCH /users/:userId)
-router.patch('/:userId', async (req, res) => {
-  const { userId } = req.params
-  const updatedFields = req.body
+router.patch('/:userId', upload.single('image'), async (req, res) => {
   try {
+    const { userId } = req.params
+    const updatedFields = req.body
+
+    // Check if required fields are present
+    if (!userId || !updatedFields) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Missing required fields.',
+      })
+    }
+
+    // If image is provided, upload it to Cloudinary
+    let imageUrl = null
+    console.log(req.body)
+    if (req.file) {
+      imageUrl = await uploadToCloudinary(req.file.buffer, 'user-profiles')
+    }
+
+    // Add imageUrl to updated fields if an image was uploaded
+    if (imageUrl) {
+      updatedFields.profileimageurl = imageUrl
+    }
+
+    // Update the user in the database
     const updatedUser = await userService.updateUser(userId, updatedFields)
-    res.json({ message: 'Profile updated successfully', user: updatedUser })
+
+    // If user is not found, return a 404 error
+    if (!updatedUser) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found.',
+      })
+    }
+
+    // Send the response with the updated user
+    res.status(200).json({
+      status: 'success',
+      message: 'Profile updated successfully',
+      user: updatedUser,
+    })
   } catch (err) {
     console.error(err)
-    res.status(400).send({ error: err.message })
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to update user profile.',
+    })
   }
 })
 

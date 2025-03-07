@@ -7,7 +7,7 @@ const USER_FIELD_NAMES = [
   'firstname',
   'lastname',
   'email',
-  'profilepicture',
+  'profileimageurl',
 ]
 // Create a new user
 const createUser = async (firstname, lastname, email, password, role) => {

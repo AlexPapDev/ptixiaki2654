@@ -30,10 +30,15 @@ const UserProfile = ({}) => {
     // loginUser({ user, token })
   }
 
-  //TODO: implment this on the server
+  //TODO: try catch
   const handleUpdate = async (updatedData) => {
-    const res = await axios.patch(`${API_BASE_URL}/api/users/${userId}`, updatedData)
-    setPageUser(updatedData)
+    console.log('updatedData', updatedData)
+    const res = await axios.patch(`${API_BASE_URL}/api/users/${userId}`, updatedData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    setPageUser(res?.data?.user)
     setIsEditMode(false) // Exit edit mode after updating
     return res
   }
@@ -44,7 +49,7 @@ const UserProfile = ({}) => {
   return (
     <div>
       {/* TODO: hide if not own user page */}
-      <button onClick={() => setIsEditMode(!isEditMode)}>
+      <button onClick={() => setIsEditMode(!isEditMode)} style={{marginBottom: '5px'}}>
         {isEditMode ? "Cancel" : "Edit Profile"}
       </button>
       {isEditMode ? (
