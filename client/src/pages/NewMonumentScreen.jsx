@@ -25,7 +25,7 @@ const NewMonument = () => {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const fullStreetName = `${address.road} ${address.house_number}`
+  const fullStreetName = `${address.road} ${address.house_number || ''}`
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
 
   useEffect(() => {
