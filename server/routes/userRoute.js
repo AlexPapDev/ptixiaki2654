@@ -11,8 +11,8 @@ const router = express.Router()
 router.get('/', async (req, res) => {
   const userId = parseInt(req.query.id)
   const email = req.query.email
-  let result = {}
 
+  let users
   try {
     if (!userId && !email) users = await userService.getAllUsers()
     if (userId) users = await userService.getUserByField('userId', userId)
