@@ -36,14 +36,14 @@ router.post('/get-address', async (req, res) => {
 // Create a new monument
 router.post('/', upload.single('image'), async (req, res) => {
   try {
-    const { name, description, latitude, longitude, userid } = req.body
+    const { name, description, latitude, longitude, userid, categories } = req.body
     if (!name || !description || !latitude || !longitude || !userid) {
       return res.status(400).json({
         status: 'error',
         message: 'Missing required fields.',
       })
     }
-
+    const categoryIds = await monumentService.getCategoryIds(categories)
     const user = await userService.getUserByField('userid', userid)
     if (!user) {
       return res.status(404).json({ status: 'error', message: 'User not found.' })
@@ -73,8 +73,10 @@ router.post('/', upload.single('image'), async (req, res) => {
 
     // Insert monument image
     console.log(newMonument)
+    const { monumentid } = newMonument
+    // update monument with image url
     await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
-
+    await monumentService.addMonumentCategories(monumentid, categoryIds)
     await db.query('COMMIT') // Commit transaction
 
     res.status(201).json({
@@ -94,10 +96,22 @@ router.get('/:query', async (req, res) => {
   const { query } = req.params
   try {
     const searchQuery = `%${query}%`
+
+    // Query to get monuments with associated category names
     const allMonuments = await db.query(
-      `SELECT monumentId, name, description, latitude, longitude
-       FROM monuments
-       WHERE name ILIKE $1`,
+      `SELECT 
+          m.monumentId, 
+          m.name, 
+          m.description, 
+          m.latitude, 
+          m.longitude, 
+          COALESCE(json_agg(c.name) FILTER (WHERE c.name IS NOT NULL), '[]') AS categories
+       FROM monuments m
+       LEFT JOIN monumentcategories mc ON m.monumentId = mc.monumentId
+       LEFT JOIN categories c ON mc.categoryId = c.id
+       WHERE m.name ILIKE $1
+       GROUP BY m.monumentId
+      `,
       [searchQuery]
     )
 
@@ -114,6 +128,7 @@ router.get('/:query', async (req, res) => {
     })
   }
 })
+
 
 // Get monuments within map bounds and optional search query
 router.get('/', async (req, res) => {
@@ -139,9 +154,12 @@ router.get('/', async (req, res) => {
         m.latitude, 
         m.longitude, 
         m.address,
-        COALESCE(json_agg(mi.imageurl) FILTER (WHERE mi.imageurl IS NOT NULL), '[]') AS images
+        COALESCE(json_agg(DISTINCT mi.imageurl) FILTER (WHERE mi.imageurl IS NOT NULL), '[]') AS images,
+        COALESCE(json_agg(DISTINCT c.name) FILTER (WHERE c.name IS NOT NULL), '[]') AS categories
       FROM monuments m
       LEFT JOIN monumentimages mi ON m.monumentId = mi.monumentId
+      LEFT JOIN monumentcategories mc ON m.monumentId = mc.monumentId
+      LEFT JOIN categories c ON mc.categoryId = c.categoryid
       WHERE m.latitude BETWEEN $1 AND $2
         AND m.longitude BETWEEN $3 AND $4
     `

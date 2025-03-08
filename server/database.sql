@@ -65,3 +65,17 @@ CREATE TABLE ListMonuments (
   monumentId INT NOT NULL REFERENCES Monuments(monumentId) ON DELETE CASCADE,
   PRIMARY KEY (listId, monumentId)
 );
+
+CREATE TABLE categories (
+  categoryid SERIAL PRIMARY KEY,
+  name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE monumentcategories (
+  monumentid INT REFERENCES monuments(monumentid) ON DELETE CASCADE,
+  categoryid INT REFERENCES categories(categoryid) ON DELETE CASCADE,
+  PRIMARY KEY (monumentid, categoryid)
+);
+
+INSERT INTO categories (name) VALUES 
+('Byzantine'), ('Roman'), ('Christian'), ('Ottoman'), ('Jewish'), ('Neoclassical'), ('Contemporary'), ('UNESCO Heritage'), ('Commercial'), ('Religious');

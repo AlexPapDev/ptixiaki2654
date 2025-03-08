@@ -22,6 +22,7 @@ const NewMonument = () => {
   const [file, setFile] = useState(null)
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [categories, setCategories] = useState([])
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -65,7 +66,7 @@ const NewMonument = () => {
     formData.append('longitude', lng)
     formData.append('userid', user?.userid)
     formData.append('image', file) // Appending the file to FormData
-
+    formData.append('categories', categories)
     try {
       toast.info('Creating record...', { position: 'top-right' })
       const result = await axios.post(`${API_BASE_URL}/api/monuments/`, formData, {
@@ -97,6 +98,13 @@ const NewMonument = () => {
       setFile(file)
     }
   }
+
+  const onSelectChangeHandler = (event) => {
+    // Convert selected options into an array of values
+    const values = Array.from(event.target.selectedOptions, (option) => option.value)
+    setCategories(values)
+  }
+
 
   return (
     <div style={{ display: 'flex' }}>
@@ -143,6 +151,15 @@ const NewMonument = () => {
             <label>Zip Code</label>
             <input name='postcode' disabled value={address?.postcode} />
           </div>
+          <div>
+            <select name="categories" id="categories" value={categories} onChange={onSelectChangeHandler} multiple>
+              <option value="Byzantine">Byzantine</option>
+              <option value="Roman">Roman</option>
+              <option value="Christian">Christian</option>
+              <option value="Ottoman">Ottoman</option>
+            </select>
+          </div>
+          
           <button type='submit' disabled={loading}>
             {loading ? 'Creating...' : 'Create Monument'}
           </button>

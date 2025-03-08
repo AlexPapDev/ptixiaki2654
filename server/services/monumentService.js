@@ -20,4 +20,45 @@ const addMonumentImage = async (monumentId, imageUrl, isMain) => {
   )
 }
 
-export default { createMonument, addMonumentImage }
+const getCategoryIds = async (categoryNames) => {
+  console.log('getCategoryIds', categoryNames, typeof categoryNames)
+  const categories = await db.query(
+    `SELECT categoryid FROM categories WHERE name = ANY($1::text[])`,
+    [categoryNames.split(',')]
+  )
+  console.log('categories rows ', categories.rows)
+  return categories.rows.map(category => category.categoryid)
+}
+
+const addMonumentCategories = async (monumentId, categoryIds) => {
+  const values = categoryIds.map((categoryId, index) => `($1, $${index + 2})`).join(", ");
+  const query = `INSERT INTO monumentcategories (monumentId, categoryId) VALUES ${values} RETURNING *;`
+  try {
+    const result = await db.query(query, [monumentId, ...categoryIds])
+    console.log(result.rows)
+    return result.rows; // Returns inserted rows
+  } catch (error) {
+    console.error("Error inserting monument categories:", error);
+    throw error
+  }
+}
+
+const insertJunctionRecords = async (idA, idBArray) => {
+  if (!idA || !Array.isArray(idBArray) || idBArray.length === 0) {
+    throw new Error("Invalid input: idA must be provided and idBArray must be a non-empty array.");
+  }
+
+  const values = idBArray.map((idB, index) => `($1, $${index + 2})`).join(", ");
+  const query = `INSERT INTO junction_table (idA, idB) VALUES ${values} RETURNING *;`;
+
+  try {
+    const result = await db.query(query, [idA, ...idBArray]);
+    return result.rows; // Returns inserted rows
+  } catch (error) {
+    console.error("Error inserting junction records:", error);
+    throw error;
+  }
+};
+
+
+export default { createMonument, addMonumentImage, getCategoryIds, addMonumentCategories }
