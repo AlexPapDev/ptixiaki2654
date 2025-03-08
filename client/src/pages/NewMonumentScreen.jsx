@@ -8,7 +8,7 @@ import useAppStore from '../utils/AppStore'
 import { GeolocateControl, NavigationControl } from 'react-map-gl'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-
+import { CATEGORIES } from '../utils/constants.js'
 const NewMonument = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { lat, lng } = Object.fromEntries(searchParams)
@@ -152,11 +152,9 @@ const NewMonument = () => {
             <input name='postcode' disabled value={address?.postcode} />
           </div>
           <div>
+            <label>Select categories</label>
             <select name="categories" id="categories" value={categories} onChange={onSelectChangeHandler} multiple>
-              <option value="Byzantine">Byzantine</option>
-              <option value="Roman">Roman</option>
-              <option value="Christian">Christian</option>
-              <option value="Ottoman">Ottoman</option>
+              {CATEGORIES.map(categoryName => <option value={categoryName}>{categoryName}</option>)}
             </select>
           </div>
           

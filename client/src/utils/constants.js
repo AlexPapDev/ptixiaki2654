@@ -6,9 +6,21 @@ const INIT_MAP_STATE = {
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYWxleHBhcDI2NTQiLCJhIjoiY20ybHY0OTJoMGZqNjJycXQyZ2xkcHg0NCJ9._2RgcG5-F50whsMU4b-6Ig'
 
-
+const CATEGORIES = [
+  'Byzantine',
+  'Roman', 
+  'Christian', 
+  'Ottoman', 
+  'Jewish', 
+  'Neoclassical', 
+  'Contemporary', 
+  'UNESCO Heritage', 
+  'Commercial', 
+  'Religious',
+]
 
 export {
   INIT_MAP_STATE,
-  MAPBOX_ACCESS_TOKEN
+  MAPBOX_ACCESS_TOKEN,
+  CATEGORIES,
 }

@@ -24,8 +24,8 @@ const MonumentCard = ({ monument }) => {
         <h5 style={{color: 'grey'}}>{description}</h5>
         <h5>{fullStreetName}</h5>
       </div>
-      <div style={{display: 'flex', paddingLeft: '10px', marginTop: '4px'}}>
-        {categories.map(categoryName => <div style={{marginRight: '4px', backgroundColor: 'grey', color: 'white', padding: '3px 8px 3px 8px', borderRadius: '10px', fontSize: '12px'}} className="category-pill">{categoryName}</div>)}
+      <div style={{display: 'flex', paddingLeft: '10px', marginTop: '4px', flexWrap: 'wrap', gap: '5px'}}>
+        {categories.slice(0, 6).map(categoryName => <div style={{backgroundColor: 'grey', color: 'white', padding: '3px 8px 3px 8px', borderRadius: '10px', fontSize: '12px'}} className="category-pill">{categoryName}</div>)}
       </div>
     </div>
   )
