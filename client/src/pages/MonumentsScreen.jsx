@@ -47,7 +47,7 @@ const Monuments = () => {
   return (
     <div style={{display:'flex'}}>
       <section className="content_section grid m-t-1">
-        {monuments?.map((monument, i, arr) => <MonumentCard monument={monument} className="cell" key={'monument-card-' + {i}}></MonumentCard>)}
+        {monuments?.map((monument, i, arr) => <MonumentCard monument={monument} className="cell" key={'monument-card-' + i}></MonumentCard>)}
       </section>
       <section className="map_section">
         {<Map data={monuments} fetchData={fetchData}></Map>}
