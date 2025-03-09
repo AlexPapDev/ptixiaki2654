@@ -1,14 +1,18 @@
 import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import useAppStore from '../utils/AppStore'
 
 const CategoriesBar = ({ categories = [] }) => {
   const location = useLocation()
+  // todo: maybe delete this later
+  const { setSearchTerm } = useAppStore()
   const navigate = useNavigate()
   const searchParams = new URLSearchParams(location.search)
   const activeCategory = searchParams.get('cat')
 
   // Function to clear all query parameters
   const clearFilters = () => {
+    setSearchTerm(null)
     navigate('/monuments/') // Navigate to /monuments/ without query params
   }
 

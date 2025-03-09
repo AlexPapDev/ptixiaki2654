@@ -72,7 +72,6 @@ router.post('/', upload.single('image'), async (req, res) => {
     const imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
 
     // Insert monument image
-    console.log(newMonument)
     const { monumentid } = newMonument
     // update monument with image url
     await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
