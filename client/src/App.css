@@ -89,6 +89,16 @@
   padding: 4px 7px;
 }
 
+.navbar-item a {
+  color: black;
+  text-decoration: unset;
+}
+
+.navbar-item a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 li {
   display: unset;
 }

@@ -36,17 +36,24 @@ code {
   background: white;
   color: white;
   /* min-height: 60px; Ensures proper spacing */
-  padding: 10px; /* Adjustable padding */
+  padding: 11px; /* Adjustable padding */
   z-index: 1000;
 }
 
 #navbar-secondary {
   position: sticky;
-  top: 40px; /* Adjust based on the height of the first navbar */
+  top: 45px; /* Adjust based on the height of the first navbar */
   width: 100%;
   background: white;
   color: black;
-  padding: 20px;
+  padding: 10px;
   z-index: 999;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.category-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  justify-content: center;
 }

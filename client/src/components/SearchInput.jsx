@@ -1,6 +1,11 @@
 import {useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
+
+const buttonStyle = {
+  padding: '2px',
+}
+
 const NavSearchBar = () => {
   const { setSearchTerm } = useAppStore()
   const [inputTerm, setInputTerm] = useState('')
@@ -11,8 +16,8 @@ const NavSearchBar = () => {
   }
   return (
     <div className="relative">
-      <input type="search" onChange={(e) => setInputTerm(e.target.value)} value={inputTerm} />
-      <button type="submit" onClick={onClickButton}>Search</button>
+      <input style={buttonStyle} type="search" onChange={(e) => setInputTerm(e.target.value)} value={inputTerm} />
+      <button style={buttonStyle} type="submit" onClick={onClickButton}>Search</button>
     </div>
   )
 }
