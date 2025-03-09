@@ -10,6 +10,27 @@ const inputs = [
   { label: 'Confirm Password', name: 'confirmPassword', type: 'password' },
 ]
 
+const formStyle = {
+  width: '200px',
+  margin: 'auto',
+}
+
+const inputWrapperStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  marginBottom: '4px',
+}
+
+const inputStyle = {
+  width: '200px',
+  marginButtom: '2px',
+}
+
+const buttonStyle = {
+  padding: '4px 6px 4px 6px',
+}
+
 const SignUpScreen = () => {
   const { user } = useAppStore()
   const [formData, setFormData] = useState({
@@ -59,20 +80,24 @@ const SignUpScreen = () => {
   return (<>
     {errorMessage && (<div>{errorMessage}</div>)}
     <form onSubmit={handleSubmit}>
-      {inputs.map(({ label, name, type='text' }) => (
-        <div key={name}>
-          <label htmlFor={name}>{label}</label>
-          <input
-            id={name}
-            name={name}
-            value={formData[name]}
-            onChange={handleChange}
-            type={type}
-            required
-          />
-        </div>
-      ))}
-      <button type="submit">Create User</button>
+      <div style={formStyle}>
+        <h3>New User</h3>
+        {inputs.map(({ label, name, type='text' }) => (
+          <div key={name} style={inputWrapperStyle}>
+            <label htmlFor={name}>{label}</label>
+            <input
+              id={name}
+              name={name}
+              value={formData[name]}
+              onChange={handleChange}
+              type={type}
+              style={inputStyle}
+              required
+            />
+          </div>
+        ))}
+        <button type="submit" style={buttonStyle}>Create User</button>
+      </div>
     </form>
   </>)
 }

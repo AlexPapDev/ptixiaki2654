@@ -44,23 +44,27 @@ const Login = ({setState}) => {
   }
   return (
     <div>
-      <h2>Login</h2>
+      <h3>Login</h3>
       <form onSubmit={handleSubmit}>
-        <input
-          type='email'
-          placeholder='Email'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type='password'
-          placeholder='Password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type='submit'>
-          Login
-        </button>
+        <div style={{display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px', width: '200px', margin: 'auto'}}>
+          <input
+            type='email'
+            placeholder='Email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type='password'
+            placeholder='Password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type='submit'>
+            Login
+          </button>
+        </div>
         {!!Object.keys(loginError).length && <p>{JSON.stringify(loginError)}</p>}
       </form>
     </div>

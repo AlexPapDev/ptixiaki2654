@@ -1,7 +1,23 @@
 import { useState } from "react"
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
+const formStyle = {
+  width: '200px',
+  margin: 'auto',
+  display: 'flex',
+  flexDirection: 'column',
+}
 
+const inputWrapperStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  marginBottom: '4px',
+  width: '100%',
+}
+
+const inputStyle = {
+  width: '100%',
+}
 const UserProfileEdit = ({ user, onSave, updateUser }) => {
   const [userState, setUserState] = useState({
     firstname: user.firstname,
@@ -47,26 +63,22 @@ const UserProfileEdit = ({ user, onSave, updateUser }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
+    <form onSubmit={handleSubmit} style={formStyle}>
+      <div style={inputWrapperStyle}>
         <label>First Name:</label>
-        <input name="firstname" value={userState.firstname} onChange={handleChange} />
+        <input style={inputStyle} name="firstname" value={userState.firstname} onChange={handleChange} />
       </div>
-      <div>
+      <div style={inputWrapperStyle}>
         <label>Last Name:</label>
-        <input name="lastname" value={userState.lastname} onChange={handleChange} />
+        <input style={inputStyle} name="lastname" value={userState.lastname} onChange={handleChange} />
       </div>
-      <div>
+      <div style={inputWrapperStyle}>
         <label>Email:</label>
-        <input name="email" type="email" value={userState.email} onChange={handleChange} />
+        <input style={inputStyle} name="email" type="email" value={userState.email} onChange={handleChange} />
       </div>
-      <div>
+      <div style={inputWrapperStyle}>
         <label>Profile Picture:</label>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-      </div>
-      <div>
-        <label>Role:</label>
-        <p>{user.role}</p> {/* Role is displayed as text and not editable */}
+        <input style={inputStyle} type="file" accept="image/*" onChange={handleFileChange} />
       </div>
       <button type="submit">Save</button>
     </form>
