@@ -7,8 +7,8 @@ const buttonStyle = {
 }
 
 const NavSearchBar = () => {
-  const { setSearchTerm } = useAppStore()
-  const [inputTerm, setInputTerm] = useState('')
+  const { setSearchTerm, searchTerm } = useAppStore()
+  const [inputTerm, setInputTerm] = useState(searchTerm || '')
   const navigate = useNavigate()
   const onClickButton = () => {
     // TODO: do we really need this? maybe remove
