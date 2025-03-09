@@ -12,10 +12,10 @@ const Home = () => {
     fetchData()
   }, [])
   
-  return (<>
-    <div>Discover Greece's rich history</div>
-    <div>Recent activity</div>
-  </>)
+  return (<div style={{padding: '32px', textAlign: 'align-left'}}>
+    <h2 class="align-left">Discover Greece's rich history</h2>
+    <h3 class="align-left" style={{paddingTop: '20px'}}>Recent Activity:</h3>
+  </div>)
 }
 
 export default Home
