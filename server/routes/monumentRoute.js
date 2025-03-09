@@ -133,7 +133,7 @@ router.get('/:query', async (req, res) => {
 // Get monuments within map bounds and optional search query
 router.get('/', async (req, res) => {
   console.log('monuments get')
-  const { query, mapBounds } = req.query
+  const { query, mapBounds, category } = req.query
   const { sw, ne } = mapBounds || {}
 
   try {
@@ -165,13 +165,25 @@ router.get('/', async (req, res) => {
     `
 
     const values = [sw.lat, ne.lat, sw.lng, ne.lng]
+    let paramIndex = values.length + 1
 
     if (query) {
-      sql += ' AND (m.name ILIKE $5 OR m.name_greeklish ILIKE $5 OR m.name_noaccents ILIKE $5 OR m.name ILIKE $6)'
+      sql += ` AND (m.name ILIKE $${paramIndex} OR m.name_greeklish ILIKE $${paramIndex} OR m.name_noaccents ILIKE $${paramIndex} OR m.name ILIKE $${paramIndex + 1})`
       values.push(`%${query}%`)
 
       const reverseGreeklishQuery = transliterateString(query)
       values.push(`%${reverseGreeklishQuery}%`)
+      paramIndex += 2
+    }
+
+    if (category) {
+      sql += ` AND EXISTS (
+        SELECT 1 FROM monumentcategories mc2 
+        JOIN categories c2 ON mc2.categoryId = c2.categoryid
+        WHERE mc2.monumentId = m.monumentId AND c2.name = $${paramIndex}
+      )`
+      values.push(category)
+      paramIndex++
     }
 
     sql += ` GROUP BY m.monumentId ORDER BY m.latitude DESC, m.longitude ASC`

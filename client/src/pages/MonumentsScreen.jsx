@@ -9,6 +9,7 @@ const Monuments = () => {
   const { searchTerm, mapBounds } = useAppStore()
   const [searchParams] = useSearchParams()
   const passedTerm = searchParams.get('q') || searchTerm
+  const category = searchParams.get('cat') || ''
 
   const [monuments, setMonuments] = useState([])
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
@@ -18,7 +19,8 @@ const Monuments = () => {
     try {
       const result = await axios.get(`${API_BASE_URL}/api/monuments/`, {
         params: { 
-          query: passedTerm, 
+          query: passedTerm,
+          category,
           mapBounds: {
             ne: { ...mapBounds._ne },
             sw: { ...mapBounds._sw },
@@ -33,7 +35,7 @@ const Monuments = () => {
 
   useEffect(() => {
     fetchData()
-  }, [passedTerm, mapBounds])
+  }, [passedTerm, mapBounds, category])
 
   return (
     <div style={{display:'flex'}}>

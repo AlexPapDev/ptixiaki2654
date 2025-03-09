@@ -37,9 +37,8 @@
 .map_section {
   position: sticky;
   width: 35vw;
-  position: sticky;
-  top: 60px;
-  height: calc(100vh - 60px);
+  top: 100px;
+  height: calc(100vh - 100px);
   overflow-y: auto;
 }
 
@@ -80,4 +79,16 @@
   cursor: pointer;
   border: 1px solid grey;
   background: rgb(240, 240, 240);
+}
+
+.category-item a {
+  color: black;
+  text-decoration: unset;
+  border: 1px grey solid;
+  border-radius: 5px;
+  padding: 4px 7px;
+}
+
+li {
+  display: unset;
 }
