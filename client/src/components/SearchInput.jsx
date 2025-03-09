@@ -11,6 +11,7 @@ const NavSearchBar = () => {
   const [inputTerm, setInputTerm] = useState('')
   const navigate = useNavigate()
   const onClickButton = () => {
+    // TODO: do we really need this? maybe remove
     setSearchTerm(inputTerm)
     navigate(`/monuments?q=${inputTerm}`)
   }
