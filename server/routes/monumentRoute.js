@@ -44,6 +44,7 @@ router.post('/', upload.single('image'), async (req, res) => {
       })
     }
     const categoryIds = await monumentService.getCategoryIds(categories)
+    console.log('categoryIds: ', categoryIds, 'categories', categories)
     const user = await userService.getUserByField('userid', userid)
     if (!user) {
       return res.status(404).json({ status: 'error', message: 'User not found.' })
