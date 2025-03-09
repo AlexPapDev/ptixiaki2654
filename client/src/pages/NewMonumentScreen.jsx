@@ -9,6 +9,24 @@ import { GeolocateControl, NavigationControl } from 'react-map-gl'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { CATEGORIES } from '../utils/constants.js'
+
+const formStyle = {
+  width: '300px',
+  margin: 'auto',
+}
+
+const inputWrapperStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  marginBottom: '4px',
+}
+
+const inputStyle = {
+  width: '300px',
+  marginButtom: '2px',
+}
+
 const NewMonument = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { lat, lng } = Object.fromEntries(searchParams)
@@ -109,19 +127,19 @@ const NewMonument = () => {
   return (
     <div style={{ display: 'flex' }}>
       <section className='content_section'>
-        <form onSubmit={onSubmitForm}>
-          <div>
+        <form onSubmit={onSubmitForm} style={formStyle}>
+          <div style={inputWrapperStyle}>
             <label>File</label>
-            <input
+            <input style={inputStyle}
               type='file'
               name='file'
               required
               onChange={handleFileChange}
             />
           </div>
-          <div>
+          <div style={inputWrapperStyle}>
             <label>Name</label>
-            <input
+            <input style={inputStyle}
               type='text'
               name='name'
               required
@@ -129,9 +147,9 @@ const NewMonument = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div>
+          <div style={inputWrapperStyle}>
             <label>Description</label>
-            <input
+            <input style={inputStyle}
               type='text'
               name='description'
               required
@@ -139,26 +157,26 @@ const NewMonument = () => {
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
-          <div>
+          <div style={inputWrapperStyle}>
             <label>Road</label>
-            <input name='road' disabled value={fullStreetName} />
+            <input style={inputStyle} name='road' disabled value={fullStreetName} />
           </div>
-          <div>
+          <div style={inputWrapperStyle}>
             <label>City</label>
-            <input name='city' disabled value={address?.city} />
+            <input style={inputStyle} name='city' disabled value={address?.city} />
           </div>
-          <div>
+          <div style={inputWrapperStyle}>
             <label>Zip Code</label>
-            <input name='postcode' disabled value={address?.postcode} />
+            <input style={inputStyle} name='postcode' disabled value={address?.postcode} />
           </div>
-          <div>
+          <div style={inputWrapperStyle}>
             <label>Select categories</label>
-            <select name="categories" id="categories" value={categories} onChange={onSelectChangeHandler} multiple>
+            <select style={{width: '100%'}} name="categories" id="categories" value={categories} onChange={onSelectChangeHandler} multiple>
               {CATEGORIES.map(categoryName => <option value={categoryName}>{categoryName}</option>)}
             </select>
           </div>
           
-          <button type='submit' disabled={loading}>
+          <button style={{width: '100%', padding: '6px 4px'}} type='submit' disabled={loading}>
             {loading ? 'Creating...' : 'Create Monument'}
           </button>
         </form>
