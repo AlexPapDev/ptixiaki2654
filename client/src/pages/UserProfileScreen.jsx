@@ -23,7 +23,6 @@ const UserProfile = ({}) => {
         id: userId
       }
     })
-    const user = result.data.data
     // TODO: token?
     setPageUser(result.data.data)
     // // update app store
