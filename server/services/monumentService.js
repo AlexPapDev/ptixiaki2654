@@ -35,6 +35,7 @@ const addMonumentCategories = async (monumentId, categoryIds) => {
   const query = `INSERT INTO monumentcategories (monumentId, categoryId) VALUES ${values} RETURNING *`
   try {
     console.log('addMonumentCategories query', query)
+    console.log('addMonumentCategories categoryIds', categoryIds)
     const result = await db.query(query, [monumentId, ...categoryIds])
     console.log(result.rows)
     return result.rows 
