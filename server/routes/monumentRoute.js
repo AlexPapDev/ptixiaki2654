@@ -44,7 +44,6 @@ router.post('/', upload.single('image'), async (req, res) => {
       })
     }
     const categoryIds = await monumentService.getCategoryIds(categories)
-    console.log('categoryIds: ', categoryIds, 'categories', categories)
     const user = await userService.getUserByField('userid', userid)
     if (!user) {
       return res.status(404).json({ status: 'error', message: 'User not found.' })
@@ -73,7 +72,6 @@ router.post('/', upload.single('image'), async (req, res) => {
     const imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
 
     // Insert monument image
-    console.log(newMonument)
     const { monumentid } = newMonument
     // update monument with image url
     await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)

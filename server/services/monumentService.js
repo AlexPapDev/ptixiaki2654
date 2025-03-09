@@ -26,7 +26,6 @@ const getCategoryIds = async (categoryNames) => {
     `SELECT categoryid FROM categories WHERE name = ANY($1::text[])`,
     [categoryNames.split(',')]
   )
-  console.log('categories rows ', categories.rows)
   return categories.rows.map(category => category.categoryid)
 }
 
@@ -34,8 +33,6 @@ const addMonumentCategories = async (monumentId, categoryIds) => {
   const values = categoryIds.map((categoryId, index) => `($1, $${index + 2})`).join(", ")
   const query = `INSERT INTO monumentcategories (monumentId, categoryId) VALUES ${values} RETURNING *`
   try {
-    console.log('addMonumentCategories query', query)
-    console.log('addMonumentCategories categoryIds', categoryIds)
     const result = await db.query(query, [monumentId, ...categoryIds])
     console.log(result.rows)
     return result.rows 
