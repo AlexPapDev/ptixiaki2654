@@ -81,7 +81,7 @@
   background: rgb(240, 240, 240);
 }
 
-.category-item a {
+.category-item a, .category-item a:visited {
   color: black;
   text-decoration: unset;
   border: 1px grey solid;
@@ -89,7 +89,7 @@
   padding: 4px 7px;
 }
 
-.navbar-item a {
+.navbar-item a, .navbar-item a:visited {
   color: black;
   text-decoration: unset;
 }
