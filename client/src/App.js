@@ -30,15 +30,17 @@ function App() {
 function MainLayout({ categories }) {
   const location = useLocation()
 
+  // Show CategoriesBar only on '/' (home) and '/monuments' (excluding '/monuments/new')
+  const shouldShowCategoriesBar =
+    location.pathname.startsWith('/monuments') && location.pathname !== '/monuments/new' || location.pathname === '/';
+
   return (
     <div className='App'>
       {/* Global navigation bar */}
       <Navbar categories={categories} />
 
-      {/* Conditionally render CategoriesBar only on '/' and '/monuments/' */}
-      {(location.pathname === '/' || location.pathname === '/monuments/') && (
-        <CategoriesBar categories={categories} />
-      )}
+      {/* Conditionally render CategoriesBar */}
+      {shouldShowCategoriesBar && <CategoriesBar categories={categories} />}
 
       <ToastContainer position='top-right' autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
 
@@ -49,7 +51,7 @@ function MainLayout({ categories }) {
         <Route path='/otpverification' element={<OTPVerification />} /> {/* OTP verification */}
         <Route path='/profile' element={<ProfileRedirect />} /> {/* Profile redirect */}
         <Route path='/monuments/new' element={<NewMonument />} /> {/* New monument page */}
-        <Route path='/monuments/' element={<Monuments />} /> {/* Monuments page */}
+        <Route path='/monuments' element={<Monuments />} /> {/* Monuments page */}
         <Route path='/user/:userId' element={<UserProfile />} /> {/* User profile */}
       </Routes>
     </div>
