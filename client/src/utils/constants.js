@@ -15,8 +15,7 @@ const CATEGORIES = [
   'Neoclassical', 
   'Contemporary', 
   'UNESCO Heritage', 
-  'Commercial', 
-  'Religious',
+  'Industrial', 
 ]
 
 export {
