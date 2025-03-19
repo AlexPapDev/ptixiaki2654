@@ -8,6 +8,7 @@ import UserProfile from './pages/UserProfileScreen'
 import Monuments from './pages/MonumentsScreen'
 import ProfileRedirect from './utils/ProfileRedirect'
 import NewMonument from './pages/NewMonumentScreen'
+import MonumentDetail from './pages/MonumentDetailScreen'
 import SignUp from './pages/SignUpScreen'
 import OTPVerification from './pages/OTPVerificationScreen'
 
@@ -52,6 +53,7 @@ function MainLayout({ categories }) {
         <Route path='/profile' element={<ProfileRedirect />} /> {/* Profile redirect */}
         <Route path='/monuments/new' element={<NewMonument />} /> {/* New monument page */}
         <Route path='/monuments' element={<Monuments />} /> {/* Monuments page */}
+        <Route path='/monuments/:monumentId' element={<MonumentDetail />} /> {/* Monument detail page */}
         <Route path='/user/:userId' element={<UserProfile />} /> {/* User profile */}
       </Routes>
     </div>

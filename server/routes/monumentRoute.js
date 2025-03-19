@@ -91,42 +91,42 @@ router.post('/', upload.single('image'), async (req, res) => {
 
 // Get monuments by search query
 // TODO this isnt used currently
-router.get('/:query', async (req, res) => {
-  const { query } = req.params
-  try {
-    const searchQuery = `%${query}%`
+// router.get('/:query', async (req, res) => {
+//   const { query } = req.params
+//   try {
+//     const searchQuery = `%${query}%`
 
-    // Query to get monuments with associated category names
-    const allMonuments = await db.query(
-      `SELECT 
-          m.monumentId, 
-          m.name, 
-          m.description, 
-          m.latitude, 
-          m.longitude, 
-          COALESCE(json_agg(c.name) FILTER (WHERE c.name IS NOT NULL), '[]') AS categories
-       FROM monuments m
-       LEFT JOIN monumentcategories mc ON m.monumentId = mc.monumentId
-       LEFT JOIN categories c ON mc.categoryId = c.id
-       WHERE m.name ILIKE $1
-       GROUP BY m.monumentId
-      `,
-      [searchQuery]
-    )
+//     // Query to get monuments with associated category names
+//     const allMonuments = await db.query(
+//       `SELECT 
+//           m.monumentId, 
+//           m.name, 
+//           m.description, 
+//           m.latitude, 
+//           m.longitude, 
+//           COALESCE(json_agg(c.name) FILTER (WHERE c.name IS NOT NULL), '[]') AS categories
+//        FROM monuments m
+//        LEFT JOIN monumentcategories mc ON m.monumentId = mc.monumentId
+//        LEFT JOIN categories c ON mc.categoryId = c.id
+//        WHERE m.name ILIKE $1
+//        GROUP BY m.monumentId
+//       `,
+//       [searchQuery]
+//     )
 
-    res.status(200).json({
-      status: 'success',
-      results: allMonuments.rows.length,
-      data: { monuments: allMonuments.rows },
-    })
-  } catch (error) {
-    console.error(`Error in /get/:query: ${error.message}`)
-    res.status(500).json({
-      status: 'error',
-      message: 'Failed to retrieve monuments.',
-    })
-  }
-})
+//     res.status(200).json({
+//       status: 'success',
+//       results: allMonuments.rows.length,
+//       data: { monuments: allMonuments.rows },
+//     })
+//   } catch (error) {
+//     console.error(`Error in /get/:query: ${error.message}`)
+//     res.status(500).json({
+//       status: 'error',
+//       message: 'Failed to retrieve monuments.',
+//     })
+//   }
+// })
 
 
 // Get monuments within map bounds and optional search query
@@ -205,6 +205,7 @@ router.get('/', async (req, res) => {
 
 // Get a specific monument by ID
 router.get('/:id', async (req, res) => {
+  console.log('get monument by id')
   const { id } = req.params
 
   try {

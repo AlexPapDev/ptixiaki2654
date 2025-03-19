@@ -129,3 +129,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 server/.localenv
+server/package-lock.json
