@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useParams } from "react-router-dom"
+import { useParams } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import UserProfileEdit from '../components/UserProfileEdit'
 import UserProfileView from '../components/UserProfileView'

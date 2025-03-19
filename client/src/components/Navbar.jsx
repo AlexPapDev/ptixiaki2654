@@ -18,11 +18,11 @@ const Navbar = ({token}) => {
   return (
     <nav className="navbar" id="navbar">
       <ul style={{display:'flex', flexDirection:'row', gap: '1em', alignItems: 'center'}}>
-        <li class="navbar-item"><Link to="/">Home</Link></li>
-        {!loggedIn && <li class="navbar-item"><Link to="/login">Login</Link></li>}
-        {!loggedIn && <li class="navbar-item"><Link to="/signup">Sign Up</Link></li>}
-        {loggedIn && <li class="navbar-item"><Link to='/profile'>Profile</Link></li>}
-        <li class="navbar-item"><Link to="/monuments">Monuments</Link></li>
+        <li className="navbar-item"><Link to="/">Home</Link></li>
+        {!loggedIn && <li className="navbar-item"><Link to="/login">Login</Link></li>}
+        {!loggedIn && <li className="navbar-item"><Link to="/signup">Sign Up</Link></li>}
+        {loggedIn && <li className="navbar-item"><Link to='/profile'>Profile</Link></li>}
+        <li className="navbar-item"><Link to="/monuments">Monuments</Link></li>
         <li><SearchInput /></li>
         {loggedIn && <li><button style={buttonStyle} onClick={onClickLogoutHandler}>Logout</button></li>}
       </ul>

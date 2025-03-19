@@ -13,8 +13,8 @@ const Home = () => {
   }, [])
   
   return (<div style={{padding: '32px', textAlign: 'align-left'}}>
-    <h2 class="align-left">Discover Greece's rich history</h2>
-    <h3 class="align-left" style={{paddingTop: '20px'}}>Recent Activity:</h3>
+    <h2 className="align-left">Discover Greece's rich history</h2>
+    <h3 className="align-left" style={{paddingTop: '20px'}}>Recent Activity:</h3>
   </div>)
 }
 
