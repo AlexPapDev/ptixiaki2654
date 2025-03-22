@@ -5,7 +5,7 @@ const { Pool } = pg // Destructure Pool from the default import
 
 
 dotenv.config()
-const { PGUSER, PGPASSWORD, PGHOST, PGPORT, PGDATABASE } = process.env
+const { PGUSER, PGPASSWORD, PGHOST, PGPORT, PGDATABASE, SKIP_SSL } = process.env
 
 const pool = new Pool({
   user: PGUSER,
@@ -13,9 +13,7 @@ const pool = new Pool({
   host: PGHOST,
   port: 5432,
   database: PGDATABASE,
-  ssl: {
-    require: true,
-  },
 })
+if (!SKIP_SSL) pool.ssl = { require: true }
 
 export default pool
