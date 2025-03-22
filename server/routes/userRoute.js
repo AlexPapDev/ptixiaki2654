@@ -58,7 +58,7 @@ router.post('/login', async (req, res) => {
 
   try {
     const user = await userService.getUserByField('email', email, true)
-
+    console.log('user', user)
     if (!user) {
       return res.status(401).send({ error: 'Invalid credentials' })
     }
@@ -74,6 +74,7 @@ router.post('/login', async (req, res) => {
     console.log(user, userPublic)
     res.send({ user: userPublic, token })
   } catch (err) {
+    console.log('err')
     console.log(err)
     res.status(500).send({ error: 'Internal server error during login' })
   }
