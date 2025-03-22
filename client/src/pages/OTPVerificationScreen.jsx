@@ -83,7 +83,7 @@ const OTPVerificationScreen = () => {
   return (
     <div>
       <h2>Enter OTP</h2>
-      <p>We sent a code to your phone</p>
+      <p>We sent a code to your email</p>
 
       {/* Display email from URL */}
       {email && (
@@ -103,6 +103,7 @@ const OTPVerificationScreen = () => {
               inputMode='numeric'
               maxLength='1'
               value={digit}
+              style={{width: '2rem'}}
               onChange={(e) => handleChange(index, e)}
               onKeyDown={(e) => handleKeyDown(index, e)}
             />
