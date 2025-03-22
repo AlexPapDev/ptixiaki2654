@@ -15,7 +15,11 @@ const MonumentDetail = () => {
       try {
         setLoading(true)
         const result = await axios.get(`${API_BASE_URL}/api/monuments/${monumentId}`)
-        setMonument(result.data.data.monument)
+        const { monument } = result.data.data
+        const { name, description, categories = [], images = [], address: { city, road }} = monument
+        setMonument({
+          name, description, city, road, categories, images
+        })
       } catch (err) {
         setError('Failed to load monument details')
       } finally {
@@ -35,8 +39,11 @@ const MonumentDetail = () => {
   return (
     <div>
       <h1>{monument?.name}</h1>
+      <img src={monument?.images[0]} style={{width:'250px'}}></img>
       <p>{monument?.description}</p>
-
+      <p>{monument?.city}</p>
+      <p>{monument?.road}</p>
+      {!!monument?.categories.length && <div>{monument.categories.join()}</div>}
     </div>
   )
 }
