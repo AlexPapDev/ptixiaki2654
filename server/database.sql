@@ -30,6 +30,8 @@ CREATE TABLE Monuments (
   address JSONB NOT NULL,
   latitude	DECIMAL(9, 6),
   longitude	DECIMAL(9, 6),
+  status TEXT CHECK (status IN ('pending', 'approved', 'rejected')) NOT NULL DEFAULT 'pending',
+  approved_by INT REFERENCES user(userId) NULL
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
