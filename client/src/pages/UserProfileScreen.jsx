@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
-import useAppStore from '../utils/AppStore'
+import useAuthStore from '../utils/AuthStore'
 import UserProfileEdit from '../components/UserProfileEdit'
 import UserProfileView from '../components/UserProfileView'
 
-const UserProfile = ({}) => {
+const UserProfile = () => {
   // logged in user
-  const { user, isLoggedIn, loginUser, token, updateUser } = useAppStore()
+  const { user, isLoggedIn, updateUser } = useAuthStore()
   // url user id
   const { userId } = useParams()
   const [pageUser, setPageUser] = useState()

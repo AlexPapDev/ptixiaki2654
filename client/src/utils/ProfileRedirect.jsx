@@ -1,18 +1,15 @@
 import React from "react";
 import { Navigate } from "react-router-dom"
-import useAppStore from "./AppStore"
+import useAuthStore from "./AuthStore"
 
 const ProfileRedirect = () => {
-  const { isLoggedIn, user } = useAppStore()
+  const { isLoggedIn, user } = useAuthStore()
 
-  debugger
   if (isLoggedIn()) {
-    // Redirect to /user/:userId if logged in
     return <Navigate to={`/user/${user.userid}`} />
   } else {
-    // Show an error message if not logged in
-    return <div>You need to be logged in to access this page.</div>;
+    return <Navigate to="/login" replace />
   }
 }
 
-export default ProfileRedirect;
+export default ProfileRedirect

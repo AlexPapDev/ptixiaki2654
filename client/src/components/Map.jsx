@@ -5,12 +5,14 @@ import MapMarkerButton from './MapMarkerButton'
 import MapMarkers from './MapMarkers'
 import GenericMap from './GenericMap'
 import useAppStore from '../utils/AppStore'
+import useAuthStore from '../utils/AuthStore'
 import { INIT_MAP_STATE } from '../utils/constants'
 import { useNavigate } from 'react-router-dom'
 import Supercluster from 'supercluster'
 
 const MapComp = ({ data = [] }) => {
-  const { mapBounds, setMapBounds, isLoggedIn } = useAppStore()
+  const { mapBounds, setMapBounds } = useAppStore()
+  const { isLoggedIn } = useAuthStore()
   const mapRef = useRef(null)
   const navigate = useNavigate()
   const [bounds, setBounds] = useState(null)

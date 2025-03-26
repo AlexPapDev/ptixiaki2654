@@ -6,11 +6,15 @@ import Home from './pages/HomeScreen'
 import Login from './pages/LoginScreen'
 import UserProfile from './pages/UserProfileScreen'
 import Monuments from './pages/MonumentsScreen'
-import ProfileRedirect from './utils/ProfileRedirect'
 import NewMonument from './pages/NewMonumentScreen'
 import MonumentDetail from './pages/MonumentDetailScreen'
 import SignUp from './pages/SignUpScreen'
 import OTPVerification from './pages/OTPVerificationScreen'
+import ApprovalScreen  from './pages/ApprovalScreen'
+
+import ProfileRedirect from './utils/ProfileRedirect'
+import ProtectedRoutes from './utils/ProtectedRoutes' 
+
 
 import { ToastContainer } from 'react-toastify'
 
@@ -55,6 +59,13 @@ function MainLayout({ categories }) {
         <Route path='/monuments' element={<Monuments />} /> {/* Monuments page */}
         <Route path='/monuments/:monumentId' element={<MonumentDetail />} /> {/* Monument detail page */}
         <Route path='/user/:userId' element={<UserProfile />} /> {/* User profile */}
+        <Route path='/approval-dashboard' 
+          element={
+            <ProtectedRoutes requiredRoles={['admin','ambassador']}>
+              <ApprovalScreen />
+            </ProtectedRoutes>
+          } 
+        />
       </Routes>
     </div>
   )

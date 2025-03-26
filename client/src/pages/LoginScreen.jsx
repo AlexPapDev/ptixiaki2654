@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import useAppStore from '../utils/AppStore'
+import useAuthStore from '../utils/AuthStore'
 
 // import './Navbar.css' // External CSS for navbar
 
@@ -9,7 +8,7 @@ const Login = ({setState}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState({})
-  const { loginUser, user } = useAppStore()
+  const { loginUser, user } = useAuthStore()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -17,16 +16,16 @@ const Login = ({setState}) => {
       navigate('/')
     }
   }, [user, navigate])
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
   const handleSubmit = async (e) => {
     e.preventDefault()
     // Handle login logic here
 
     try  {
-      const result = await axios.post(`${API_BASE_URL}/api/users/login`, {
-        email, password
-      })
-      const { user } = result.data
+      
+      const result = await loginUser(email, password)
+      if (!result.success) throw Error(result.message)
+      debugger
+      const { user } = result
       // case where user hasn't validated
       if (!user.hasVerifiedOtp) {
         return navigate({
@@ -35,7 +34,6 @@ const Login = ({setState}) => {
         })
       }
 
-      loginUser(result.data)
       navigate(`/user/${user.userid}`)
     } catch (e) {
       setLoginError(e)

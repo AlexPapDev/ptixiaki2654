@@ -4,7 +4,7 @@ import GenericMap from '../components/GenericMap'
 import { useNavigate } from 'react-router-dom'
 import Pin from '../components/Pin'
 import { Marker } from 'react-map-gl'
-import useAppStore from '../utils/AppStore'
+import useAuthStore from '../utils/AuthStore'
 import { GeolocateControl, NavigationControl } from 'react-map-gl'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -30,7 +30,7 @@ const inputStyle = {
 const NewMonument = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { lat, lng } = Object.fromEntries(searchParams)
-  const { user } = useAppStore()
+  const { user } = useAuthStore()
   const [address, setAddress] = useState({
     road: '',
     house_number: '',

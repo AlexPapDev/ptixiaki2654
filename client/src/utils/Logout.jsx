@@ -1,11 +1,11 @@
 import React from "react";
 import { Navigate } from "react-router-dom"
-import useAppStore from "./AppStore"
+import useAuthStore from "./AuthStore"
 
 const Logout = () => {
-  const { logoutUser } = useAppStore()
+  const { logoutUser } = useAuthStore()
   logoutUser()
   return <Navigate to={`/`} />
 }
 
-export default Logout;
+export default Logout

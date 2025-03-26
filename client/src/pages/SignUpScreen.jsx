@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import useAppStore from '../utils/AppStore'
+import useAuthStore from '../utils/AuthStore'
 const inputs = [
   { label: 'First Name', name: 'firstname' },
   { label: 'Last Name', name: 'lastname' },
@@ -32,7 +32,7 @@ const buttonStyle = {
 }
 
 const SignUpScreen = () => {
-  const { user } = useAppStore()
+  const { user } = useAuthStore()
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',

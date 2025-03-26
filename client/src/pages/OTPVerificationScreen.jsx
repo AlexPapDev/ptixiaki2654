@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import useAppStore from '../utils/AppStore'
+import useAuthStore from '../utils/AuthStore'
 
 const OTPVerificationScreen = () => {
-  const { loginUser } = useAppStore()
+  const { loginUser } = useAuthStore()
 
   const [otp, setOtp] = useState(new Array(6).fill(''))
   const [email, setEmail] = useState('')
