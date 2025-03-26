@@ -8,14 +8,14 @@ const Login = ({setState}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState({})
-  const { loginUser, user } = useAuthStore()
+  const { loginUser, isLoggedIn } = useAuthStore()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (user) {
+    if (isLoggedIn()) {
       navigate('/')
     }
-  }, [user, navigate])
+  }, [isLoggedIn, navigate])
   const handleSubmit = async (e) => {
     e.preventDefault()
     // Handle login logic here

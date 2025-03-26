@@ -5,18 +5,11 @@ import userService from '../services/userService.js'
 import CONSTANTS from '../utils/serverConstants.js'
 import upload from '../utils/fileUpload.js'
 import monumentService from '../services/monumentService.js'
+import { authenticateUser, checkRole } from '../utils/middleware.js'
 import { getAddressDetails, removeGreekTonos, transliterateString, uploadToCloudinary } from '../utils/helpers.js'
 
 const { GEOCODE_API_URL, INSTANT_CREATION_ROLES, GREEK_TO_ENGLISH_MAP, TONOS_MAP } = CONSTANTS
 const router = express.Router()
-
-const checkRole = (roles) => (req, res, next) => {
-  const userRole = req.user.role // Assume user is attached to req
-  if (!roles.includes(userRole)) {
-    return res.status(403).json({ error: "Access denied" })
-  }
-  next()
-}
 
 // Endpoint to get address from latitude and longitude
 router.post('/get-address', async (req, res) => {
@@ -124,46 +117,6 @@ router.post('/', upload.single('image'), async (req, res) => {
   }
 })
 
-// Get monuments by search query
-// TODO this isnt used currently
-// router.get('/:query', async (req, res) => {
-//   const { query } = req.params
-//   try {
-//     const searchQuery = `%${query}%`
-
-//     // Query to get monuments with associated category names
-//     const allMonuments = await db.query(
-//       `SELECT 
-//           m.monumentId, 
-//           m.name, 
-//           m.description, 
-//           m.latitude, 
-//           m.longitude, 
-//           COALESCE(json_agg(c.name) FILTER (WHERE c.name IS NOT NULL), '[]') AS categories
-//        FROM monuments m
-//        LEFT JOIN monumentcategories mc ON m.monumentId = mc.monumentId
-//        LEFT JOIN categories c ON mc.categoryId = c.id
-//        WHERE m.name ILIKE $1
-//        GROUP BY m.monumentId
-//       `,
-//       [searchQuery]
-//     )
-
-//     res.status(200).json({
-//       status: 'success',
-//       results: allMonuments.rows.length,
-//       data: { monuments: allMonuments.rows },
-//     })
-//   } catch (error) {
-//     console.error(`Error in /get/:query: ${error.message}`)
-//     res.status(500).json({
-//       status: 'error',
-//       message: 'Failed to retrieve monuments.',
-//     })
-//   }
-// })
-
-
 // Get monuments within map bounds and optional search query
 router.get('/', async (req, res) => {
   console.log('monuments get')
@@ -238,6 +191,18 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/pending', authenticateUser, checkRole(['admin', 'ambassador']), async (req, res) => {
+  try {
+    console.log('pending')
+    const pendingMonuments = await monumentService.getPendingMonuments()
+    console.log('pending 2')
+    res.json({ status: 'success', data: pendingMonuments })
+  } catch (error) {
+    console.error(`Error fetching pending monuments: ${error.message}`)
+    res.status(500).json({ status: 'error', message: 'Failed to fetch pending monuments.' })
+  }
+})
+
 // Get a specific monument by ID
 router.get('/:id', async (req, res) => {
   console.log('get monument by id')
@@ -254,7 +219,7 @@ router.get('/:id', async (req, res) => {
       LEFT JOIN categories c ON mc.categoryId = c.categoryId
       LEFT JOIN MonumentImages mi ON m.monumentId = mi.monumentid
       WHERE m.monumentId = $1
-      GROUP BY m.monumentId;
+      GROUP BY m.monumentId
     `
     const query2 = `SELECT * FROM monuments WHERE monumentId = $1`
     const monument = await db.query(
@@ -289,6 +254,22 @@ router.get('/:id', async (req, res) => {
     })
   }
 })
+
+
+router.patch('/:monumentid/approve', checkRole(['admin', 'ambassador']), async (req, res) => {
+  try {
+    const { monumentid } = req.params
+    const approvedBy = req.user.userid // User making the request
+
+    const updatedMonument = await monumentService.approveMonument(monumentid, approvedBy)
+
+    res.json({ status: 'success', data: updatedMonument })
+  } catch (error) {
+    console.error(`Error approving monument: ${error.message}`)
+    res.status(500).json({ status: 'error', message: 'Failed to approve monument.' })
+  }
+})
+
 
 // Update a specific monument
 router.put('/:id', async (req, res) => {
