@@ -9,6 +9,15 @@ import { getAddressDetails, removeGreekTonos, transliterateString, uploadToCloud
 
 const { GEOCODE_API_URL, INSTANT_CREATION_ROLES, GREEK_TO_ENGLISH_MAP, TONOS_MAP } = CONSTANTS
 const router = express.Router()
+
+const checkRole = (roles) => (req, res, next) => {
+  const userRole = req.user.role // Assume user is attached to req
+  if (!roles.includes(userRole)) {
+    return res.status(403).json({ error: "Access denied" })
+  }
+  next()
+}
+
 // Endpoint to get address from latitude and longitude
 router.post('/get-address', async (req, res) => {
   try {
@@ -43,39 +52,61 @@ router.post('/', upload.single('image'), async (req, res) => {
         message: 'Missing required fields.',
       })
     }
-    const categoryIds = await monumentService.getCategoryIds(categories)
+
+    // Validate latitude & longitude
+    const lat = parseFloat(latitude)
+    const lon = parseFloat(longitude)
+    if (isNaN(lat) || isNaN(lon)) {
+      return res.status(400).json({ status: 'error', message: 'Invalid latitude or longitude.' })
+    }
+
+    // Fetch category IDs safely
+    const categoryIds = Array.isArray(categories) ? await monumentService.getCategoryIds(categories) : []
+
+    // Validate user existence
     const user = await userService.getUserByField('userid', userid)
     if (!user) {
       return res.status(404).json({ status: 'error', message: 'User not found.' })
     }
 
-    const isapproved = INSTANT_CREATION_ROLES.includes(user.role)
-    const address = await getAddressDetails(latitude, longitude)
+    // Determine approval status
+    const isApproved = INSTANT_CREATION_ROLES.includes(user.role)
+    const status = isApproved ? 'approved' : 'pending'
+
+    // Get address details (ensure function handles errors gracefully)
+    const address = await getAddressDetails(lat, lon)
+    
+    // Process name transformations
     const name_noaccents = removeGreekTonos(name)
     const name_greeklish = transliterateString(name)
 
     await db.query('BEGIN') // Start transaction
 
-    // Insert monument first
+    // Insert monument
     const newMonument = await monumentService.createMonument(
       name,
       name_noaccents,
       name_greeklish,
       description,
       address,
-      latitude,
-      longitude,
-      isapproved
+      lat,
+      lon,
+      status
     )
 
-    // Upload image to Cloudinary
-    const imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
+    let imageUrl = null
+    
+    // Upload image only if provided
+    if (req.file) {
+      imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
+      await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
+    }
 
-    // Insert monument image
-    const { monumentid } = newMonument
-    // update monument with image url
-    await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
-    await monumentService.addMonumentCategories(monumentid, categoryIds)
+    // Insert categories
+    if (categoryIds.length > 0) {
+      await monumentService.addMonumentCategories(newMonument.monumentid, categoryIds)
+    }
+
     await db.query('COMMIT') // Commit transaction
 
     res.status(201).json({
@@ -83,9 +114,13 @@ router.post('/', upload.single('image'), async (req, res) => {
       data: { monument: newMonument, imageUrl },
     })
   } catch (error) {
-    await db.query('ROLLBACK') // Rollback if anything fails
+    await db.query('ROLLBACK') // Rollback transaction on failure
     console.error(`Error in monument creation: ${error.message}`)
-    res.status(500).json({ status: 'error', message: 'Failed to create monument.' })
+
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to create monument.',
+    })
   }
 })
 

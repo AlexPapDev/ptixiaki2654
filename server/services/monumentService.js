@@ -4,11 +4,11 @@ import db from '../config/db.js' // PostgreSQL connection pool
 //   return await db.connect()
 // }
 
-const createMonument = async (name, name_noaccents, name_greeklish, description, address, latitude, longitude, isapproved) => {
+const createMonument = async (name, name_noaccents, name_greeklish, description, address, latitude, longitude, status) => {
   const result = await db.query(
-    `INSERT INTO monuments (name, name_noaccents, name_greeklish, description, address, latitude, longitude, isapproved)
+    `INSERT INTO monuments (name, name_noaccents, name_greeklish, description, address, latitude, longitude, status)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *`,
-    [name, name_noaccents, name_greeklish, description, address, latitude, longitude, isapproved]
+    [name, name_noaccents, name_greeklish, description, address, latitude, longitude, status]
   )
   return result.rows[0]
 }
@@ -59,5 +59,31 @@ const insertJunctionRecords = async (idA, idBArray) => {
   }
 }
 
+const getPendingMonuments = async () => {
+  const query = `SELECT * FROM monuments WHERE status = 'pending'`
+  const { rows } = await db.query(query)
+  return rows
+}
 
-export default { createMonument, addMonumentImage, getCategoryIds, addMonumentCategories }
+const approveMonument = async (monumentid, approvedBy) => {
+  const query = `UPDATE monuments SET status = 'approved', approved_by = $1 WHERE monumentid = $2 RETURNING *`
+  const { rows } = await db.query(query, [approvedBy, monumentid])
+  return rows[0]
+}
+
+const rejectMonument = async (monumentid) => {
+  const query = `UPDATE monuments SET status = 'rejected' WHERE monumentid = $1 RETURNING *`
+  const { rows } = await db.query(query, [monumentid])
+  return rows[0]
+}
+
+
+export default { 
+  createMonument,
+  addMonumentImage,
+  getCategoryIds,
+  addMonumentCategories,
+  getPendingMonuments,
+  approveMonument,
+  rejectMonument,
+}
