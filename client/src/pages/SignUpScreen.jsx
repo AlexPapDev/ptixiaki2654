@@ -32,7 +32,7 @@ const buttonStyle = {
 }
 
 const SignUpScreen = () => {
-  const { user } = useAuthStore()
+  const { isLoggedIn } = useAuthStore()
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -44,10 +44,10 @@ const SignUpScreen = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (user) {
+    if (isLoggedIn()) {
       navigate('/')
     }
-  }, [user, navigate])
+  }, [isLoggedIn, navigate])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })

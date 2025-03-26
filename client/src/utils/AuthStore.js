@@ -48,6 +48,23 @@ const useAuthStore = create(
         }
       },
 
+      verifyOtp: async (email, otp) => {
+        try {
+          const res = await axios.post(
+            `${API_BASE_URL}/api/users/validate-otp`,
+            { email, otp }
+          )
+          const { token, user } = res.data.data
+
+          localStorage.setItem('token', token)
+          set({ user, token })
+
+          return { success: true, user }
+        } catch (err) {
+          return { success: false, message: err.response?.data?.error || 'OTP verification failed' }
+        }
+      },
+
       logoutUser: () => {
         localStorage.removeItem('token')
         set({ user: null, token: null })

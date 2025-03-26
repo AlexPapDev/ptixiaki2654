@@ -4,7 +4,7 @@ import axios from 'axios'
 import useAuthStore from '../utils/AuthStore'
 
 const OTPVerificationScreen = () => {
-  const { loginUser } = useAuthStore()
+  const { loginUser, verifyOtp } = useAuthStore()
 
   const [otp, setOtp] = useState(new Array(6).fill(''))
   const [email, setEmail] = useState('')
@@ -53,7 +53,6 @@ const OTPVerificationScreen = () => {
     }
     e.preventDefault() // Prevent the default paste action
   }
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
   const handleSubmit = async (e) => {
     e.preventDefault()
     const otpValue = otp.join('')
@@ -61,15 +60,15 @@ const OTPVerificationScreen = () => {
     // Check if the OTP has a length of 6
     if (otpValue.length === 6) {
       try {
-        const response = await axios.post(`${API_BASE_URL}/api/users/validate-otp`, { email, otp: otpValue })
-
-        if (response.status !== 500) {
-          const { user, token } = response.data.data
+        const result = await verifyOtp(email, otpValue)
+        
+        if (result.success) {
+          const { user, token } = result
           loginUser({ user, token })
           navigate('/')
         } else {
           // Handle the error case
-          setErrorMessage('OTP verification failed. Please try again.')
+          setErrorMessage(result.message)
         }
       } catch (error) {
         // Handle Axios error or network error
