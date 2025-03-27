@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 import crypto from 'crypto'
 import db from '../config/db.js'
 import nodemailer from 'nodemailer'
-
+import jwt from 'jsonwebtoken'
 const USER_FIELD_NAMES = [
   'firstname',
   'lastname',
@@ -77,13 +77,13 @@ const validateOtp = async (email, otp) => {
   )
 
   if (result.rows.length === 0) {
-    return { success: false, message: "Invalid OTP or expired" };
+    return { success: false, message: "Invalid OTP or expired" }
   }
 
   // Invalidate OTP after successful validation
-  await db.query('UPDATE users SET otp = NULL WHERE email = $1', [email]);
-
-  return { success: true, message: "OTP validated successfully", user: result.rows[0] };
+  await db.query('UPDATE users SET otp = NULL WHERE email = $1', [email])
+  console.log(email, otp, result.rows)
+  return { success: true, message: "OTP validated successfully", user: result.rows[0] }
 }
 
 // Get user by email
@@ -127,11 +127,30 @@ const updateUser = async (userId, updatedFields) => {
   const result = await db.query(query, [...values, userId])
 
   if (result.rowCount === 0) {
-    throw new Error('User not found or update failed');
+    throw new Error('User not found or update failed')
   }
 
   // Step 4: Return the updated user object
-  return result.rows[0];
+  return result.rows[0]
+}
+
+const verifyToken = async (token) => {
+  try {
+    console.log('verify')
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const userId = decoded.id
+
+    const user = await getUserByField('userId', userId)
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+    return user
+  } catch (error) {
+    console.log('Token verification failed:', error.message)
+    console.error('Token verification failed:', error.message)
+    return null
+  }
 }
 
 const comparePasswords = async (password, hashedpassword) => {
@@ -178,4 +197,13 @@ const randomInt = (min, max) => {
   return min + (randomInt % range)
 }
 
-export default { createUser, getUserByField, updateUser, comparePasswords, getAllUsers, validateOtp, getUserPublicWithCalculatedFields }
+export default { 
+  createUser,
+  getUserByField,
+  updateUser,
+  comparePasswords,
+  getAllUsers,
+  validateOtp,
+  getUserPublicWithCalculatedFields,
+  verifyToken,
+}

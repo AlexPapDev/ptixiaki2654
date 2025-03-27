@@ -196,7 +196,7 @@ router.get('/pending', authenticateUser, checkRole(['admin', 'ambassador']), asy
     console.log('pending')
     const pendingMonuments = await monumentService.getPendingMonuments()
     console.log('pending 2')
-    res.json({ status: 'success', data: pendingMonuments })
+    res.json({ status: 'success', monuments: pendingMonuments })
   } catch (error) {
     console.error(`Error fetching pending monuments: ${error.message}`)
     res.status(500).json({ status: 'error', message: 'Failed to fetch pending monuments.' })
