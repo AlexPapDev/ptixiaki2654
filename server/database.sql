@@ -31,7 +31,8 @@ CREATE TABLE Monuments (
   latitude	DECIMAL(9, 6),
   longitude	DECIMAL(9, 6),
   status TEXT CHECK (status IN ('pending', 'approved', 'rejected')) NOT NULL DEFAULT 'pending',
-  approved_by INT REFERENCES user(userId) NULL
+  approved_by INT REFERENCES users(userId) NULL,
+  created_by INT REFERENCES users(userId) NULL,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
