@@ -84,7 +84,8 @@ router.post('/', upload.single('image'), async (req, res) => {
       address,
       lat,
       lon,
-      status
+      status,
+      userid,
     )
 
     let imageUrl = null
@@ -193,9 +194,7 @@ router.get('/', async (req, res) => {
 
 router.get('/pending', authenticateUser, checkRole(['admin', 'ambassador']), async (req, res) => {
   try {
-    console.log('pending')
-    const pendingMonuments = await monumentService.getPendingMonuments()
-    console.log('pending 2')
+    const pendingMonuments = await monumentService.getMonumentsByStatus(['pending'])
     res.json({ status: 'success', monuments: pendingMonuments })
   } catch (error) {
     console.error(`Error fetching pending monuments: ${error.message}`)
@@ -209,42 +208,18 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params
 
   try {
-    const query = `
-      SELECT 
-        m.*, 
-        COALESCE(json_agg(DISTINCT c.name) FILTER (WHERE c.name IS NOT NULL), '[]') AS categories,
-        COALESCE(json_agg(DISTINCT mi.imageurl) FILTER (WHERE mi.imageurl IS NOT NULL), '[]') AS images
-      FROM monuments m
-      LEFT JOIN monumentcategories mc ON m.monumentId = mc.monumentId
-      LEFT JOIN categories c ON mc.categoryId = c.categoryId
-      LEFT JOIN MonumentImages mi ON m.monumentId = mi.monumentid
-      WHERE m.monumentId = $1
-      GROUP BY m.monumentId
-    `
-    const query2 = `SELECT * FROM monuments WHERE monumentId = $1`
-    const monument = await db.query(
-      query,
-      [id]
-    )
+    const monument = await monumentService.getMonumentById(id)
 
-    if (monument.rows.length === 0) {
+    if (!monument) {
       return res.status(404).json({
         status: 'error',
         message: 'Monument not found.',
       })
     }
 
-    // const categories = await db.query(
-    //   `SELECT * FROM category WHERE monumentId = $1`,
-    //   [id]
-    // )
-
     res.status(200).json({
       status: 'success',
-      data: {
-        monument: monument.rows[0],
-        // comments: comments.rows,
-      },
+      data: { monument },
     })
   } catch (error) {
     console.error(`Error in /get/:id: ${error.message}`)
@@ -256,7 +231,7 @@ router.get('/:id', async (req, res) => {
 })
 
 
-router.patch('/:monumentid/approve', checkRole(['admin', 'ambassador']), async (req, res) => {
+router.patch('/:monumentid/approve', authenticateUser, checkRole(['admin', 'ambassador']), async (req, res) => {
   try {
     const { monumentid } = req.params
     const approvedBy = req.user.userid // User making the request
@@ -267,6 +242,20 @@ router.patch('/:monumentid/approve', checkRole(['admin', 'ambassador']), async (
   } catch (error) {
     console.error(`Error approving monument: ${error.message}`)
     res.status(500).json({ status: 'error', message: 'Failed to approve monument.' })
+  }
+})
+
+router.patch('/:monumentid/reject', authenticateUser, checkRole(['admin', 'ambassador']), async (req, res) => {
+  try {
+    const { monumentid } = req.params
+    const approvedBy = req.user.userid // User making the request
+
+    const updatedMonument = await monumentService.rejectMonument(monumentid, approvedBy)
+
+    res.json({ status: 'success', data: updatedMonument })
+  } catch (error) {
+    console.error(`Error rejecting monument: ${error.message}`)
+    res.status(500).json({ status: 'error', message: 'Failed to reject monument.' })
   }
 })
 

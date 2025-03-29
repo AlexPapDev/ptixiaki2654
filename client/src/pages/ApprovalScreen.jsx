@@ -1,31 +1,39 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef, useCallback } from "react"
+import axios from "axios"
 
 const ApprovalScreen = () => {
   const [pendingMonuments, setPendingMonuments] = useState([])
-  
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001"
+  const token = localStorage.getItem("token")
+  const hasFetched = useRef(false) // Prevents useEffect from running twice in Strict Mode
+
   // Fetch pending monuments
-  const fetchPendingMonuments = async () => {
+  const fetchPendingMonuments = useCallback(async () => {
+    if (!token) return // Prevent API call if token is missing
     try {
-      const response = await fetch("/api/monuments/pending") // Adjust API endpoint as needed
-      const data = await response.json()
-      if (response.ok) {
-        setPendingMonuments(data.monuments)
-      } else {
-        console.error("Failed to fetch monuments:", data.message)
-      }
+      const result = await axios.get(`${API_BASE_URL}/api/monuments/pending`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      setPendingMonuments(result.data.monuments || []) // Ensure state is updated correctly
     } catch (error) {
       console.error("Error fetching monuments:", error)
     }
-  }
+  }, [API_BASE_URL, token])
+
+  useEffect(() => {
+    if (!hasFetched.current) {
+      fetchPendingMonuments()
+      hasFetched.current = true // Mark as fetched to prevent duplicate calls
+    }
+  }, [fetchPendingMonuments])
 
   // Approve a monument
   const approveMonument = async (monumentId) => {
     try {
-      const response = await fetch(`/api/monuments/${monumentId}/approve`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+      const response = await axios.patch(`${API_BASE_URL}/api/monuments/${monumentId}/approve`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      if (response.ok) {
+      if (response.status === 200) {
         setPendingMonuments((prev) => prev.filter((m) => m.monumentid !== monumentId))
       } else {
         console.error("Failed to approve monument")
@@ -38,11 +46,10 @@ const ApprovalScreen = () => {
   // Reject a monument
   const rejectMonument = async (monumentId) => {
     try {
-      const response = await fetch(`/api/monuments/${monumentId}/reject`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+      const response = await axios.patch(`${API_BASE_URL}/api/monuments/${monumentId}/reject`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
       })
-      if (response.ok) {
+      if (response.status === 200) {
         setPendingMonuments((prev) => prev.filter((m) => m.monumentid !== monumentId))
       } else {
         console.error("Failed to reject monument")
@@ -51,10 +58,6 @@ const ApprovalScreen = () => {
       console.error("Error rejecting monument:", error)
     }
   }
-
-  useEffect(() => {
-    fetchPendingMonuments()
-  }, [])
 
   return (
     <div style={styles.container}>
@@ -66,24 +69,30 @@ const ApprovalScreen = () => {
         <div>
           {pendingMonuments.map((monument) => (
             <div key={monument.monumentid} style={styles.card}>
-              <h3 style={styles.monumentTitle}>{monument.name}</h3>
-              <p style={styles.text}><strong>Description:</strong> {monument.description}</p>
-              <p style={styles.text}><strong>Address:</strong> {monument.address}</p>
-              <p style={styles.text}><strong>Submitted by User ID:</strong> {monument.created_by}</p>
+              
+              <div style={styles.card}>
+                <img src={monument.images[0] || ''} style={{width: '100px', height: '100px'}}></img>
+                <div>
+                  <h3 style={styles.monumentTitle}>{monument.name}</h3>
+                  <p style={styles.text}><strong>Description:</strong> {monument.description}</p>
+                  {/* <p style={styles.text}><strong>Address:</strong> {monument.address}</p> */}
+                  <p style={styles.text}><strong>Submitted by User ID:</strong> {monument.created_by}</p>
 
-              <div style={styles.buttonContainer}>
-                <button 
-                  style={{ ...styles.button, ...styles.approveButton }} 
-                  onClick={() => approveMonument(monument.monumentid)}
-                >
-                  ✅ Approve
-                </button>
-                <button 
-                  style={{ ...styles.button, ...styles.rejectButton }} 
-                  onClick={() => rejectMonument(monument.monumentid)}
-                >
-                  ❌ Reject
-                </button>
+                  <div style={styles.buttonContainer}>
+                    <button 
+                      style={{ ...styles.button, ...styles.approveButton }} 
+                      onClick={() => approveMonument(monument.monumentid)}
+                    >
+                      Approve
+                    </button>
+                    <button 
+                      style={{ ...styles.button, ...styles.rejectButton }} 
+                      onClick={() => rejectMonument(monument.monumentid)}
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
@@ -117,6 +126,8 @@ const styles = {
     padding: "15px",
     marginBottom: "15px",
     backgroundColor: "#f9f9f9",
+
+    display: 'flex'
   },
   monumentTitle: {
     fontSize: "18px",
@@ -141,12 +152,12 @@ const styles = {
     border: "none",
   },
   approveButton: {
-    backgroundColor: "#28a745",
-    color: "white",
+    // backgroundColor: "#28a745",
+    // color: "white",
   },
   rejectButton: {
-    backgroundColor: "#dc3545",
-    color: "white",
+    // backgroundColor: "#dc3545",
+    // color: "white",
   },
 }
 
