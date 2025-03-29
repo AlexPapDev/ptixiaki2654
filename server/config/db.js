@@ -5,7 +5,7 @@ const { Pool } = pg
 
 dotenv.config()
 const { PGUSER, PGPASSWORD, PGHOST, PGPORT, PGDATABASE, SSL } = process.env
-
+console.log('SSL', SSL, SSL=='true', SSL===true)
 const pool = new Pool({
   user: PGUSER,
   password: PGPASSWORD,
