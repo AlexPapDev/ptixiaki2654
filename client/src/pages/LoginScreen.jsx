@@ -2,12 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
 
-// import './Navbar.css' // External CSS for navbar
-
-const Login = ({setState}) => {
+const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [loginError, setLoginError] = useState({})
+  const [loginError, setLoginError] = useState('')
   const { loginUser, isLoggedIn } = useAuthStore()
   const navigate = useNavigate()
 
@@ -16,17 +14,16 @@ const Login = ({setState}) => {
       navigate('/')
     }
   }, [isLoggedIn, navigate])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // Handle login logic here
+    setLoginError('')
 
-    try  {
-      
+    try {
       const result = await loginUser(email, password)
-      if (!result.success) throw Error(result.message)
-      debugger
+      if (!result.success) throw new Error(result.message)
+      
       const { user } = result
-      // case where user hasn't validated
       if (!user.hasVerifiedOtp) {
         return navigate({
           pathname: '/otpverification',
@@ -35,16 +32,16 @@ const Login = ({setState}) => {
       }
 
       navigate(`/user/${user.userid}`)
-    } catch (e) {
-      setLoginError(e)
-      debugger
-    } 
+    } catch (error) {
+      setLoginError(error.message || 'Login failed. Please try again.')
+    }
   }
+
   return (
     <div>
       <h3>Login</h3>
       <form onSubmit={handleSubmit}>
-        <div style={{display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px', width: '200px', margin: 'auto'}}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px', width: '200px', margin: 'auto' }}>
           <input
             type='email'
             placeholder='Email'
@@ -59,11 +56,9 @@ const Login = ({setState}) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type='submit'>
-            Login
-          </button>
+          <button type='submit'>Login</button>
         </div>
-        {!!Object.keys(loginError).length && <p>{JSON.stringify(loginError)}</p>}
+        {loginError && <p style={{ color: 'red', textAlign: 'center', marginTop: '10px' }}>{loginError}</p>}
       </form>
     </div>
   )
