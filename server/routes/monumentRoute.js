@@ -150,6 +150,7 @@ router.get('/', async (req, res) => {
       LEFT JOIN categories c ON mc.categoryId = c.categoryid
       WHERE m.latitude BETWEEN $1 AND $2
         AND m.longitude BETWEEN $3 AND $4
+        AND status = 'approved'
     `
 
     const values = [sw.lat, ne.lat, sw.lng, ne.lng]
