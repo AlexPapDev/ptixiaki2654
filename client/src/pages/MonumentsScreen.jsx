@@ -43,6 +43,10 @@ const Monuments = () => {
         {monuments?.map((monument, i) => (
           <MonumentCard monument={monument} className="cell" key={'monument-card-' + i} />
         ))}
+        {/* duplicate for more results */}
+         {monuments?.map((monument, i) => (
+          <MonumentCard monument={monument} className="cell" key={'monument-card-' + i} />
+        ))}
       </section>
       <section className="map_section">
         <Map data={monuments} fetchData={fetchData} />
