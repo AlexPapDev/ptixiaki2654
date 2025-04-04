@@ -1,4 +1,4 @@
-import { createTheme, MantineProvider } from "@mantine/core";
+import { createTheme, MantineProvider } from "@mantine/core"
 
 const theme = createTheme({
   colors: {
@@ -50,10 +50,10 @@ const theme = createTheme({
       h6: { fontSize: "16px", fontWeight: 500 },
     },
   },
-});
+})
 
 function MantineThemeProvider({ children }) {
-  return <MantineProvider theme={theme}>{children}</MantineProvider>;
+  return <MantineProvider theme={theme}>{children}</MantineProvider>
 }
 
 export default MantineThemeProvider
