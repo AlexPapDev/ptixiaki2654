@@ -7,29 +7,31 @@ const MonumentCard = ({ monument, selected = false }) => {
   const houseNumber = address?.house_number || ''
   const fullStreetName = `${road} ${houseNumber}`.trim()
   const image = images?.[0] || 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000'
-  console.log(categories)
+  const destinationUrl = `/monuments/${monumentid}`
   return (
-    <Card className={`monument-card ${selected ? 'selected' : ''}`} padding="md" radius="sm">
-      <Card.Section mb="sm">
-        <Image
-          src={image}
-          height={160}
-          alt="Norway"
-        />
-      </Card.Section>
+    <Link to={destinationUrl} style={{ textDecoration: 'none' }}>
+      <Card className={`monument-card ${selected ? 'selected' : ''}`} padding="md" radius="sm">
+        <Card.Section mb="sm">
+          <Image
+            src={image}
+            height={160}
+            alt="Norway"
+          />
+        </Card.Section>
 
-      <Text fw={600}>{name}</Text>
-      <Text fw={400}>{fullStreetName}</Text>
+        <Text fw={600}>{name}</Text>
+        <Text fw={400}>{fullStreetName}</Text>
 
-      <Text size="sm" c="dimmed" lineClamp={3}>
-        {description}
-      </Text>
+        <Text size="sm" c="dimmed" lineClamp={3}>
+          {description}
+        </Text>
 
-      <Group mt="xs" gap="xs" style={{ height: 30 }}>
-        {categories.slice(0, 3).map(categoryName => (<Badge size="sm" color="grey">{categoryName}</Badge>))}
-      </Group>
-    </Card>
-    )
+        <Group mt="xs" gap="xs" style={{ height: 30 }}>
+          {categories.slice(0, 3).map(categoryName => (<Badge size="sm" color="grey">{categoryName}</Badge>))}
+        </Group>
+      </Card>
+    </Link>
+  )
 }
 
 export default MonumentCard
