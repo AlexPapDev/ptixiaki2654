@@ -96,7 +96,9 @@ const MapComp = ({ data = [] }) => {
         <MapMarkers clusters={clusters} points={points} setMarkerPopupInfo={setMarkerPopupInfo} />
         <MapMarkerPopup markerPopupInfo={markerPopupInfo} setMarkerPopupInfo={setMarkerPopupInfo} />
         <MapMarkerButton onClickHandler={onClickNewMonumentButton} popupButtonInfo={popupButtonInfo} setPopupButtonInfo={setPopupButtonInfo} />
-        <Button mt="xs" mr="xs" onClick={onRedoSearch} style={{ position: 'absolute', zIndex: 999, right: 0, }}>Redo Search</Button>
+        <Button mt="xs" mr="xs" onClick={onRedoSearch} variant="outline" style={{ position: 'absolute', zIndex: 999, right: 0, backgroundColor: 'white'}}>
+          Redo Search
+        </Button>
        
       </GenericMap>
     </>

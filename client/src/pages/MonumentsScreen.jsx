@@ -4,7 +4,8 @@ import axios from 'axios'
 import { useSearchParams } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import MonumentCard from '../components/MonumentCard'
-import { Group, Grid, Card, Skeleton } from '@mantine/core'
+import { Group, Card, Skeleton } from '@mantine/core'
+import NoResults from '../components/NoResults'
 
 const Monuments = () => {
   const { searchTerm, mapBounds, clickedMonumentMarker } = useAppStore()
@@ -23,7 +24,7 @@ const Monuments = () => {
       !mapBounds._ne || !mapBounds._sw ||
       !mapBounds._ne.lat || !mapBounds._ne.lng ||
       !mapBounds._sw.lat || !mapBounds._sw.lng
-    ) return;
+    ) return
 
     setLoading(true)
     try {
@@ -70,18 +71,21 @@ const Monuments = () => {
 
   return (
     <Group align="flex-start">
-      <section className="content_section grid m-t-1">
-        {loading
-        ? renderSkeletonCards()
-        : monuments?.map((monument, i) => (
+      {monuments.length === 0
+        ? <NoResults />
+        : <section className="content_section grid m-t-1">
+          {loading
+            ? renderSkeletonCards()
+            : monuments.map((monument, i) => (
               <MonumentCard 
                 key={'monument-card-' + i}
                 monument={monument} 
                 selected={monument.monumentid === clickedMonumentMarker}
               />
-          ))
-        }
-      </section>
+            ))
+          }
+        </section>
+      }
 
       <section className="map_section">
         <Map data={monuments} fetchData={fetchData} />
