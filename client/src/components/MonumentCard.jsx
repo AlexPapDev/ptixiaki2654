@@ -15,7 +15,6 @@ const MonumentCard = ({ monument, selected = false }) => {
           <Image
             src={image}
             height={160}
-            alt="Norway"
           />
         </Card.Section>
 

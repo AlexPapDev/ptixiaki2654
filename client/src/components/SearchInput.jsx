@@ -20,7 +20,9 @@ const NavSearchBar = () => {
         radius="lg"
         placeholder="Search Monuments"
         rightSectionWidth={34}
-        onChange={(e) => setInputTerm(e.target.value)} value={inputTerm} 
+        onChange={(e) => setInputTerm(e.target.value)}
+        value={inputTerm}
+        style={{width: '300px'}}
         rightSection={
           <ActionIcon size={28} radius="md" color={theme.primaryColor} variant="filled" onClick={onClickButton}>
             <Search size={20} color="white"/>

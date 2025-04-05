@@ -1,59 +1,37 @@
-import { useState } from "react"
+import { useState } from 'react'
+import { Button, Input, FileInput, Text } from '@mantine/core'
 
-const formStyle = {
-  width: '200px',
-  margin: 'auto',
-  display: 'flex',
-  flexDirection: 'column',
-}
-
-const inputWrapperStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  marginBottom: '4px',
-  width: '100%',
-}
-
-const inputStyle = {
-  width: '100%',
-}
 const UserProfileEdit = ({ user, onSave, updateUser }) => {
   const [userState, setUserState] = useState({
     firstname: user.firstname,
     lastname: user.lastname,
     email: user.email,
   })
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null)
 
   const handleChange = (e) => {
-    setUserState({ ...userState, [e.target.name]: e.target.value });
+    setUserState({ ...userState, [e.target.name]: e.target.value })
   }
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-    }
+    const file = e.target.files[0]
+    if (file) setSelectedFile(file)
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-
+    e.preventDefault()
     const { firstname, lastname, email } = userState
     const formData = new FormData()
     formData.append('firstname', firstname)
     formData.append('lastname', lastname)
     formData.append('email', email)
-    
+
     if (selectedFile) {
       formData.append('image', selectedFile)
     }
 
-    // const updatedUserData = { ...formData, profilepicture: imageUrl };
     const res = await onSave(formData)
     const { user } = res.data
-    console.log(res)
     updateUser({
       firstname: user.firstname,
       lastname: user.lastname,
@@ -63,26 +41,43 @@ const UserProfileEdit = ({ user, onSave, updateUser }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={formStyle}>
-      <div style={inputWrapperStyle}>
-        <label>First Name:</label>
-        <input style={inputStyle} name="firstname" value={userState.firstname} onChange={handleChange} />
-      </div>
-      <div style={inputWrapperStyle}>
-        <label>Last Name:</label>
-        <input style={inputStyle} name="lastname" value={userState.lastname} onChange={handleChange} />
-      </div>
-      <div style={inputWrapperStyle}>
-        <label>Email:</label>
-        <input style={inputStyle} name="email" type="email" value={userState.email} onChange={handleChange} />
-      </div>
-      <div style={inputWrapperStyle}>
-        <label>Profile Picture:</label>
-        <input style={inputStyle} type="file" accept="image/*" onChange={handleFileChange} />
-      </div>
-      <button type="submit">Save</button>
+    <form onSubmit={handleSubmit}>
+      <Input
+        style={{ marginBottom: '20px' }}
+        label="First Name"
+        value={userState.firstname}
+        onChange={handleChange}
+        name="firstname"
+        required
+      />
+      <Input
+        style={{ marginBottom: '20px' }}
+        label="Last Name"
+        value={userState.lastname}
+        onChange={handleChange}
+        name="lastname"
+        required
+      />
+      <Input
+        style={{ marginBottom: '20px' }}
+        label="Email"
+        type="email"
+        value={userState.email}
+        onChange={handleChange}
+        name="email"
+        required
+      />
+      <FileInput
+        label="Profile Picture"
+        accept="image/*"
+        onChange={handleFileChange}
+        style={{ marginBottom: '20px' }}
+      />
+      <Button type="submit" fullWidth>
+        Save Changes
+      </Button>
     </form>
-  );
-};
+  )
+}
 
-export default UserProfileEdit;
+export default UserProfileEdit
