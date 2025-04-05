@@ -6,6 +6,7 @@ import useAppStore from '../utils/AppStore'
 import MonumentCard from '../components/MonumentCard'
 import { Group, Card, Skeleton } from '@mantine/core'
 import NoResults from '../components/NoResults'
+import { motion } from 'framer-motion'
 
 const Monuments = () => {
   const { searchTerm, mapBounds, clickedMonumentMarker } = useAppStore()
@@ -59,38 +60,51 @@ const Monuments = () => {
 
   const renderSkeletonCards = () => {
     return Array.from({ length: 6 }).map((_, index) => (
-      // <Grid.Col span={4} key={`skeleton-${index}`}>
-        <Card key={`skeleton-${index}`} shadow="sm" padding="lg" radius="md" withBorder>
-          <Skeleton height={200} radius="sm" />
-          <Skeleton height={16} mt="md" width="60%" />
-          <Skeleton height={16} mt="sm" width="80%" />
-        </Card>
-      // </Grid.Col>
+      <Card key={`skeleton-${index}`} shadow="sm" padding="lg" radius="md" withBorder>
+        <Skeleton height={200} radius="sm" />
+        <Skeleton height={16} mt="md" width="60%" />
+        <Skeleton height={16} mt="sm" width="80%" />
+      </Card>
     ))
   }
 
   return (
-    <Group align="flex-start">
-      {!loading && monuments.length === 0
-        ? <NoResults />
-        : <section className="content_section grid m-t-1">
-          {loading
-            ? renderSkeletonCards()
-            : monuments.map((monument, i) => (
-              <MonumentCard 
-                key={'monument-card-' + i}
-                monument={monument} 
-                selected={monument.monumentid === clickedMonumentMarker}
-              />
-            ))
-          }
-        </section>
-      }
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="content-wrapper"
+    >
+      <Group align="flex-start">
+        {!loading && monuments.length === 0
+          ? <NoResults />
+          : <section className="content_section grid m-t-1">
+            {loading
+              ? renderSkeletonCards()
+              : monuments.map((monument, i) => (
+                <motion.div
+                  key={'monument-card-' + i}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3, delay: 0.1 * i }}
+                >
+                  <MonumentCard 
+                    monument={monument} 
+                    selected={monument.monumentid === clickedMonumentMarker}
+                  />
+                </motion.div>
+              ))
+            }
+          </section>
+        }
 
-      <section className="map_section">
-        <Map data={monuments} fetchData={fetchData} />
-      </section>
-    </Group>
+        <section className="map_section">
+          <Map data={monuments} fetchData={fetchData} />
+        </section>
+      </Group>
+    </motion.section>
   )
 }
 
