@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-
+import { Container, Image } from '@mantine/core'
 const MonumentDetail = () => {
   const { monumentId } = useParams()
   const [monument, setMonument] = useState(null)
@@ -37,14 +37,17 @@ const MonumentDetail = () => {
   if (error) return <div>{error}</div>
 
   return (
-    <div>
+    <Container>
       <h1>{monument?.name}</h1>
-      <img src={monument?.images[0]} style={{width:'250px'}}></img>
+      <Image radius="sm"
+        h={200}
+        w="auto"
+        fit="contain" src={monument?.images[0]} />
       <p>{monument?.description}</p>
       <p>{monument?.city}</p>
       <p>{monument?.road}</p>
       {!!monument?.categories.length && <div>{monument.categories.join()}</div>}
-    </div>
+    </Container>
   )
 }
 

@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import { TextInput, useMantineTheme, ActionIcon, Paper } from '@mantine/core'
 import { Search } from 'lucide-react'
-const buttonStyle = {
-  padding: '2px',
-}
 
 const NavSearchBar = () => {
   const { setSearchTerm, searchTerm } = useAppStore()
@@ -18,14 +15,14 @@ const NavSearchBar = () => {
     navigate(`/monuments?q=${inputTerm}`)
   }
   return (
-    <Paper shadow="sm" radius="md">
+    <Paper shadow="sm" radius="lg">
       <TextInput
-        radius="md"
+        radius="lg"
         placeholder="Search Monuments"
         rightSectionWidth={34}
         onChange={(e) => setInputTerm(e.target.value)} value={inputTerm} 
         rightSection={
-          <ActionIcon size={28} radius="sm" color={theme.primaryColor} variant="filled" onClick={onClickButton}>
+          <ActionIcon size={28} radius="md" color={theme.primaryColor} variant="filled" onClick={onClickButton}>
             <Search size={20} color="white"/>
           </ActionIcon>
         }

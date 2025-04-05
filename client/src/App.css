@@ -100,6 +100,10 @@ p, a, li, label {
   margin-top: 20px;
 }
 
+.p-b-1 {
+  padding-bottom: 20px;
+}
+
 .pin-hover:hover {
   border: 1px solid black;
 }

@@ -79,7 +79,7 @@ const Monuments = () => {
       <Group align="flex-start">
         {!loading && monuments.length === 0
           ? <NoResults />
-          : <section className="content_section grid m-t-1">
+          : <section className="content_section grid m-t-1 p-b-1">
             {loading
               ? renderSkeletonCards()
               : monuments.map((monument, i) => (
