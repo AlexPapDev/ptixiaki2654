@@ -3,11 +3,32 @@ import { createTheme, MantineProvider } from "@mantine/core"
 const theme = createTheme({
   colors: {
     primary: [
-      "#FFF5F7", "#FFE0E5", "#FFB8C1", "#FF8A9D", "#FF637D", "#FF385C", "#E03453", "#B62844", "#8F1E35", "#691527"
+      "#F3FCF6", // lightest
+      "#D2F5DD",
+      "#A6EBBC",
+      "#79E19B",
+      "#4DD87A",
+      "#21CE59", // base green
+      "#1AA94A",
+      "#14853B",
+      "#0E612C",
+      "#083C1D"  // darkest
     ],
     gray: [
       "#F7F7F7", "#EDEDED", "#DDDDDD", "#CCCCCC", "#BBBBBB", "#AAAAAA", "#888888", "#666666", "#444444", "#222222"
     ],
+    white: [
+      "#FFFFFF", // pure white
+      "#FAFAFA",
+      "#F5F5F5",
+      "#F0F0F0",
+      "#EBEBEB",
+      "#E6E6E6",
+      "#E0E0E0",
+      "#DADADA",
+      "#D5D5D5",
+      "#D0D0D0"
+    ]
   },
   primaryColor: "primary",
   fontFamily: "Circular, Inter, sans-serif",
@@ -50,6 +71,32 @@ const theme = createTheme({
       h6: { fontSize: "16px", fontWeight: 500 },
     },
   },
+  components: {
+    Button: {
+      styles: (theme) => ({
+        root: {
+          transition: 'transform 0.1s ease', // smooth transition for scaling
+          '&:active': {
+            transform: 'scale(0.95)', // shrink the button to 95% of its size
+            boxShadow: 'none', // remove shadow on click if desired
+          },
+        },
+      }),
+      variants: {
+        white: (theme) => ({
+          root: {
+            backgroundColor: theme.colors.white[0],
+            color: theme.colors.gray[8],
+            border: `1px solid red`,
+            fontWeight: 300,
+            '&:hover': {
+              backgroundColor: theme.colors.gray[0],
+            },
+          },
+        }),
+      },
+    },
+  }
 })
 
 function MantineThemeProvider({ children }) {

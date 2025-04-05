@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useSearchParams } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import MonumentCard from '../components/MonumentCard'
-
+import { Group } from '@mantine/core'
 const Monuments = () => {
   const { searchTerm, mapBounds } = useAppStore()
   const [searchParams] = useSearchParams()
@@ -38,20 +38,16 @@ const Monuments = () => {
   }, [passedTerm, mapBounds, category])
 
   return (
-    <div style={{display:'flex'}}>
+    <Group align="flex-start">
       <section className="content_section grid m-t-1">
         {monuments?.map((monument, i) => (
-          <MonumentCard monument={monument} className="cell" key={'monument-card-' + i} />
-        ))}
-        {/* duplicate for more results */}
-         {monuments?.map((monument, i) => (
           <MonumentCard monument={monument} className="cell" key={'monument-card-' + i} />
         ))}
       </section>
       <section className="map_section">
         <Map data={monuments} fetchData={fetchData} />
       </section>
-    </div>
+    </Group>
   )
 }
 

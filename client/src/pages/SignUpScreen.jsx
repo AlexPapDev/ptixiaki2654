@@ -2,34 +2,24 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useAuthStore from '../utils/AuthStore'
+import {
+  TextInput,
+  PasswordInput,
+  Button,
+  Paper,
+  Title,
+  Text,
+  Container,
+  Stack,
+} from '@mantine/core'
+
 const inputs = [
   { label: 'First Name', name: 'firstname' },
   { label: 'Last Name', name: 'lastname' },
-  { label: 'Email', name: 'email'},
-  { label: 'Password', name: 'password', type: 'password'},
+  { label: 'Email', name: 'email' },
+  { label: 'Password', name: 'password', type: 'password' },
   { label: 'Confirm Password', name: 'confirmPassword', type: 'password' },
 ]
-
-const formStyle = {
-  width: '200px',
-  margin: 'auto',
-}
-
-const inputWrapperStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'flex-start',
-  marginBottom: '4px',
-}
-
-const inputStyle = {
-  width: '200px',
-  marginButtom: '2px',
-}
-
-const buttonStyle = {
-  padding: '4px 6px 4px 6px',
-}
 
 const SignUpScreen = () => {
   const { isLoggedIn } = useAuthStore()
@@ -52,8 +42,9 @@ const SignUpScreen = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
-  // TODO: handle errors
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const { firstname, lastname, email, password, confirmPassword } = formData
@@ -64,7 +55,10 @@ const SignUpScreen = () => {
 
     try {
       const result = await axios.post(`${API_BASE_URL}/api/users/`, {
-        firstname, lastname, email, password
+        firstname,
+        lastname,
+        email,
+        password,
       })
       console.log(result.data.message)
       navigate({
@@ -73,33 +67,49 @@ const SignUpScreen = () => {
       })
     } catch (error) {
       console.error(error)
-      setErrorMessage('Error: ' + error.response.data.error)
+      setErrorMessage('Error: ' + (error.response?.data?.error || 'Registration failed'))
     }
   }
 
-  return (<>
-    {errorMessage && (<div>{errorMessage}</div>)}
-    <form onSubmit={handleSubmit}>
-      <div style={formStyle}>
-        <h3>New User</h3>
-        {inputs.map(({ label, name, type='text' }) => (
-          <div key={name} style={inputWrapperStyle}>
-            <label htmlFor={name}>{label}</label>
-            <input
-              id={name}
-              name={name}
-              value={formData[name]}
-              onChange={handleChange}
-              type={type}
-              style={inputStyle}
-              required
-            />
-          </div>
-        ))}
-        <button type="submit" style={buttonStyle}>Create User</button>
-      </div>
-    </form>
-  </>)
+  return (
+    <Container size={420} my={40}>
+      <Title align="center" order={2}>
+        Create a New Account
+      </Title>
+
+      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+        <form onSubmit={handleSubmit}>
+          <Stack>
+            {inputs.map(({ label, name, type = 'text' }) => {
+              const isPassword = type === 'password'
+              const Component = isPassword ? PasswordInput : TextInput
+
+              return (
+                <Component
+                  key={name}
+                  label={label}
+                  name={name}
+                  value={formData[name]}
+                  onChange={handleChange}
+                  required
+                />
+              )
+            })}
+          </Stack>
+
+          {errorMessage && (
+            <Text color="red" size="sm" mt="md" align="center">
+              {errorMessage}
+            </Text>
+          )}
+
+          <Button fullWidth mt="xl" type="submit">
+            Create Account
+          </Button>
+        </form>
+      </Paper>
+    </Container>
+  )
 }
 
 export default SignUpScreen

@@ -38,7 +38,7 @@ function MainLayout() {
   return (
     <AppShell
       // navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: true } }}
-      header={{ height: 110 }}
+      header={{ height: 130 }}
     >
       <AppShell.Header>
         <Navbar categories={categories} />
