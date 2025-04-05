@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
+import {
+  TextInput,
+  PasswordInput,
+  Button,
+  Paper,
+  Title,
+  Text,
+  Container,
+  Stack,
+} from '@mantine/core'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -22,7 +32,7 @@ const Login = () => {
     try {
       const result = await loginUser(email, password)
       if (!result.success) throw new Error(result.message)
-      
+
       const { user } = result
       if (!user.hasVerifiedOtp) {
         return navigate({
@@ -38,29 +48,42 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <h3>Login</h3>
-      <form onSubmit={handleSubmit}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '8px', width: '200px', margin: 'auto' }}>
-          <input
-            type='email'
-            placeholder='Email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type='password'
-            placeholder='Password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <button type='submit'>Login</button>
-        </div>
-        {loginError && <p style={{ color: 'red', textAlign: 'center', marginTop: '10px' }}>{loginError}</p>}
-      </form>
-    </div>
+    <Container size={420} my={40}>
+      <Title align='center' order={2}>
+        Welcome back
+      </Title>
+
+      <Paper withBorder shadow='md' p={30} mt={30} radius='md'>
+        <form onSubmit={handleSubmit}>
+          <Stack>
+            <TextInput
+              label='Email'
+              placeholder='you@example.com'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <PasswordInput
+              label='Password'
+              placeholder='Your password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Stack>
+
+          {loginError && (
+            <Text color='red' size='sm' mt='md' align='center'>
+              {loginError}
+            </Text>
+          )}
+
+          <Button fullWidth mt='xl' type='submit'>
+            Login
+          </Button>
+        </form>
+      </Paper>
+    </Container>
   )
 }
 

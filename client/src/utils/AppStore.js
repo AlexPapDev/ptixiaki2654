@@ -12,6 +12,9 @@ const useAppStore = create(
       // Map position
       mapBounds: null,
       setMapBounds: (bounds) => set({ mapBounds: bounds }),
+
+      clickedMonumentMarker: null,
+      setClickedMonumentMarker: (clickedMarker) => set({ clickedMonumentMarker: clickedMarker }),
     }),
     {
       name: 'monuma-storage',

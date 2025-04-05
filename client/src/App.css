@@ -1,3 +1,6 @@
+* {
+  --map-height-top-distance: 130px
+}
 .App {
   text-align: center;
 }
@@ -37,8 +40,8 @@
 .map_section {
   position: sticky;
   width: 35vw;
-  top: 100px;
-  height: calc(100vh - 100px);
+  top: var(--map-height-top-distance);
+  height: calc(100vh - var(--map-height-top-distance));
   overflow-y: auto;
 }
 
@@ -71,7 +74,7 @@ p, a, li, label {
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  rid-auto-rows: max-content;
+  grid-auto-rows: max-content;
   /* grid-template-rows: repeat(3, 1fr); */
   gap: 15px;
   overflow-y: auto;
@@ -101,10 +104,17 @@ p, a, li, label {
   border: 1px solid black;
 }
 
+.monument-card {
+  transition: box-shadow 0.3s ease;
+  box-shadow: var(--mantine-shadow-xs) !important;
+}
+
+.monument-card.selected {
+  box-shadow: var(--mantine-shadow-lg) !important;
+}
+
 .monument-card:hover {
   cursor: pointer;
-  border: 1px solid grey;
-  background: rgb(240, 240, 240);
 }
 
 .category-item a, .category-item a:visited {

@@ -1,11 +1,9 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Image, Group, Container, Anchor } from '@mantine/core'
 import SearchInput from './SearchInput'
 import useAuthStore from '../utils/AuthStore'
-
-const buttonStyle = {
-  padding: '2px',
-}
+import ProfileNav from './ProfileNav'
 
 const Navbar = () => {
   const { isLoggedIn, logoutUser, user } = useAuthStore()
@@ -15,24 +13,24 @@ const Navbar = () => {
     logoutUser()
     navigate('/')
   }
+
   const loggedIn = isLoggedIn()
-  const isAdminOrAmbassador = loggedIn && (user?.role === 'admin' || user?.role === 'ambassador')
 
   return (
-    <nav className="navbar" id="navbar">
-      <ul style={{ display: 'flex', flexDirection: 'row', gap: '1em', alignItems: 'center' }}>
-        <li className="navbar-item"><Link to="/">Home</Link></li>
-        {!loggedIn && <li className="navbar-item"><Link to="/login">Login</Link></li>}
-        {!loggedIn && <li className="navbar-item"><Link to="/signup">Sign Up</Link></li>}
-        {loggedIn && <li className="navbar-item"><Link to="/profile">Profile</Link></li>}
-        <li className="navbar-item"><Link to="/monuments">Monuments</Link></li>
+    <Container fluid px={32} pt={16} pb={2}>
+      <Group justify="space-between">
+        <Group gap="xs">
+          <Image height={30} src="/ancient-greece.png"></Image>
+          <Anchor href="/monuments" style={{ textDecoration: 'none' }}>Monuma</Anchor>
+        </Group>
+        
+        <Group gap="md" align="center">
+          <SearchInput />
+        </Group>
 
-        {isAdminOrAmbassador && <li className="navbar-item"><Link to="/approval-dashboard">Approval Dashboard</Link></li>}
-
-        <li><SearchInput /></li>
-        {loggedIn && <li><button style={buttonStyle} onClick={onClickLogoutHandler}>Logout</button></li>}
-      </ul>
-    </nav>
+        <ProfileNav />
+      </Group>
+    </Container>
   )
 }
 

@@ -1,8 +1,10 @@
 import React from 'react'
 import { Marker } from 'react-map-gl'
 import Pin from './Pin'
+import useAppStore from '../utils/AppStore'
 const MAX_CLUSTER_NUMBER = 20
 const MapMarkers = ({clusters, points, setMarkerPopupInfo}) => {
+  const { setClickedMonumentMarker } = useAppStore()
   const getClusterNumber = num => num <= MAX_CLUSTER_NUMBER ? num : `${MAX_CLUSTER_NUMBER}+`
   return clusters.map((cluster, i) => {
     const [longitude, latitude] = cluster.geometry.coordinates
@@ -46,6 +48,7 @@ const MapMarkers = ({clusters, points, setMarkerPopupInfo}) => {
           // If we let the click event propagates to the map, it will immediately close the popup
           // with `closeOnClick: true`
           e.originalEvent.stopPropagation()
+          setClickedMonumentMarker(cluster.data.monumentid)
           setMarkerPopupInfo(cluster.data)
         }}
       >

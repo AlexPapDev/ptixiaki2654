@@ -1,50 +1,58 @@
-import React from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import useAppStore from '../utils/AppStore'
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import useAppStore from '../utils/AppStore';
+import { Container, Group, Button, Paper } from '@mantine/core';
 
 const CategoriesBar = ({ categories = [] }) => {
-  const location = useLocation()
-  // todo: maybe delete this later
-  const { setSearchTerm } = useAppStore()
-  const navigate = useNavigate()
-  const searchParams = new URLSearchParams(location.search)
-  const activeCategory = searchParams.get('cat')
+  const location = useLocation();
+  const { setSearchTerm } = useAppStore();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const activeCategory = searchParams.get('cat');
 
   // Function to clear all query parameters
   const clearFilters = () => {
-    setSearchTerm(null)
-    navigate('/monuments/') // Navigate to /monuments/ without query params
-  }
+    setSearchTerm(null);
+    navigate('/monuments/'); // Navigate to /monuments/ without query params
+  };
 
   return (
-    <nav className="category-bar" id="navbar-secondary">
-      <ul style={{ display: 'flex', flexDirection: 'row', gap: '1em', justifyContent: 'center', paddingTop: '5px' }}>
-        {categories.map((category) => {
-          const newSearchParams = new URLSearchParams(searchParams)
-          newSearchParams.set('cat', category)
+    <Paper shadow="xs" p="md">
+      <Container fluid px={32} >
+        <Group justify="center" spacing={16}>
+          {categories.map((category) => {
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.set('cat', category);
+            const isActive = activeCategory === category;
 
-          return (
-            <li
-              key={category}
-              className={`category-item ${activeCategory === category ? 'active' : ''}`}
-              style={{
-                textShadow: activeCategory === category ? '1px 1px 2px rgba(0, 0, 0, 0.3)' : 'none',
-              }}
-            >
-              <Link to={`/monuments/?${newSearchParams.toString()}`}>
+            return (
+              <Button
+                key={category}
+                radius="xl"
+                variant={isActive ? 'filled' : 'outline'}
+                color={isActive ? 'green' : 'gray'}
+                onClick={() => navigate(`/monuments/?${newSearchParams.toString()}`)}
+                sx={(theme) => ({
+                  padding: '8px 16px',
+                  borderBottom: isActive ? '2px solid #007bff' : '2px solid transparent',
+                  transition: 'background-color 0.3s, border-bottom 0.3s',
+                  '&:hover': {
+                    backgroundColor: theme.colors.gray[0],
+                    borderBottom: `2px solid ${theme.colors.gray[3]}`,
+                  },
+                })}
+              >
                 {category}
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
+              </Button>
+            );
+          })}
+          <Button variant="light" onClick={clearFilters} size="sm" sx={{ padding: '5px 10px' }}>
+            Clear Filters
+          </Button>
+        </Group>
+      </Container>
+    </Paper>
+  );
+};
 
-        <button onClick={clearFilters} style={{ padding: '5px 10px', cursor: 'pointer' }}>
-          Clear Filters
-        </button>
-
-    </nav>
-  )
-}
-
-export default CategoriesBar
+export default CategoriesBar;

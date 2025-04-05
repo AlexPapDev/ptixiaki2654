@@ -64,7 +64,7 @@ const NewMonument = () => {
       }
     }
     fetchAddress()
-  }, [lat, lng])
+  }, [lat, lng, API_BASE_URL],)
 
   const onSubmitForm = async (e) => {
     e.preventDefault()
