@@ -71,7 +71,7 @@ const Monuments = () => {
 
   return (
     <Group align="flex-start">
-      {monuments.length === 0
+      {!loading && monuments.length === 0
         ? <NoResults />
         : <section className="content_section grid m-t-1">
           {loading
