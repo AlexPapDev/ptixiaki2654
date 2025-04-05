@@ -53,6 +53,13 @@ const theme = createTheme({
     lg: "24px",
     xl: "32px",
   },
+  breakpoints: {
+    xs: '30em',
+    sm: '48em',
+    md: '64em',
+    lg: '74em',
+    xl: '90em',
+  },
   shadows: {
     xs: "0px 1px 3px rgba(0, 0, 0, 0.12)",
     sm: "0px 2px 6px rgba(0, 0, 0, 0.12)",

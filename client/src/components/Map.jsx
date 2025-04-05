@@ -9,7 +9,7 @@ import useAuthStore from '../utils/AuthStore'
 import { INIT_MAP_STATE } from '../utils/constants'
 import { useNavigate } from 'react-router-dom'
 import Supercluster from 'supercluster'
-
+import { Button } from '@mantine/core'
 const MapComp = ({ data = [] }) => {
   const { mapBounds, setMapBounds } = useAppStore()
   const { isLoggedIn } = useAuthStore()
@@ -96,9 +96,8 @@ const MapComp = ({ data = [] }) => {
         <MapMarkers clusters={clusters} points={points} setMarkerPopupInfo={setMarkerPopupInfo} />
         <MapMarkerPopup markerPopupInfo={markerPopupInfo} setMarkerPopupInfo={setMarkerPopupInfo} />
         <MapMarkerButton onClickHandler={onClickNewMonumentButton} popupButtonInfo={popupButtonInfo} setPopupButtonInfo={setPopupButtonInfo} />
-        <button onClick={onRedoSearch} style={{ position: 'absolute', zIndex: 999, right: 0 }}>
-          Redo search
-        </button>
+        <Button mt="xs" mr="xs" onClick={onRedoSearch} style={{ position: 'absolute', zIndex: 999, right: 0, }}>Redo Search</Button>
+       
       </GenericMap>
     </>
   )
