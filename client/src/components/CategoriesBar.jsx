@@ -28,17 +28,15 @@ const CategoriesBar = ({ categories = [] }) => {
             return (
               <Button
                 key={category}
+                size="xs"
                 radius="xl"
                 variant={isActive ? 'filled' : 'outline'}
                 color={isActive ? 'green' : 'gray'}
                 onClick={() => navigate(`/monuments/?${newSearchParams.toString()}`)}
                 sx={(theme) => ({
-                  padding: '8px 16px',
-                  borderBottom: isActive ? '2px solid #007bff' : '2px solid transparent',
                   transition: 'background-color 0.3s, border-bottom 0.3s',
                   '&:hover': {
                     backgroundColor: theme.colors.gray[0],
-                    borderBottom: `2px solid ${theme.colors.gray[3]}`,
                   },
                 })}
               >
@@ -46,7 +44,7 @@ const CategoriesBar = ({ categories = [] }) => {
               </Button>
             )
           })}
-          <Button variant="light" onClick={clearFilters} size="sm" sx={{ padding: '5px 10px' }}>
+          <Button variant="light" onClick={clearFilters} size="xs" sx={{ padding: '5px 10px' }}>
             Clear Filters
           </Button>
         </Group>
