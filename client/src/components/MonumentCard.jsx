@@ -21,7 +21,7 @@ const MonumentCard = ({ monument, selected = false }) => {
           </Link>
         </Card.Section>
 
-        <Group justify="space-between" mb="sm">
+        <Group wrap="nowrap" justify="space-between" mb="sm">
           <Text fw={600}>{name}</Text>
           <MonumentMenu monumentId={monumentid} /> {/* This will render the menu next to the title */}
         </Group>
