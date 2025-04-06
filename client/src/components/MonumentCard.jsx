@@ -33,7 +33,7 @@ const MonumentCard = ({ monument, selected = false }) => {
         </Text>
 
         <Group mt="xs" gap="xs" style={{ height: 30 }}>
-          {categories.slice(0, 3).map(categoryName => (<Badge key={`badge-${monumentid}-${categoryName}`} size="sm" color="grey">{categoryName}</Badge>))}
+          {categories.slice(0, 3).map(categoryName => (<Badge key={`badge-${monumentid}-${categoryName}`} size="sm" color="green">{categoryName}</Badge>))}
         </Group>
       </Card>
   )

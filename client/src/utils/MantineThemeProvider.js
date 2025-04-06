@@ -3,19 +3,19 @@ import { createTheme, MantineProvider } from '@mantine/core';
 const theme = createTheme({
   colors: {
     primary: [
-      '#F3FCF6', // lightest
-      '#D2F5DD',
-      '#A6EBBC',
-      '#79E19B',
-      '#4DD87A',
-      '#21CE59', // base green
-      '#1AA94A',
-      '#14853B',
-      '#0E612C',
-      '#083C1D', // darkest
+      '#e0f7fa', '#b2ebf2', '#80deea', '#4dd0e1', '#26c6da',
+      '#00bcd4', '#00acc1', '#0097a7', '#00838f', '#006064',
+    ],
+    teal: [
+      '#e0f2f1', '#b2dfdb', '#80cbc4', '#4db6ac', '#26a69a',
+      '#009688', '#00897b', '#00796b', '#00695c', '#004d40',
     ],
     gray: [
       '#F7F7F7', '#EDEDED', '#DDDDDD', '#CCCCCC', '#BBBBBB', '#AAAAAA', '#888888', '#666666', '#444444', '#222222',
+    ],
+    green: [
+      '#e8f5e9', '#c8e6c9', '#a5d6a7', '#81c784', '#66bb6a',
+      '#4caf50', '#43a047', '#388e3c', '#2e7d32', '#1b5e20',
     ],
     white: [
       '#FFFFFF', // pure white

@@ -103,7 +103,7 @@ const SignUp = () => {
             </Text>
           )}
 
-          <Button fullWidth mt="xl" type="submit">
+          <Button fullWidth mt="xl" type="submit" color="teal">
             Create Account
           </Button>
         </form>
