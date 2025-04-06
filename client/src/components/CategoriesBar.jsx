@@ -17,7 +17,7 @@ const CategoriesBar = ({ categories = [] }) => {
   }
 
   return (
-    <Paper shadow="xs" p="md">
+    <Paper shadow="none" p="md" pt="0" radius="0">
       <Container fluid px={32} >
         <Group justify="center" spacing={16}>
           {categories.map((category) => {

@@ -6,18 +6,8 @@ import useAuthStore from '../utils/AuthStore'
 import ProfileNav from './ProfileNav'
 
 const Navbar = () => {
-  const { isLoggedIn, logoutUser, user } = useAuthStore()
-  const navigate = useNavigate()
-  
-  const onClickLogoutHandler = () => {
-    logoutUser()
-    navigate('/')
-  }
-
-  const loggedIn = isLoggedIn()
-
   return (
-    <Container fluid px={32} pt={16} pb={2}>
+    <Container fluid px={32} pt={16} pb="md">
       <Group justify="space-between">
         <Group gap="xs">
           <Image height={30} src="/ancient-greece.png"></Image>

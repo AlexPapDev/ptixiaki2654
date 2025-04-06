@@ -1,7 +1,7 @@
 
 
 // Mantine
-import { AppShell, Modal } from '@mantine/core'
+import { AppShell, Modal, Paper } from '@mantine/core'
 import MantineThemeProvider from './utils/MantineThemeProvider'
 
 // Header / Navbar imports
@@ -50,15 +50,17 @@ function MainLayout() {
     location.pathname.startsWith('/monuments') 
     && location.pathname !== '/monuments/new') 
     || location.pathname === '/'
-
+  const headerHeight = shouldShowCategoriesBar ? 122 : 74
   return (
     <AppShell
       // navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: true } }}
-      header={{ height: 130 }}
+      header={{ height: headerHeight }}
     >
       <AppShell.Header>
-        <Navbar categories={categories} />
-        {shouldShowCategoriesBar && <CategoriesBar categories={categories} />}
+        <Paper shadow="sm">
+          <Navbar categories={categories} />
+          {shouldShowCategoriesBar && <CategoriesBar categories={categories} />}
+        </Paper>
       </AppShell.Header>
       {/* <AppShell.Navbar p="md">
         
