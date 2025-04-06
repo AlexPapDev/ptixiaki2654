@@ -1,38 +1,62 @@
 import React from 'react'
 import { Popup } from 'react-map-gl'
-import { Button, Text, Stack } from '@mantine/core'
+import { Button, Text, Stack, Group } from '@mantine/core'
 import { Plus } from 'lucide-react'
+import useAuthStore from '../utils/AuthStore'
+import useAppStore from '../utils/AppStore'
 
+const PopUpButton = ({children, onClick, withIcon = false}) => {
+  console.log(children)
+  return <Button
+    size="xs"
+    variant="light"
+    leftSection={<Plus size={14} />}
+    onClick={onClick}
+  >
+    {children}
+  </Button>
+}
 const MapMarkerButton = ({ popupButtonInfo, setPopupButtonInfo, onClickHandler }) => {
-  const { lng, lat } = popupButtonInfo || {}
-
+  const { isLoggedIn } = useAuthStore()
+  const { openAuthModal } = useAppStore()
+  if (!popupButtonInfo) return <></>
+  const { lng, lat } = popupButtonInfo
+  
   return (
-    popupButtonInfo && (
-      <Popup
-        anchor="top"
-        longitude={lng}
-        latitude={lat}
-        onClose={() => setPopupButtonInfo(null)}
-        closeButton={false}
-        closeOnClick={false}
-        className="map-popup"
-      >
-        <Stack spacing="xs" align="center">
-          <Text size="sm" fw={500}>
-            Add a new monument at this location?
-          </Text>
-          <Button
-            size="xs"
-            variant="light"
-            
-            leftSection={<Plus size={14} />}
-            onClick={onClickHandler}
-          >
-            Create Monument
-          </Button>
-        </Stack>
-      </Popup>
-    )
+    <Popup
+      anchor="top"
+      longitude={lng}
+      latitude={lat}
+      onClose={() => setPopupButtonInfo(null)}
+      closeButton={false}
+      closeOnClick={false}
+      className="map-popup"
+    >
+      <Stack spacing="xs" align="center">
+        {!isLoggedIn()  ? (
+          <>
+            <Text size="sm" fw={500}>You need to be logged in to create a monument</Text>
+            <Group>
+              <PopUpButton onClick={() => openAuthModal('login')}>
+                Login
+              </PopUpButton>
+              <PopUpButton onClick={() => openAuthModal('signup')}>
+                Signup
+              </PopUpButton>
+            </Group>
+          </>
+        ) : (
+          <>
+            <Text size="sm" fw={500}>
+              Add a new monument at this location?
+            </Text>
+            <PopUpButton onClick={onClickHandler}>
+              Create Monument
+            </PopUpButton>
+          </>
+        )}
+      </Stack>
+    </Popup>
   )
 }
 

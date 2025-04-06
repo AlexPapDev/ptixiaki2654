@@ -1,18 +1,14 @@
 import { useState } from "react"
 import { Menu, Button, Avatar, Divider, Text } from "@mantine/core"
 import { Menu as MenuIcon } from "lucide-react"
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import useAppStore from '../utils/AppStore'
 import useAuthStore from '../utils/AuthStore'
 import { INIT_MAP_STATE } from '../utils/constants'
-
-// ✅ Clean, reusable component for Menu items that are links
-const MenuItemLink = ({ to, children }) => (
-  <Menu.Item component={Link} to={to}>
-    <Text>{children}</Text>
-  </Menu.Item>
-)
+import MenuItemLink from './MenuItemLink'
 
 export default function ProfileNav() {
+  const { openAuthModal } = useAppStore()
   const { isLoggedIn, user, logoutUser } = useAuthStore()
   const [opened, setOpened] = useState(false)
   const loggedIn = isLoggedIn()
@@ -36,8 +32,8 @@ export default function ProfileNav() {
       </Menu.Target>
 
       <Menu.Dropdown>
-        {!loggedIn && <MenuItemLink to="/login">Login</MenuItemLink>}
-        {!loggedIn && <MenuItemLink to="/signup">Signup</MenuItemLink>}
+        {!loggedIn && <MenuItemLink onClick={() => openAuthModal('login')}>Login</MenuItemLink>}
+        {!loggedIn && <MenuItemLink onClick={() => openAuthModal('signup')}>Signup</MenuItemLink>}
 
         {loggedIn && <MenuItemLink to="/profile">Profile</MenuItemLink>}
 
@@ -60,9 +56,7 @@ export default function ProfileNav() {
         {loggedIn && (
           <>
             <Divider />
-            <Menu.Item onClick={onClickLogoutHandler}>
-              <Text>Logout</Text>
-            </Menu.Item>
+            <MenuItemLink onClick={onClickLogoutHandler}>Logout</MenuItemLink>
           </>
         )}
       </Menu.Dropdown>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
+import useAppStore from '../utils/AppStore'
 import {
   TextInput,
   PasswordInput,
@@ -16,6 +17,7 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
+  const { closeAuthModal } = useAppStore()
   const { loginUser, isLoggedIn } = useAuthStore()
   const navigate = useNavigate()
 
@@ -42,18 +44,19 @@ const Login = () => {
       }
 
       navigate(`/user/${user.userid}`)
+      closeAuthModal()
     } catch (error) {
       setLoginError(error.message || 'Login failed. Please try again.')
     }
   }
 
   return (
-    <Container size={420} my={40}>
+    <Container size={420} mb={20}>
       <Title align='center' order={2}>
         Welcome back
       </Title>
 
-      <Paper withBorder shadow='md' p={30} mt={30} radius='md'>
+      <Paper radius='md'>
         <form onSubmit={handleSubmit}>
           <Stack>
             <TextInput

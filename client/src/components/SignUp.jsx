@@ -21,7 +21,7 @@ const inputs = [
   { label: 'Confirm Password', name: 'confirmPassword', type: 'password' },
 ]
 
-const SignUpScreen = () => {
+const SignUp = () => {
   const { isLoggedIn } = useAuthStore()
   const [formData, setFormData] = useState({
     firstname: '',
@@ -72,12 +72,12 @@ const SignUpScreen = () => {
   }
 
   return (
-    <Container size={420} my={40}>
+    <Container size={420} mb={20}>
       <Title align="center" order={2}>
         Create a New Account
       </Title>
 
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+      <Paper>
         <form onSubmit={handleSubmit}>
           <Stack>
             {inputs.map(({ label, name, type = 'text' }) => {
@@ -112,4 +112,4 @@ const SignUpScreen = () => {
   )
 }
 
-export default SignUpScreen
+export default SignUp
