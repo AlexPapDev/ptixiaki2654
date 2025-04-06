@@ -1,8 +1,6 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { Image, Group, Container, Anchor } from '@mantine/core'
 import SearchInput from './SearchInput'
-import useAuthStore from '../utils/AuthStore'
 import ProfileNav from './ProfileNav'
 
 const Navbar = () => {

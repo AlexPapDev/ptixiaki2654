@@ -31,7 +31,7 @@ const CategoriesBar = ({ categories = [] }) => {
                 size="xs"
                 radius="xl"
                 variant={isActive ? 'filled' : 'outline'}
-                color={isActive ? 'green' : 'gray'}
+                color={isActive ? 'primary' : 'gray'}
                 onClick={() => navigate(`/monuments/?${newSearchParams.toString()}`)}
                 sx={(theme) => ({
                   transition: 'background-color 0.3s, border-bottom 0.3s',

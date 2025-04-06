@@ -169,7 +169,7 @@ const NewMonument = () => {
         </form>
       </Box>
 
-      <Box className="map_section">
+      <Box className="map_section no-categories-map-height">
         <GenericMap overrideOriginalCoordinates={{ latitude: lat, longitude: lng }}>
           <GeolocateControl position='top-left' />
           <NavigationControl position='top-left' />

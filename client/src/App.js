@@ -57,11 +57,12 @@ function MainLayout() {
       header={{ height: headerHeight }}
     >
       <AppShell.Header>
-        <Paper shadow="sm">
+        <Paper shadow="sm" radius="none">
           <Navbar categories={categories} />
           {shouldShowCategoriesBar && <CategoriesBar categories={categories} />}
         </Paper>
       </AppShell.Header>
+      
       {/* <AppShell.Navbar p="md">
         
       </AppShell.Navbar> */}
