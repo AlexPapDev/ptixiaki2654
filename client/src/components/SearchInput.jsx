@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import { TextInput, useMantineTheme, ActionIcon, Paper } from '@mantine/core'
@@ -22,12 +22,13 @@ const NavSearchBar = () => {
       <TextInput
         radius="lg"
         placeholder="Search Monuments"
-        rightSectionWidth={34}
+        rightSectionWidth={41}
         onChange={(e) => setInputTerm(e.target.value)}
         value={inputTerm}
-        style={{width: '300px'}}
+        style={{width: '360px'}}
+        size="md"
         rightSection={
-          <ActionIcon size={28} radius="md" color={theme.primaryColor} variant="filled" onClick={onClickButton}>
+          <ActionIcon size={32} radius="md" color={theme.primaryColor} variant="filled" onClick={onClickButton}>
             <Search size={20} color="white"/>
           </ActionIcon>
         }
