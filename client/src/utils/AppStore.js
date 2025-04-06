@@ -15,6 +15,12 @@ const useAppStore = create(
 
       clickedMonumentMarker: null,
       setClickedMonumentMarker: (clickedMarker) => set({ clickedMonumentMarker: clickedMarker }),
+
+      isAuthModalOpen: false,
+      authMode: 'login',
+
+      openAuthModal: (mode) => set({ isAuthModalOpen: true, authMode: mode }),
+      closeAuthModal: () => set({ isAuthModalOpen: false }),
     }),
     {
       name: 'monuma-storage',

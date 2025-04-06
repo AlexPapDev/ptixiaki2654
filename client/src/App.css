@@ -117,10 +117,6 @@ p, a, li, label {
   box-shadow: var(--mantine-shadow-lg) !important;
 }
 
-.monument-card:hover {
-  cursor: pointer;
-}
-
 .category-item a, .category-item a:visited {
   color: black;
   text-decoration: unset;
