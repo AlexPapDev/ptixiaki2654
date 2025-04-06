@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, Group, Container, Anchor } from '@mantine/core'
+import { Image, Group, Container, Anchor, Text } from '@mantine/core'
 import SearchInput from './SearchInput'
 import ProfileNav from './ProfileNav'
 
@@ -9,7 +9,7 @@ const Navbar = () => {
       <Group justify="space-between">
         <Group gap="xs">
           <Image height={30} src="/ancient-greece.png"></Image>
-          <Anchor href="/monuments" style={{ textDecoration: 'none' }}>Monuma</Anchor>
+          <Anchor href="/monuments" style={{ textDecoration: 'none' }}><Text size="md" fw={600}>Monuma</Text></Anchor>
         </Group>
         
         <Group gap="md" align="center">
