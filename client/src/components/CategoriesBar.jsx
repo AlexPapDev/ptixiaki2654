@@ -2,8 +2,8 @@ import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import { Container, Group, Button, Paper } from '@mantine/core'
-
-const CategoriesBar = ({ categories = [] }) => {
+import { CATEGORIES } from '../utils/constants'
+const CategoriesBar = () => {
   const location = useLocation()
   const { setSearchTerm } = useAppStore()
   const navigate = useNavigate()
@@ -20,7 +20,7 @@ const CategoriesBar = ({ categories = [] }) => {
     <Paper shadow="none" p="md" pt="0" radius="0">
       <Container fluid px={32} >
         <Group justify="center" spacing={16}>
-          {categories.map((category) => {
+          {CATEGORIES.map((category) => {
             const newSearchParams = new URLSearchParams(searchParams)
             newSearchParams.set('cat', category)
             const isActive = activeCategory === category

@@ -31,8 +31,6 @@ import Login from './components/Login'
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '@mantine/core/styles.css'
-const categories = ['Byzantine', 'Roman', 'Christian', 'Ottoman', 'Jewish', 'Neoclassical', 'Contemporary', 'UNESCO Heritage', 'Industrial']
-
 function App() {
   return (
     <MantineThemeProvider>
@@ -58,8 +56,8 @@ function MainLayout() {
     >
       <AppShell.Header>
         <Paper shadow="sm" radius="none">
-          <Navbar categories={categories} />
-          {shouldShowCategoriesBar && <CategoriesBar categories={categories} />}
+          <Navbar />
+          {shouldShowCategoriesBar && <CategoriesBar />}
         </Paper>
       </AppShell.Header>
       
