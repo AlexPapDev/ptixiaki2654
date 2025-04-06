@@ -8,7 +8,7 @@ const Navbar = () => {
     <Container fluid px={32} pt={16} pb="md">
       <Group justify="space-between">
         <Group gap="xs">
-          <Image height={30} src="/ancient-greece.png"></Image>
+          <Image height={30} width={30} src="/ancient-greece.png"></Image>
           <Anchor href="/monuments" style={{ textDecoration: 'none' }}><Text size="md" fw={600}>Monuma</Text></Anchor>
         </Group>
         
