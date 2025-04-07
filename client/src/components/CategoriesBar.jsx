@@ -1,9 +1,10 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
-import { Container, Group, Button, Paper } from '@mantine/core'
+import { Container, Group, Button, Paper, UnstyledButton, Text, Flex } from '@mantine/core'
 import { CATEGORIES } from '../utils/constants'
-const CategoriesBar = () => {
+import TabButton from '../components/TabButton'
+const CategoriesBar = ({hideClearFilters}) => {
   const location = useLocation()
   const { setSearchTerm } = useAppStore()
   const navigate = useNavigate()
@@ -17,39 +18,40 @@ const CategoriesBar = () => {
   }
 
   return (
-    <Paper shadow="none" p="md" pt="0" radius="0">
-      <Container fluid px={32} >
-        <Group justify="center" spacing={16}>
-          {CATEGORIES.map((category) => {
-            const newSearchParams = new URLSearchParams(searchParams)
-            newSearchParams.set('cat', category)
-            const isActive = activeCategory === category
+    <Paper shadow="none" pb="sm" pt="0" radius="0">
+  <Container fluid px={32}>
+    <Flex justify="space-between" align="center">
+      <Group justify="center" spacing={16} style={{ flex: 1 }}>
+        {CATEGORIES.map((category) => {
+          const newSearchParams = new URLSearchParams(searchParams);
+          newSearchParams.set('cat', category);
+          const isActive = activeCategory === category;
+          return (
+            <TabButton
+              key={category}
+              isActive={isActive}
+              size="sm"
+              onClick={() => navigate(`/monuments/?${newSearchParams.toString()}`)}
+            >
+              {category}
+            </TabButton>
+          );
+        })}
+      </Group>
+      {!hideClearFilters && (
+        <Button
+          variant="light"
+          onClick={clearFilters}
+          size="xs"
+          sx={{ padding: '5px 10px', marginLeft: 16 }}
+        >
+          Clear Filters
+        </Button>
+      )}
+    </Flex>
+  </Container>
+</Paper>
 
-            return (
-              <Button
-                key={category}
-                size="xs"
-                radius="xl"
-                variant={isActive ? 'filled' : 'outline'}
-                color={isActive ? 'primary' : 'gray'}
-                onClick={() => navigate(`/monuments/?${newSearchParams.toString()}`)}
-                sx={(theme) => ({
-                  transition: 'background-color 0.3s, border-bottom 0.3s',
-                  '&:hover': {
-                    backgroundColor: theme.colors.gray[0],
-                  },
-                })}
-              >
-                {category}
-              </Button>
-            )
-          })}
-          <Button variant="light" onClick={clearFilters} size="xs" sx={{ padding: '5px 10px' }}>
-            Clear Filters
-          </Button>
-        </Group>
-      </Container>
-    </Paper>
   )
 }
 

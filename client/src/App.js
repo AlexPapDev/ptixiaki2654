@@ -16,6 +16,7 @@ import NewMonument from './pages/NewMonumentScreen'
 import MonumentDetail from './pages/MonumentDetailScreen'
 import OTPVerification from './pages/OTPVerificationScreen'
 import ApprovalScreen from './pages/ApprovalScreen'
+import Lists from './pages/ListsScreen'
 
 // Utility
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
@@ -44,11 +45,10 @@ function App() {
 function MainLayout() {
   const location = useLocation()
   const { isAuthModalOpen, authMode, closeAuthModal } = useAppStore()
-  const shouldShowCategoriesBar = (
-    location.pathname.startsWith('/monuments') 
-    && location.pathname !== '/monuments/new') 
-    || location.pathname === '/'
-  const headerHeight = shouldShowCategoriesBar ? 122 : 74
+  const isMonumentsPage = (location.pathname.startsWith('/monuments') && location.pathname !== '/monuments/new') 
+  const isHomePage = location.pathname === '/'
+  const showCategoriesBar = isMonumentsPage || isHomePage 
+  const headerHeight = showCategoriesBar ? 112 : 74
   return (
     <AppShell
       // navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: true } }}
@@ -57,14 +57,14 @@ function MainLayout() {
       <AppShell.Header>
         <Paper shadow="sm" radius="none">
           <Navbar />
-          {shouldShowCategoriesBar && <CategoriesBar />}
+          {showCategoriesBar && <CategoriesBar hideClearFilters={isHomePage}/>}
         </Paper>
       </AppShell.Header>
       
       {/* <AppShell.Navbar p="md">
         
       </AppShell.Navbar> */}
-      <AppShell.Main>
+      <AppShell.Main style={{backgroundColor: '#f8f9fa'}}>
         <ToastContainer position='top-right' autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
           <Routes>
             <Route path='/' element={<Home />} />
@@ -76,6 +76,7 @@ function MainLayout() {
             <Route path='/monuments' element={<Monuments />} />
             <Route path='/monuments/:monumentId' element={<MonumentDetail />} />
             <Route path='/user/:userId' element={<UserProfile />} />
+            <Route path='/lists' element={<Lists />}  />
             <Route path='/approval-dashboard' element={
               <ProtectedRoutes requiredRoles={['admin', 'ambassador']}>
                 <ApprovalScreen />
