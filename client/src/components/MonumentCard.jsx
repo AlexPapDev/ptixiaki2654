@@ -11,12 +11,13 @@ const MonumentCard = ({ monument, selected = false }) => {
   const destinationUrl = `/monuments/${monumentid}`
 
   return (
-      <Card className={`monument-card ${selected ? 'selected' : ''}`} padding="md" radius="sm">
-        <Card.Section mb="sm">
+      <Card shadow="none" className={`monument-card ${selected ? 'selected' : ''}`} padding="none" radius="sm">
+        <Card.Section mb="sm" >
           <Link to={destinationUrl} style={{ textDecoration: 'none' }}>
             <Image
+            radius="md"
               src={image}
-              height={160}
+              height={230}
             />
           </Link>
         </Card.Section>

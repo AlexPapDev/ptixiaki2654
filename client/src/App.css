@@ -126,12 +126,12 @@ p, a, li, label {
 }
 
 .monument-card {
-  transition: box-shadow 0.3s ease;
-  box-shadow: var(--mantine-shadow-xs) !important;
+  /* transition: box-shadow 0.3s ease; */
+  /* box-shadow: var(--mantine-shadow-xs) !important; */
 }
 
 .monument-card.selected {
-  box-shadow: var(--mantine-shadow-lg) !important;
+  /* box-shadow: var(--mantine-shadow-lg) !important; */
 }
 
 .category-item a, .category-item a:visited {

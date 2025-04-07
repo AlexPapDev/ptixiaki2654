@@ -64,7 +64,8 @@ function MainLayout() {
       {/* <AppShell.Navbar p="md">
         
       </AppShell.Navbar> */}
-      <AppShell.Main style={{backgroundColor: '#f8f9fa'}}>
+      {/* <AppShell.Main style={{backgroundColor: '#f8f9fa'}}> */}
+            <AppShell.Main style={{backgroundColor: '#fff'}}>
         <ToastContainer position='top-right' autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
           <Routes>
             <Route path='/' element={<Home />} />

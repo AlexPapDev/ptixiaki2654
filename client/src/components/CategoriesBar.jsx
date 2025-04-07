@@ -19,37 +19,36 @@ const CategoriesBar = ({hideClearFilters}) => {
 
   return (
     <Paper shadow="none" pb="sm" pt="0" radius="0">
-  <Container fluid px={32}>
-    <Flex justify="space-between" align="center">
-      <Group justify="center" spacing={16} style={{ flex: 1 }}>
-        {CATEGORIES.map((category) => {
-          const newSearchParams = new URLSearchParams(searchParams);
-          newSearchParams.set('cat', category);
-          const isActive = activeCategory === category;
-          return (
-            <TabButton
-              key={category}
-              isActive={isActive}
-              size="sm"
-              onClick={() => navigate(`/monuments/?${newSearchParams.toString()}`)}
-            >
-              {category}
-            </TabButton>
-          );
-        })}
-      </Group>
-      {!hideClearFilters && (
-        <Button
-          variant="light"
-          onClick={clearFilters}
-          size="xs"
-          sx={{ padding: '5px 10px', marginLeft: 16 }}
-        >
-          Clear Filters
-        </Button>
-      )}
-    </Flex>
-  </Container>
+      <Container fluid px={32} position="relative">
+        <Group justify="start" spacing={16} style={{ flex: 1, position: 'relative' }}>
+          {CATEGORIES.map((category) => {
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.set('cat', category);
+            const isActive = activeCategory === category;
+            return (
+              <TabButton
+                key={category}
+                isActive={isActive}
+                size="sm"
+                onClick={() => navigate(`/monuments/?${newSearchParams.toString()}`)}
+              >
+                {category}
+              </TabButton>
+            );
+          })}
+          {!hideClearFilters && (
+          <Button
+            variant="light"
+            onClick={clearFilters}
+            size="xs"
+            style={{ padding: '5px 10px', marginLeft: 10,}}
+          >
+            Clear Filters
+          </Button>
+        )}
+        </Group>
+        
+    </Container>
 </Paper>
 
   )
