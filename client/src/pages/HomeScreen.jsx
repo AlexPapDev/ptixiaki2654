@@ -8,7 +8,7 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState('monuments')
   const [inputTerm, setInputTerm] = useState('')
   const navigate = useNavigate()
-  const { setSearchTerm, searchTerm } = useAppStore()
+  const { setSearchTerm } = useAppStore()
   const placeholder = `Search ${activeTab}`
 
   const handleTabChange = (tab: string) => {

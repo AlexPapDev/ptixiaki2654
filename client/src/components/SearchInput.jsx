@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import { TextInput, useMantineTheme, ActionIcon, Paper } from '@mantine/core'
@@ -7,8 +7,14 @@ import { Search } from 'lucide-react'
 const NavSearchBar = () => {
   const { setSearchTerm, searchTerm } = useAppStore()
   const theme = useMantineTheme()
-  const [inputTerm, setInputTerm] = useState(searchTerm || '')
+  const [inputTerm, setInputTerm] = useState('')
+
   const navigate = useNavigate()
+  useEffect(() => {
+    if (searchTerm) {
+      setInputTerm(searchTerm)
+    }
+  }, [searchTerm])
   const onClickButton = (e) => {
     // user clicked search without inserting text
     if (!inputTerm && !e.target.value) return
