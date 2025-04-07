@@ -52,8 +52,7 @@ const UserProfile = () => {
   const isOwnProfile = Number(userId) === Number(user?.userid)
 
   return (
-    <Container>
-      <Paper padding="xl" style={{ maxWidth: 800, margin: 'auto' }}>
+      <Paper style={{ maxWidth: 800, margin: 'auto' }}>
         {error && (
           <Alert title="Error" color="red" style={{ marginBottom: '20px' }}>
             {error}
@@ -72,7 +71,6 @@ const UserProfile = () => {
           <UserProfileView user={renderedUser} />
         )}
       </Paper>
-    </Container>
   )
 }
 
