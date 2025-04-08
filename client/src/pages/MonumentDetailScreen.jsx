@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
 import { Container, Image } from '@mantine/core'
+import { getCloudinaryUrl } from '../utils/helpers'
 const MonumentDetail = () => {
   const { monumentId } = useParams()
   const [monument, setMonument] = useState(null)
@@ -9,7 +10,7 @@ const MonumentDetail = () => {
   const [error, setError] = useState(null)
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
-
+  const url = getCloudinaryUrl(monument?.images[0])
   useEffect(() => {
     const fetchMonument = async () => {
       try {
@@ -42,7 +43,7 @@ const MonumentDetail = () => {
       <Image radius="sm"
         h={200}
         w="auto"
-        fit="contain" src={monument?.images[0]} />
+        fit="contain" src={url} />
       <p>{monument?.description}</p>
       <p>{monument?.city}</p>
       <p>{monument?.road}</p>

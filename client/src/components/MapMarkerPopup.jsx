@@ -1,9 +1,11 @@
 import React from 'react'
 import { Popup } from 'react-map-gl'
 import { Card, Image, Text} from '@mantine/core'
+import { getCloudinaryUrl } from '../utils/helpers'
+
 const MapMarkerPopup = ({markerPopupInfo, setMarkerPopupInfo}) => {
   const { longitude, latitude, name, description, images } = markerPopupInfo || {}
-
+  const url = getCloudinaryUrl(images?.[0], { width: 300 })
   return (
     markerPopupInfo && <Popup
       anchor="top"
@@ -16,7 +18,7 @@ const MapMarkerPopup = ({markerPopupInfo, setMarkerPopupInfo}) => {
       <Card radius="xs" padding="none">
         <Card.Section>
           <Image
-            src={images[0]}
+            src={url}
             height={100}
             fit="cover"
             alt="Norway"

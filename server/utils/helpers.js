@@ -37,7 +37,7 @@ const uploadToCloudinary = (fileBuffer, folder) => {
       { folder },
       (error, result) => {
         if (error) reject(error);
-        else resolve(result.secure_url)
+        else resolve(result.public_id)
       }
     )
     stream.end(fileBuffer)
