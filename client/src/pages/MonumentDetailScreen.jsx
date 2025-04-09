@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import { Container, Image } from '@mantine/core'
-import { getCloudinaryUrl } from '../utils/helpers'
+import { Container, Title, Group, Button, Box, Text, Stack, Divider, Grid } from '@mantine/core'
+import MonumentDetailGrid from '../components/MonumentDetailGrid'
+import MonumentDetailTextInfo from '../components/MonumentDetailTextInfo'
+import WorkingHours from '../components/WorkingHours'
 const MonumentDetail = () => {
   const { monumentId } = useParams()
   const [monument, setMonument] = useState(null)
@@ -10,17 +12,18 @@ const MonumentDetail = () => {
   const [error, setError] = useState(null)
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
-  const url = getCloudinaryUrl(monument?.images[0])
+  // const url = getCloudinaryUrl(monument?.images[0])
   useEffect(() => {
     const fetchMonument = async () => {
       try {
         setLoading(true)
         const result = await axios.get(`${API_BASE_URL}/api/monuments/${monumentId}`)
         const { monument } = result.data.data
-        const { name, description, categories = [], images = [], address: { city, road }} = monument
+        const { name, description, categories = [], images = [], address, address: { city, road }} = monument
         setMonument({
-          name, description, city, road, categories, images
+          name, description, city, road, categories, images, address, isPublic: true
         })
+        
       } catch (err) {
         setError('Failed to load monument details')
       } finally {
@@ -39,15 +42,26 @@ const MonumentDetail = () => {
 
   return (
     <Container>
-      <h1>{monument?.name}</h1>
-      <Image radius="sm"
-        h={200}
-        w="auto"
-        fit="contain" src={url} />
-      <p>{monument?.description}</p>
-      <p>{monument?.city}</p>
-      <p>{monument?.road}</p>
-      {!!monument?.categories.length && <div>{monument.categories.join()}</div>}
+      <Group pt="lg">
+        <Title order={2}>{monument?.name}</Title>
+        <Button color="teal">Edit</Button>
+        <Button color="coral">Delete</Button>
+      </Group>
+      
+      <div mt="lg">
+        <MonumentDetailGrid images={monument?.images} />
+      </div>
+      <Grid>
+        <Grid.Col span={7}>
+          <MonumentDetailTextInfo monument={monument} />
+        </Grid.Col>
+        <Grid.Col span={5} pt="xl">
+          <Box ml="auto" maw={300}>
+            <WorkingHours hoursPerDay={[]} isPublic={monument.isPublic}/>
+          </Box>
+        </Grid.Col>
+      </Grid>
+      
     </Container>
   )
 }

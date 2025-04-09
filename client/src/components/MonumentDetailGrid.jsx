@@ -1,58 +1,79 @@
 import React from 'react'
-import { Grid, Col, Image } from '@mantine/core'
-
+import { Grid, Group, Image,Box } from '@mantine/core'
+import { getCloudinaryUrl } from '../utils/helpers'
+import { Gallery } from "react-grid-gallery"
 const MonumentDetailGrid = ({ images }) => {
-  return (
-    <Grid>
-      {/* Left side: Takes half the space */}
-      <Col span={6}>
-        <Image
-          src={images[0]}
-          alt="Main Image"
-          fit="cover"
-          height="100%"
-        />
-      </Col>
+  const imageUrls = getCloudinaryUrl(images, { width: 1000 })
 
-      {/* Right side: 2x2 grid */}
-      <Col span={6}>
-        <Grid>
-          <Col span={6}>
-            <Image
-              src={images[1]}
-              alt="Image 1"
-              fit="cover"
-              height="100%"
-            />
-          </Col>
-          <Col span={6}>
-            <Image
-              src="https://via.placeholder.com/300x200"
-              alt="Image 2"
-              fit="cover"
-              height="100%"
-            />
-          </Col>
-          <Col span={6}>
-            <Image
-              src="https://via.placeholder.com/300x200"
-              alt="Image 3"
-              fit="cover"
-              height="100%"
-            />
-          </Col>
-          <Col span={6}>
-            <Image
-              src="https://via.placeholder.com/300x200"
-              alt="Image 4"
-              fit="cover"
-              height="100%"
-            />
-          </Col>
-        </Grid>
-      </Col>
-    </Grid>
-  )
+  return (
+    <Box mt="md" sx={(theme) => ({
+      width: '100%',
+    })}>
+      <Grid style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px) !important', height: '100%', width: '100%' }}>
+        <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px) !important' }}>          <Image
+            src={imageUrls[0]}
+            alt="Main"
+            radius="md"
+            style={{
+              height: '100%',
+            }}
+          />
+        </Grid.Col>
+        <Grid.Col span={6}>
+          <Grid>
+            <Grid.Col span={6}>
+              <Image
+                src={imageUrls[0]}
+                alt="Thumbnail 1"
+                radius="md"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Grid.Col >
+            <Grid.Col span={6}>
+              <Image
+                src={imageUrls[0]}
+                alt="Thumbnail 2"
+                radius="md"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Image
+                src={imageUrls[0]}
+                alt="Thumbnail 1"
+                radius="md"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Image
+                src={imageUrls[0]}
+                alt="Thumbnail 2"
+                radius="md"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Grid.Col>
+          </Grid>
+        </Grid.Col>
+      </Grid>
+    </Box>
+  );
 }
 
 export default MonumentDetailGrid
