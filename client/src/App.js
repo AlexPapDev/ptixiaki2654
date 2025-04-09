@@ -77,7 +77,7 @@ function MainLayout() {
             <Route path='/monuments' element={<Monuments />} />
             <Route path='/monuments/:monumentId' element={<MonumentDetail />} />
             <Route path='/user/:userId' element={<UserProfile />} />
-            <Route path='/lists' element={<Lists />}  />
+            <Route path='/lists/*' element={<Lists />}  />
             <Route path='/approval-dashboard' element={
               <ProtectedRoutes requiredRoles={['admin', 'ambassador']}>
                 <ApprovalScreen />

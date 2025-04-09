@@ -36,7 +36,7 @@ router.post('/get-address', async (req, res) => {
 })
 
 // Create a new monument
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', upload.array('image', 5), async (req, res) => {
   try {
     const { name, description, latitude, longitude, userid, categories } = req.body
     if (!name || !description || !latitude || !longitude || !userid) {
@@ -91,9 +91,19 @@ router.post('/', upload.single('image'), async (req, res) => {
     let imageUrl = null
     
     // Upload image only if provided
-    if (req.file) {
-      imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
-      await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
+    // if (req.file) {
+    //   imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
+    //   await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
+    // }
+    // const uploadedImages = []
+    console.log(req.files)
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const imageUrl = await uploadToCloudinary(file.buffer, 'ptixiaki')
+        console.log(imageUrl)
+        await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
+        // uploadedImages.push(imageUrl)
+      }
     }
 
     // Insert categories

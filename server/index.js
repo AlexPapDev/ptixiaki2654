@@ -1,9 +1,10 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
-import pool from './config/db.js' // Use the correct extension
-import userRoutes from './routes/userRoute.js' // Use the correct extension
-import monumentRoutes from './routes/monumentRoute.js' // Use the correct extension
+import pool from './config/db.js' 
+import userRoutes from './routes/userRoute.js' 
+import monumentRoutes from './routes/monumentRoute.js' 
+import listRoute from './routes/listRoute.js'
 
 dotenv.config() // Load environment variables
 
@@ -16,6 +17,7 @@ app.use(express.json())
 // Use the user routes for /api/users path
 app.use('/api/users', userRoutes)
 app.use('/api/monuments', monumentRoutes)
+app.use('/api/lists', listRoute)
 
 app.get('/ping', (req, res) => {
   res.send('Main Ping!')
