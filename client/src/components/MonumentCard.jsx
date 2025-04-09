@@ -32,7 +32,7 @@ const MonumentCard = ({ monument, selected = false }) => {
 
         <Text fw={400}>{fullStreetName}</Text>
 
-        <Text size="sm" c="dimmed" lineClamp={3} style={{ minHeight: '60px' }}>
+        <Text size="sm" c="dimmed" lineClamp={3}>
           {description}
         </Text>
 
