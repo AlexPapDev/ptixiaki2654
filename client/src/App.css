@@ -1,6 +1,15 @@
 * {
   --map-height-top-distance: 112px
 }
+
+/* @font-face {
+  font-family: 'Open Sans Variable';
+  src: url('/fonts/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-stretch: 75% 125%;
+  font-style: normal;
+} */
+
 .App {
   text-align: center;
 }
@@ -64,11 +73,11 @@
 
 /* TEXT */
 h1, h2, h3, h4, h5 {
-  font-family: "Poppins", "Open Sans" "sans-serif";
+  /* font-family: 'Open Sans Variable' !important; */
 }
 
 p, a, li, label {
-  font-family: "Open Sans";
+  /* font-family: 'Open Sans Variable' !important; */
 }
 
 .text_large {
