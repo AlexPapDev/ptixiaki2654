@@ -49,14 +49,15 @@ const NewMonument = () => {
   }, [lat, lng, API_BASE_URL])
 
   const handleSubmit = async (values) => {
-    debugger
     const formData = new FormData()
     formData.append('name', values.name)
     formData.append('description', values.description)
     formData.append('latitude', lat)
     formData.append('longitude', lng)
     formData.append('userid', user?.userid)
-    formData.append('images', values.files)
+    for (let i = 0; i < values.files.length; i++) {
+      formData.append('image', values.files[i])
+    }
     formData.append('categories', values.categories)
 
     try {

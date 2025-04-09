@@ -82,7 +82,7 @@ const NewMonumentForm = ({handleSubmit, loading, address = {}}) => {
           {...form.getInputProps('categories')}
         />
 
-        <FileDropzone onFilesChange={onFilesChange}></FileDropzone>
+        <FileDropzone onFilesChange={onFilesChange} multiple></FileDropzone>
 
         <Button type="submit" loading={loading} fullWidth>
           Create Monument

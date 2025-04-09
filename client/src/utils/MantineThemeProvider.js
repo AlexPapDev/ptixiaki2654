@@ -17,6 +17,10 @@ const theme = createTheme({
       '#e8f5e9', '#c8e6c9', '#a5d6a7', '#81c784', '#66bb6a',
       '#4caf50', '#43a047', '#388e3c', '#2e7d32', '#1b5e20',
     ],
+    coral: [
+      '#ffebee', '#ffcdd2', '#ef9a9a', '#e57373', '#ef5350',
+      '#f44336', '#e53935', '#d32f2f', '#c62828', '#b71c1c',
+    ],
     white: [
       '#FFFFFF', // pure white
       '#FAFAFA',
@@ -31,7 +35,7 @@ const theme = createTheme({
     ],
   },
   primaryColor: 'primary',
-  fontFamily: 'Circular, Inter, sans-serif',
+  fontFamily: 'Comfortaa',
   fontSizes: {
     xs: '12px',
     sm: '14px',
@@ -68,7 +72,7 @@ const theme = createTheme({
     xl: '0px 8px 24px rgba(0, 0, 0, 0.24)',
   },
   headings: {
-    fontFamily: 'Circular, Inter, sans-serif',
+    fontFamily: 'Roboto Slab',
     sizes: {
       h1: { fontSize: '32px', fontWeight: 700 },
       h2: { fontSize: '28px', fontWeight: 600 },
