@@ -12,7 +12,7 @@ const NewMonument = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { lat, lng } = Object.fromEntries(searchParams)
   const navigate = useNavigate()
-  const { user } = useAuthStore()
+  const { user, isLoggedIn } = useAuthStore()
 
   const [loading, setLoading] = useState(false)
   const [address, setAddress] = useState({
@@ -47,6 +47,11 @@ const NewMonument = () => {
     }
     fetchAddress()
   }, [lat, lng, API_BASE_URL])
+
+  if (!isLoggedIn()) {
+    navigate('/')
+    return null
+  }
 
   const handleSubmit = async (values) => {
     const formData = new FormData()
