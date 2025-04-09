@@ -36,15 +36,22 @@ export default function ProfileNav() {
         {!loggedIn && <MenuItemLink onClick={() => openAuthModal('signup')}>Signup</MenuItemLink>}
 
         {loggedIn && <MenuItemLink to="/profile">Profile</MenuItemLink>}
-
-        {loggedIn && (
-          <MenuItemLink to={{
-            pathname: "/monuments/new",
-            search: `?lat=${latitude}&lng=${longitude}`,
-          }}>
-            Create Monument
-          </MenuItemLink>
-        )}
+        {!loggedIn && <Divider />}
+        <MenuItemLink to={
+          loggedIn
+            ? {
+                pathname: "/monuments/new",
+                search: `?lat=${latitude}&lng=${longitude}`,
+              }
+            : undefined
+          }
+          onClick={() => {
+            if (!loggedIn) {
+              openAuthModal('login')
+            }
+          }} >
+          Create Monument
+        </MenuItemLink>
 
         {isAdminOrAmbassador && (
           <>
