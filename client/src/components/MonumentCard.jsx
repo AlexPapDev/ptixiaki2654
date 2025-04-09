@@ -18,7 +18,7 @@ const MonumentCard = ({ monument, selected = false }) => {
         <Card.Section mb="sm" >
           <Link to={destinationUrl} style={{ textDecoration: 'none' }}>
             <Image
-            radius="md"
+              radius="md"
               src={image}
               height={230}
             />
