@@ -33,11 +33,11 @@ import '@mantine/core/styles.css'
 function App() {
   return (
     <MantineThemeProvider>
-      <ModalsProvider>
-        <Router>
+      <Router>
+        <ModalsProvider>
           <MainLayout />
-        </Router>
-      </ModalsProvider>
+        </ModalsProvider>
+      </Router>
     </MantineThemeProvider>
   )
 }
