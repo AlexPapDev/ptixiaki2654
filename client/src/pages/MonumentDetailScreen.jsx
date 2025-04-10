@@ -4,6 +4,7 @@ import axios from 'axios'
 import { Container, Title, Group, Button, Box, Text, Stack, Divider, Grid } from '@mantine/core'
 import MonumentDetailGrid from '../components/MonumentDetailGrid'
 import MonumentDetailTextInfo from '../components/MonumentDetailTextInfo'
+import MonumentDetailMap from '../components/MonumentDetailMap'
 import WorkingHours from '../components/WorkingHours'
 const MonumentDetail = () => {
   const { monumentId } = useParams()
@@ -19,9 +20,9 @@ const MonumentDetail = () => {
         setLoading(true)
         const result = await axios.get(`${API_BASE_URL}/api/monuments/${monumentId}`)
         const { monument } = result.data.data
-        const { name, description, categories = [], images = [], address, address: { city, road }} = monument
+        const { name, description, latitude, longitude, categories = [], images = [], address, address: { city, road }} = monument
         setMonument({
-          name, description, city, road, categories, images, address, isPublic: true
+          latitude, longitude, name, description, city, road, categories, images, address, isPublic: true
         })
         
       } catch (err) {
@@ -54,10 +55,12 @@ const MonumentDetail = () => {
       <Grid>
         <Grid.Col span={7}>
           <MonumentDetailTextInfo monument={monument} />
+          <Divider pb="md"/>
+          <WorkingHours hoursPerDay={[]} isPublic={monument.isPublic}/>
         </Grid.Col>
-        <Grid.Col span={5} pt="xl">
-          <Box ml="auto" maw={300}>
-            <WorkingHours hoursPerDay={[]} isPublic={monument.isPublic}/>
+        <Grid.Col pl="md" span={5} pt="xl">
+          <Box style={{height:'100%', width: '100%'}}>
+            <MonumentDetailMap lat={monument?.latitude} lng={monument?.longitude}></MonumentDetailMap>
           </Box>
         </Grid.Col>
       </Grid>
