@@ -18,9 +18,6 @@ const useAppStore = create(
 
       isAuthModalOpen: false,
       authMode: 'login',
-
-      openAuthModal: (mode) => set({ isAuthModalOpen: true, authMode: mode }),
-      closeAuthModal: () => set({ isAuthModalOpen: false }),
     }),
     {
       name: 'monuma-storage',
