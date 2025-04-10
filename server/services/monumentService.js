@@ -133,6 +133,11 @@ const rejectMonument = async (monumentid) => {
   return rows[0]
 }
 
+const deleteMonument = async (monumentid) => {
+  const query = `DELETE FROM monuments WHERE monumentid = $1`
+  const result = await db.query(query, [monumentid])
+  return result.rowCount
+}
 
 export default { 
   createMonument,
@@ -144,4 +149,5 @@ export default {
   rejectMonument,
   getMonumentById,
   getMonumentsByStatus,
+  deleteMonument,
 }

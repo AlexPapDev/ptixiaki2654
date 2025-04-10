@@ -308,6 +308,31 @@ router.put('/:id', async (req, res) => {
   }
 })
 
+router.delete('/:monumentid', authenticateUser, checkRole(['admin', 'ambassador']), async (req, res) => {
+  try {
+    const { monumentid } = req.params
+    const rowCount = await monumentService.deleteMonument(monumentid)
+    console.log('delete result', rowCount)
+    if (rowCount > 0) {
+      res.status(200).json({
+        status: 'success',
+        data: {},
+      })
+    } else {
+      res.status(404).json({
+        status: 'fail',
+        message: 'Monument not found',
+      })
+    }
+  } catch (error) {
+    console.error(error.message)
+    res.status(500).json({
+      status: 'error',
+      message: 'Internal server error',
+    })
+  }
+})
+
 router.get('/ping', (req, res) => {
   res.send('Monuments Ping!')
 })
