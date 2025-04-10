@@ -10,7 +10,8 @@ const MonumentDetailGrid = ({ images }) => {
       width: '100%',
     })}>
       <Grid style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px) !important', height: '100%', width: '100%' }}>
-        <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px) !important' }}>          <Image
+        <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px) !important' }}>
+          <Image
             src={imageUrls[0]}
             alt="Main"
             radius="md"
