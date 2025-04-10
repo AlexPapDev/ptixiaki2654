@@ -1,7 +1,6 @@
 import { Stack, Grid, Text } from '@mantine/core'
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
-
+const hoursPerDayDefault = [null, null, null, null, null, null, null]
 const StackItem = ({ day, hours, isPublic }) => {
   return (
     <Grid>
@@ -19,7 +18,7 @@ const StackItem = ({ day, hours, isPublic }) => {
     </Grid>
   )
 }
-const WorkingHours = ({ hoursPerDay = [], isPublic = false }) => {
+const WorkingHours = ({ hoursPerDay = hoursPerDayDefault, isPublic = false }) => {
   return (
     <Stack>
       <Text fw={600} align="left">Working Hours</Text>

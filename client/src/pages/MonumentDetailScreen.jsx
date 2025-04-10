@@ -57,12 +57,10 @@ const MonumentDetail = () => {
         <Grid.Col span={7}>
           <MonumentDetailTextInfo monument={monument} />
           <Divider pb="md" />
-          {monument.workingHours?.length > 0 && (
-            <WorkingHours
-              hoursPerDay={monument.workingHours}
-              isPublic={monument.isPublic}
-            />
-          )}
+          <WorkingHours
+            hoursPerDay={monument.workingHours}
+            isPublic={monument.isPublic}
+          />
         </Grid.Col>
         <Grid.Col pl="md" span={5} pt="xl">
           <Box style={{ height: '100%', width: '100%' }}>
