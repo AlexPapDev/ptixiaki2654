@@ -18,23 +18,23 @@ const GenericMap = ({
     ...overrideOriginalCoordinates
   }
   return (
-      <Map
-        ref={mapRef}
-        mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
-        initialViewState={initMapState}
-        style={{  
-          width: '100%',
-          height: '100%'
-        }}
-        mapStyle="mapbox://styles/mapbox/streets-v9"
-        onContextMenu={onContextMenu}
-        onMoveEnd={onMoveEnd}
-        onLoad={onLoad}
-        onZoom={onZoom}
-        onClick={onClick}
-      >
-        {children}
-      </Map>
+    <Map
+      ref={mapRef}
+      mapboxAccessToken={MAPBOX_ACCESS_TOKEN}
+      initialViewState={initMapState}
+      style={{  
+        width: '100%',
+        height: '100%'
+      }}
+      mapStyle="mapbox://styles/mapbox/streets-v9"
+      onContextMenu={onContextMenu}
+      onMoveEnd={onMoveEnd}
+      onLoad={onLoad}
+      onZoom={onZoom}
+      onClick={onClick}
+    >
+      {children}
+    </Map>
   )
 }
 export default GenericMap
