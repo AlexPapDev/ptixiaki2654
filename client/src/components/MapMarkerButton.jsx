@@ -3,7 +3,7 @@ import { Popup } from 'react-map-gl'
 import { Button, Text, Stack, Group } from '@mantine/core'
 import { Plus } from 'lucide-react'
 import useAuthStore from '../utils/AuthStore'
-import useAppStore from '../utils/AppStore'
+import useAuthModals from '../hooks/useAuthModals'
 
 const PopUpButton = ({children, onClick, withIcon = false}) => {
   console.log(children)
@@ -18,7 +18,7 @@ const PopUpButton = ({children, onClick, withIcon = false}) => {
 }
 const MapMarkerButton = ({ popupButtonInfo, setPopupButtonInfo, onClickHandler }) => {
   const { isLoggedIn } = useAuthStore()
-  const { openAuthModal } = useAppStore()
+  const { openLoginModal, openSignUpModal } = useAuthModals()
   if (!popupButtonInfo) return <></>
   const { lng, lat } = popupButtonInfo
   
@@ -37,10 +37,10 @@ const MapMarkerButton = ({ popupButtonInfo, setPopupButtonInfo, onClickHandler }
           <>
             <Text size="sm" fw={500}>You need to be logged in to create a monument</Text>
             <Group>
-              <PopUpButton onClick={() => openAuthModal('login')}>
+              <PopUpButton onClick={openLoginModal}>
                 Login
               </PopUpButton>
-              <PopUpButton onClick={() => openAuthModal('signup')}>
+              <PopUpButton onClick={openSignUpModal}>
                 Signup
               </PopUpButton>
             </Group>

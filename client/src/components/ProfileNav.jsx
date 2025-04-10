@@ -6,6 +6,7 @@ import useAppStore from '../utils/AppStore'
 import useAuthStore from '../utils/AuthStore'
 import { INIT_MAP_STATE } from '../utils/constants'
 import MenuItemLink from './MenuItemLink'
+import useAuthModals from '../hooks/useAuthModals'
 
 export default function ProfileNav() {
   const { openAuthModal } = useAppStore()
@@ -13,6 +14,7 @@ export default function ProfileNav() {
   const [opened, setOpened] = useState(false)
   const loggedIn = isLoggedIn()
   const navigate = useNavigate()
+  const { openLoginModal, openSignUpModal } = useAuthModals()
 
   const onClickLogoutHandler = () => {
     logoutUser()
@@ -32,8 +34,8 @@ export default function ProfileNav() {
       </Menu.Target>
 
       <Menu.Dropdown>
-        {!loggedIn && <MenuItemLink onClick={() => openAuthModal('login')}>Login</MenuItemLink>}
-        {!loggedIn && <MenuItemLink onClick={() => openAuthModal('signup')}>Signup</MenuItemLink>}
+        {!loggedIn && <MenuItemLink onClick={openLoginModal}>Login</MenuItemLink>}
+        {!loggedIn && <MenuItemLink onClick={openSignUpModal}>Signup</MenuItemLink>}
 
         {loggedIn && <MenuItemLink to="/profile">Profile</MenuItemLink>}
         {!loggedIn && <Divider />}

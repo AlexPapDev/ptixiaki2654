@@ -1,7 +1,8 @@
 
 
 // Mantine
-import { AppShell, Modal, Paper } from '@mantine/core'
+import { AppShell, Paper } from '@mantine/core'
+import { ModalsProvider } from '@mantine/modals'
 import MantineThemeProvider from './utils/MantineThemeProvider'
 
 // Header / Navbar imports
@@ -25,9 +26,6 @@ import ProtectedRoutes from './utils/ProtectedRoutes'
 import { ToastContainer } from 'react-toastify'
 import useAppStore from './utils/AppStore'
 
-import SignUp from './components/SignUp'
-import Login from './components/Login'
-
 // Styles
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css'
@@ -35,16 +33,17 @@ import '@mantine/core/styles.css'
 function App() {
   return (
     <MantineThemeProvider>
-      <Router>
-        <MainLayout />
-      </Router>
+      <ModalsProvider>
+        <Router>
+          <MainLayout />
+        </Router>
+      </ModalsProvider>
     </MantineThemeProvider>
   )
 }
 
 function MainLayout() {
   const location = useLocation()
-  const { isAuthModalOpen, authMode, closeAuthModal } = useAppStore()
   const isMonumentsPage = (location.pathname.startsWith('/monuments') && location.pathname !== '/monuments/new') 
   const isHomePage = location.pathname === '/'
   const showCategoriesBar = isMonumentsPage || isHomePage 
@@ -65,7 +64,7 @@ function MainLayout() {
         
       </AppShell.Navbar> */}
       {/* <AppShell.Main style={{backgroundColor: '#f8f9fa'}}> */}
-            <AppShell.Main style={{backgroundColor: '#fff'}}>
+      <AppShell.Main style={{backgroundColor: '#fff'}}>
         <ToastContainer position='top-right' autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
           <Routes>
             <Route path='/' element={<Home />} />
@@ -84,14 +83,6 @@ function MainLayout() {
               </ProtectedRoutes>
             } />
           </Routes>
-          <Modal
-            opened={isAuthModalOpen}
-            onClose={closeAuthModal}
-            title={authMode === 'login' ? 'Login' : 'Sign up'}
-            centered
-          >
-            {authMode === 'login' ? <Login /> : <SignUp />}
-          </Modal>
       </AppShell.Main>
     </AppShell>
   )
