@@ -15,13 +15,21 @@ const MonumentCard = ({ monument, selected = false }) => {
 
   return (
       <Card shadow="none" className={`monument-card ${selected ? 'selected' : ''}`} padding="none" radius="sm">
-        <Card.Section mb="sm" >
+        <Card.Section mb="sm" style={{  width:"100%"}}>
           <Link to={destinationUrl} style={{ textDecoration: 'none' }}>
+          <div style={{ width: '100%', aspectRatio: '1 / 1', overflow: 'hidden', borderRadius: '8px' }}>
             <Image
-              radius="md"
               src={image}
-              height={230}
+              alt={name}
+              style={{
+                width: '100%',
+                height: '100%',
+                // objectFit: 'cover',
+                display: 'block',
+              }}
+              object-fit="cover"
             />
+            </div>
           </Link>
         </Card.Section>
 
