@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useSearchParams } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import MonumentCard from '../components/MonumentCard'
-import { Group, Card, Skeleton } from '@mantine/core'
+import { Group, Card, Skeleton, Box } from '@mantine/core'
 import NoResults from '../components/NoResults'
 import { motion } from 'framer-motion'
 
@@ -79,30 +79,31 @@ const Monuments = () => {
       <Group align="flex-start">
         {!loading && monuments.length === 0
           ? <NoResults />
-          : <section className="content_section grid m-t-1 p-b-1">
-            {loading
-              ? renderSkeletonCards()
-              : monuments.map((monument, i) => (
-                <motion.div
-                  key={'monument-card-' + i}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 * i }}
-                >
-                  <MonumentCard 
-                    monument={monument} 
-                    selected={monument.monumentid === clickedMonumentMarker}
-                  />
-                </motion.div>
-              ))
-            }
-          </section>
+          : <Box className="content_section grid m-t-1 p-b-1">
+              {loading
+                ? renderSkeletonCards()
+                : monuments.map((monument, i) => (
+                  <motion.div
+                    key={'monument-card-' + i}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 * i }}
+                  >
+                    <MonumentCard 
+                      monument={monument} 
+                      selected={monument.monumentid === clickedMonumentMarker}
+                    />
+                  </motion.div>
+                ))
+              }
+
+          </Box>
         }
 
-        <section className="map_section">
+        <Box className="map_section" visibleFrom="sm">
           <Map data={monuments} fetchData={fetchData} />
-        </section>
+        </Box>
       </Group>
     </motion.section>
   )

@@ -42,8 +42,10 @@
 
 .content_section {
   margin-left: 24px;
-  margin-right: 24px;
+  margin-right: 12px;
   width: 65vw;
+  max-width: 65vw;
+
 }
 
 .map_section {
@@ -105,6 +107,22 @@ p, a, li, label {
   gap: 15px;
   overflow-y: auto;
   flex: 1;
+}
+
+/* md breakpoint = 1024px */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .content_section {
+    width:100vw;
+  }
 }
 
 .cell {
