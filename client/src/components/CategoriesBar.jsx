@@ -20,7 +20,7 @@ const CategoriesBar = ({hideClearFilters}) => {
   return (
     <Paper shadow="none" pb="sm" pt="0" radius="0">
       <Container fluid px={32} position="relative">
-        <Group justify="start" spacing={16} style={{ flex: 1, position: 'relative' }}>
+        <Group justify="start" wrap="nowrap" spacing={16} style={{ flex: 1, position: 'relative' }}>
           {CATEGORIES.map((category) => {
             const newSearchParams = new URLSearchParams(searchParams);
             newSearchParams.set('cat', category);
@@ -34,7 +34,7 @@ const CategoriesBar = ({hideClearFilters}) => {
               >
                 {category}
               </TabButton>
-            );
+            )
           })}
           {!hideClearFilters && (
           <Button

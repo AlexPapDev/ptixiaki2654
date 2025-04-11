@@ -31,7 +31,7 @@ const NavSearchBar = () => {
         rightSectionWidth={41}
         onChange={(e) => setInputTerm(e.target.value)}
         value={inputTerm}
-        style={{width: '360px'}}
+        // style={{width: '360px'}}
         size="md"
         rightSection={
           <ActionIcon size={32} radius="md" color={theme.primaryColor} variant="filled" onClick={onClickButton}>

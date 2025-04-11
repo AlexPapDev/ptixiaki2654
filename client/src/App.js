@@ -3,11 +3,13 @@
 // Mantine
 import { AppShell, Paper } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
+import { useMediaQuery } from '@mantine/hooks'
 import MantineThemeProvider from './utils/MantineThemeProvider'
 
 // Header / Navbar imports
 import Navbar from './components/Navbar'
 import CategoriesBar from './components/CategoriesBar'
+import CompactNav from './components/CompactNav'
 
 // Screen Imports
 import Home from './pages/HomeScreen'
@@ -24,7 +26,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import ProfileRedirect from './utils/ProfileRedirect'
 import ProtectedRoutes from './utils/ProtectedRoutes'
 import { ToastContainer } from 'react-toastify'
-import useAppStore from './utils/AppStore'
 
 // Styles
 import './App.css'
@@ -44,10 +45,15 @@ function App() {
 
 function MainLayout() {
   const location = useLocation()
+  const isBiggerThanMd = useMediaQuery('(min-width: 64em)')
+  const isBiggerThanSm = useMediaQuery('(min-width: 48em)')
   const isMonumentsPage = (location.pathname.startsWith('/monuments') && location.pathname !== '/monuments/new') 
   const isHomePage = location.pathname === '/'
-  const showCategoriesBar = isMonumentsPage || isHomePage 
+  
+  const showCategoriesBar = isBiggerThanMd && (isMonumentsPage || isHomePage)
   const headerHeight = showCategoriesBar ? 112 : 74
+
+  const showNavLinks = !isBiggerThanSm && (isMonumentsPage || isHomePage)
   return (
     <AppShell
       // navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: true } }}
@@ -57,6 +63,7 @@ function MainLayout() {
         <Paper shadow="sm" radius="none">
           <Navbar />
           {showCategoriesBar && <CategoriesBar hideClearFilters={isHomePage}/>}
+          {showNavLinks && <CompactNav />}
         </Paper>
       </AppShell.Header>
       
