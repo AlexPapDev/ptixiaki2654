@@ -49,11 +49,12 @@ const ListsScreen = () => {
         </Tabs.Panel> */}
       </Tabs>
       <Routes>
+        <Route index element={<Navigate to="discover" replace />} />
           {/* <Route index element={<Navigate to="discover" replace />} /> */}
-          <Route path="discover" element={<DiscoverLists />} />
-          <Route path="mine" element={<MyLists />} />
-          <Route path="following" element={<FollowingLists />} />
-        </Routes>
+        <Route path="discover" element={<DiscoverLists />} />
+        <Route path="mine" element={<MyLists />} />
+        <Route path="following" element={<FollowingLists />} />
+      </Routes>
     </Container>
   </>)
 }
