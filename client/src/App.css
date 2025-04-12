@@ -64,13 +64,20 @@
   border-bottom: 2px solid transparent;
   border-top: 2px solid transparent;
   transition: color 0.1s ease, border-bottom-color 0.1s ease;
-
+  text-wrap: nowrap;
   padding-bottom: 3px !important;
 }
 .tab-button:hover, .tab-button.selected {
   /* background-color: #F7F7F7; */
   color: #444444;
   border-bottom: 2px solid #444444;
+}
+
+.square-image-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  /* border-radius: 8px; */
 }
 
 /* TEXT */
@@ -122,6 +129,7 @@ p, a, li, label {
   }
   .content_section {
     width:100vw;
+    max-width: 100vw;
   }
 }
 
