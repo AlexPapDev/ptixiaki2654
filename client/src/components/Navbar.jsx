@@ -5,6 +5,7 @@ import SearchInput from './SearchInput'
 import ProfileNav from './ProfileNav'
 import NavLinks from './NavLinks'
 import { useMediaQuery } from '@mantine/hooks'
+import { useMantineTheme } from '@mantine/core'
 const links = [
   { link: '/monuments', label: 'Monuments' },
   { link: '/lists', label: 'Lists' },
@@ -12,9 +13,11 @@ const links = [
 ]
 
 const Navbar = () => {
-  const matches = useMediaQuery('(min-width: 90em)')
-  console.log('matches', matches)
-  const groupFlex = matches ? '1 0 140px' : ''
+  const theme = useMantineTheme();
+  const isXlOrBigger = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`)
+  const isSmOrSmaller = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`)
+
+  const groupFlex = isXlOrBigger ? '1 0 140px' : ''
   return (
     <Container fluid px={32} pt={16} pb="md">
       <Group justify="space-between" wrap="nowrap" style={{ position: 'relative', minHeight: '42px' }}>
@@ -34,13 +37,13 @@ const Navbar = () => {
         {/* This is the part that will be absolutely positioned */}
         <Box px="md" style={{
           flex: '1 0 auto',
-          minWidth: '348px',
-          maxWidth: '500px'
+          minWidth: !isSmOrSmaller ? '348px' : null,
+          maxWidth: !isSmOrSmaller ? '500px' : null,
         }}>
           <SearchInput />
         </Box>
 
-        <Group visibleFrom="sm" ml={30} gap="md" justify="flex-end" style={{flex: groupFlex}} >
+        <Group visibleFrom="sm" ml={30} gap="md" justify="flex-end" wrap="nowrap" style={{flex: groupFlex}} >
           <NavLinks />
           <Box visibleFrom="md">
             <ProfileNav />
