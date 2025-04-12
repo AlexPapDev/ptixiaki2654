@@ -17,7 +17,6 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
-  const { closeAuthModal } = useAppStore()
   const { loginUser, isLoggedIn } = useAuthStore()
   const navigate = useNavigate()
 
@@ -44,7 +43,6 @@ const Login = () => {
       }
 
       navigate(`/user/${user.userid}`)
-      closeAuthModal()
     } catch (error) {
       setLoginError(error.message || 'Login failed. Please try again.')
     }
