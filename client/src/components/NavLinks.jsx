@@ -10,7 +10,7 @@ const navLinks = [
 
 const NavLinks = () => {
   return (
-    <Group>
+    <Group wrap="nowrap">
       {navLinks.map((link) => (
         <Box
           key={link.label}
