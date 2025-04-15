@@ -10,7 +10,8 @@ import { INIT_MAP_STATE } from '../utils/constants'
 import { useNavigate } from 'react-router-dom'
 import Supercluster from 'supercluster'
 import { Button } from '@mantine/core'
-const MapComp = ({ data = [] }) => {
+const MonumentsMap = ({ data = [] }) => {
+  console.log('render map')
   const { mapBounds, setMapBounds } = useAppStore()
   const { isLoggedIn } = useAuthStore()
   const mapRef = useRef(null)
@@ -105,4 +106,4 @@ const MapComp = ({ data = [] }) => {
   )
 }
 
-export default MapComp
+export default MonumentsMap

@@ -2,9 +2,13 @@ import React from 'react'
 import { Grid, Group, Image,Box } from '@mantine/core'
 import { getCloudinaryUrl } from '../utils/helpers'
 import { Gallery } from "react-grid-gallery"
-const MonumentDetailGrid = ({ images }) => {
-  const imageUrls = getCloudinaryUrl(images, { width: 1000 })
+const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
 
+const MonumentDetailGrid = ({ images }) => {
+  // const imageUrls = getCloudinaryUrl(images, { width: 1000 })
+  const imageUrls = [
+    DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE
+  ]
   return (
     <Box mt="md" sx={(theme) => ({
       width: '100%',

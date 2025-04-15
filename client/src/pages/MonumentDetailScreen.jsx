@@ -11,6 +11,7 @@ import {
   Grid,
   Center,
   Loader,
+  AspectRatio,
 } from '@mantine/core'
 import useMonumentDetail from '../hooks/useMonumentDetail'
 import useDeleteMonument from '../hooks/useDeleteMonument'
@@ -56,7 +57,7 @@ const MonumentDetail = () => {
       <Grid>
         <Grid.Col span={7}>
           <MonumentDetailTextInfo monument={monument} />
-          <Divider pb="md" />
+          <Divider mt="md" pb="md" />
           <WorkingHours
             hoursPerDay={monument.workingHours}
             isPublic={monument.isPublic}
@@ -64,10 +65,12 @@ const MonumentDetail = () => {
         </Grid.Col>
         <Grid.Col pl="md" span={5} pt="xl">
           <Box style={{ height: '100%', width: '100%' }}>
-            <MonumentDetailMap
-              lat={monument?.latitude}
-              lng={monument?.longitude}
-            />
+            <AspectRatio>
+              <MonumentDetailMap
+                lat={monument?.latitude}
+                lng={monument?.longitude}
+              />
+            </AspectRatio>
           </Box>
         </Grid.Col>
       </Grid>

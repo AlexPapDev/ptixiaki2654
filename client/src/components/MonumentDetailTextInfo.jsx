@@ -9,10 +9,10 @@ const MonumentDetailTextInfo = ({ monument }) => {
       <Text c="dimmed">{fullStreetName}</Text>
       <Text fw={600}>{monument?.description}</Text>
       <Divider />
-      <Title pt="lg" pb="sm">Categories</Title>
+      <Title pt="md">Categories</Title>
       <Group>
         {categories.map(categoryName => (
-          <Badge key={`badge-${monumentid}-${categoryName}`} size="sm" color="green">
+          <Badge key={`badge-${monumentid}-${categoryName}`} size="lg" color="green">
             {categoryName}
           </Badge>
         ))}

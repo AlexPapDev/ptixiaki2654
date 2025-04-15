@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react'
-import Map from '../components/Map'
-import axios from 'axios'
+import { useState } from 'react'
+import MonumentsMap from '../components/MonumentsMap'
 import { useSearchParams } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import MonumentCard from '../components/MonumentCard'
 import { Group, Card, Skeleton, Box } from '@mantine/core'
 import NoResults from '../components/NoResults'
 import { motion } from 'framer-motion'
+import useFetchMonuments from '../hooks/useFetchMonuments' // Import the custom hook
 
 const Monuments = () => {
   const { searchTerm, mapBounds, clickedMonumentMarker } = useAppStore()
@@ -14,49 +14,7 @@ const Monuments = () => {
   const passedTerm = searchParams.get('q') || searchTerm
   const category = searchParams.get('cat') || ''
 
-  const [monuments, setMonuments] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
-
-  const fetchData = useCallback(async (controller) => {
-    if (
-      !mapBounds ||
-      !mapBounds._ne || !mapBounds._sw ||
-      !mapBounds._ne.lat || !mapBounds._ne.lng ||
-      !mapBounds._sw.lat || !mapBounds._sw.lng
-    ) return
-
-    setLoading(true)
-    try {
-      const result = await axios.get(`${API_BASE_URL}/api/monuments/`, {
-        signal: controller.signal,
-        params: {
-          query: passedTerm,
-          category,
-          mapBounds: {
-            ne: { ...mapBounds._ne },
-            sw: { ...mapBounds._sw },
-          }
-        }
-      })
-      setMonuments(result.data.data.monuments)
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log('Request canceled')
-      } else {
-        console.error('Error fetching monuments:', error)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }, [API_BASE_URL, passedTerm, category, mapBounds])
-
-  useEffect(() => {
-    const controller = new AbortController()
-    fetchData(controller)
-    return () => controller.abort()
-  }, [fetchData])
+  const { monuments, loading, error } = useFetchMonuments(passedTerm, category, mapBounds)
 
   const renderSkeletonCards = () => {
     return Array.from({ length: 6 }).map((_, index) => (
@@ -66,6 +24,10 @@ const Monuments = () => {
         <Skeleton height={16} mt="sm" width="80%" />
       </Card>
     ))
+  }
+
+  if (error) {
+    return <div>Error loading monuments.</div>
   }
 
   return (
@@ -90,19 +52,18 @@ const Monuments = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3, delay: 0.1 * i }}
                   >
-                    <MonumentCard 
-                      monument={monument} 
+                    <MonumentCard
+                      monument={monument}
                       selected={monument.monumentid === clickedMonumentMarker}
                     />
                   </motion.div>
                 ))
               }
-
-          </Box>
+            </Box>
         }
 
         <Box className="map_section" visibleFrom="sm">
-          <Map data={monuments} fetchData={fetchData} />
+          <MonumentsMap data={monuments}/>
         </Box>
       </Group>
     </motion.section>
