@@ -1,4 +1,4 @@
-
+import { useState } from 'react'
 
 // Mantine
 import { AppShell, Paper } from '@mantine/core'
@@ -20,6 +20,7 @@ import MonumentDetail from './pages/MonumentDetailScreen'
 import OTPVerification from './pages/OTPVerificationScreen'
 import ApprovalScreen from './pages/ApprovalScreen'
 import Lists from './pages/ListsScreen'
+import ListDetail from './pages/ListDetailScreen'
 
 // Utility
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
@@ -45,12 +46,13 @@ function App() {
 }
 
 function MainLayout() {
+  const [navbarOpened, setNavbarOpened] = useState(false)
   const location = useLocation()
   const isBiggerThanMd = useMediaQuery('(min-width: 64em)')
   const isBiggerThanSm = useMediaQuery('(min-width: 48em)')
   const isMonumentsPage = (location.pathname.startsWith('/monuments') && location.pathname !== '/monuments/new') 
   const isHomePage = location.pathname === '/'
-  
+
   const showCategoriesBar = isBiggerThanMd && (isMonumentsPage || isHomePage)
   const headerHeight = showCategoriesBar ? 112 : 74
 
@@ -62,15 +64,12 @@ function MainLayout() {
     >
       <AppShell.Header>
         <Paper shadow="sm" radius="none">
-          <Navbar />
+          <Navbar navbarOpened={navbarOpened} toggleNavbar={() => setNavbarOpened((o) => !o)} />
           {showCategoriesBar && <CategoriesBar hideClearFilters={isHomePage}/>}
           {showNavLinks && <CompactNav />}
         </Paper>
       </AppShell.Header>
       
-      {/* <AppShell.Navbar p="md">
-        
-      </AppShell.Navbar> */}
       {/* <AppShell.Main style={{backgroundColor: '#f8f9fa'}}> */}
       <AppShell.Main style={{backgroundColor: '#fff'}}>
         <ToastContainer position='top-right' autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
@@ -85,6 +84,7 @@ function MainLayout() {
             <Route path='/monuments/:monumentId' element={<MonumentDetail />} />
             <Route path='/user/:userId' element={<UserProfile />} />
             <Route path='/lists/*' element={<Lists />}  />
+            <Route path='/list/*' element={<ListDetail />}  />
             <Route path='/approval-dashboard' element={
               <ProtectedRoutes requiredRoles={['admin', 'ambassador']}>
                 <ApprovalScreen />

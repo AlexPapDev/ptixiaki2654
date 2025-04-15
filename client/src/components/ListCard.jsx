@@ -5,11 +5,12 @@ import SquareImage from '../components/SquareImage'
 const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
 
 const ListCard = ({ list }) => {
-  const { createdBy } = list
+  const { createdBy, listId } = list
+  const destinationUrl = `/list/${listId}`
   return (
     <Card padding="none">
       <Card.Section mb="sm" style={{ width: "100%" }}>
-        <Link to={DEFAULT_IMAGE} style={{ textDecoration: 'none' }}>
+        <Link to={destinationUrl} style={{ textDecoration: 'none' }}>
           <Grid>
             <Grid.Col p={0} span={8}>
               <SquareImage src={DEFAULT_IMAGE} />

@@ -1,18 +1,18 @@
 import React from 'react'
-import { Image } from '@mantine/core'
+import { Image, AspectRatio } from '@mantine/core'
 
 const SquareImage = ({ src, alt = "Image" }) => (
-  <div style={{ aspectRatio: '1 / 1', overflow: 'hidden', borderRadius: '8px' }}>
+  <AspectRatio>
     <Image
       src={src}
       alt={alt}
       style={{
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        display: 'block',
+        // width: '100%',
+        // height: '100%',
+        // objectFit: 'cover',
+        // display: 'block',
       }}
     />
-  </div>
+  </AspectRatio>
 )
 export default SquareImage

@@ -1,5 +1,6 @@
 * {
-  --map-height-top-distance: 112px
+  --map-height-top-distance: 112px;
+  --map-height-top-distance_no-categories: 74px;
 }
 
 /* @font-face {
@@ -45,7 +46,6 @@
   margin-right: 12px;
   width: 65vw;
   max-width: 65vw;
-
 }
 
 .map_section {
@@ -53,6 +53,14 @@
   width: 35vw;
   top: var(--map-height-top-distance);
   height: calc(100vh - var(--map-height-top-distance));
+  overflow-y: auto;
+}
+
+.list_map_section {
+  position: sticky;
+  /* width: 35vw; */
+  top: var(--map-height-top-distance);
+  height: calc(100vh - var(--map-height-top-distance_no-categories));
   overflow-y: auto;
 }
 
@@ -73,12 +81,12 @@
   border-bottom: 2px solid #444444;
 }
 
-.square-image-wrapper {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
+/* .square-image-wrapper { */
+  /* width: 100%; */
+  /* aspect-ratio: 1 / 1; */
+  /* overflow: hidden; */
   /* border-radius: 8px; */
-}
+/* } */
 
 /* TEXT */
 h1, h2, h3, h4, h5 {

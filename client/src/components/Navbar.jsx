@@ -1,10 +1,11 @@
-import React from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Image, Group, Container, Text, Anchor, Box, Burger } from '@mantine/core'
 import SearchInput from './SearchInput'
 import ProfileNav from './ProfileNav'
 import NavLinks from './NavLinks'
-import { useMediaQuery } from '@mantine/hooks'
+import NavDrawer from './NavDrawer'
+import { useMediaQuery, useDisclosure } from '@mantine/hooks'
 import { useMantineTheme } from '@mantine/core'
 const links = [
   { link: '/monuments', label: 'Monuments' },
@@ -12,8 +13,9 @@ const links = [
   { link: '/articles', label: 'Articles' },
 ]
 
-const Navbar = () => {
-  const theme = useMantineTheme();
+const Navbar = ({ toggleNavbar, navbarOpened }) => {
+  const theme = useMantineTheme()
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
   const isXlOrBigger = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`)
   const isSmOrSmaller = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`)
 
@@ -22,7 +24,7 @@ const Navbar = () => {
     <Container fluid px={32} pt={16} pb="md">
       <Group justify="space-between" wrap="nowrap" style={{ position: 'relative', minHeight: '42px' }}>
         <Group gap="xs" style={{flex: groupFlex}} wrap="nowrap">
-          <Burger hiddenFrom="md" size="sm" mr="md" lineSize={2}></Burger>
+          <Burger hiddenFrom="md" opened={drawerOpened} onClick={openDrawer} size="sm" mr="md" lineSize={2}></Burger>
           <Image visibleFrom="md" height={30} width={30} src="/ancient-greece.png" />
           <Box visibleFrom="md">
             <Link to="/" style={{ textDecoration: 'none' }} >
@@ -53,6 +55,7 @@ const Navbar = () => {
         {/* <Box hiddenFrom="md" visibleFrom="xs">
           <ProfileNav/>
         </Box> */}
+        <NavDrawer drawerOpened={drawerOpened} closeDrawer={closeDrawer}/>
       </Group>
     </Container>
   )
