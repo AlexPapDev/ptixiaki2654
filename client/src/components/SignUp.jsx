@@ -21,7 +21,7 @@ const inputs = [
   { label: 'Confirm Password', name: 'confirmPassword', type: 'password' },
 ]
 
-const SignUp = () => {
+const SignUp = ({ onClose }) => {
   const { isLoggedIn } = useAuthStore()
   const [formData, setFormData] = useState({
     firstname: '',
@@ -65,6 +65,7 @@ const SignUp = () => {
         pathname: '/otpverification',
         search: `?email=${formData.email}`,
       })
+      onClose()
     } catch (error) {
       console.error(error)
       setErrorMessage('Error: ' + (error.response?.data?.error || 'Registration failed'))

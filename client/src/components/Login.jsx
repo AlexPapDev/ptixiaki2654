@@ -13,7 +13,7 @@ import {
   Stack,
 } from '@mantine/core'
 
-const Login = () => {
+const Login = ({onClose}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
@@ -43,6 +43,7 @@ const Login = () => {
       }
 
       navigate(`/user/${user.userid}`)
+      onClose()
     } catch (error) {
       setLoginError(error.message || 'Login failed. Please try again.')
     }
