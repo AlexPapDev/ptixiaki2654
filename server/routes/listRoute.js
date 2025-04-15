@@ -27,11 +27,14 @@ router.get('/my', authenticateUser, async (req, res) => {
   }
 })
 
-// Get monuments in a list
-router.get('/:listId/monuments', async (req, res) => {
+// Get list info with monuments
+router.get('/:listId', async (req, res) => {
   try {
-    const monuments = await listService.getMonumentsInList(req.params.listId)
-    res.json(monuments)
+    const list = await listService.getListInfo(req.params.listId)
+    if (!list) {
+      return res.status(404).json({ error: 'List not found' });
+    }
+    res.json(list)
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Failed to fetch monuments in list' })
@@ -61,6 +64,7 @@ router.post('/:listId/monuments/:monumentId', authenticateUser, async (req, res)
   }
 })
 
+// add multiple monuments to list
 router.post('/:listId/monuments', authenticateUser, async (req, res) => {
   try {
     const { monumentIds } = req.body // expects: [1, 2, 3]

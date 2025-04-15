@@ -54,7 +54,7 @@ router.post('/', upload.array('image', 5), async (req, res) => {
     }
 
     // Fetch category IDs safely
-    const categoryIds = Array.isArray(categories) ? await monumentService.getCategoryIds(categories) : []
+    const categoryIds = categories ? await monumentService.getCategoryIds(categories) : []
 
     // Validate user existence
     const user = await userService.getUserByField('userid', userid)
@@ -96,11 +96,11 @@ router.post('/', upload.array('image', 5), async (req, res) => {
     //   await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
     // }
     // const uploadedImages = []
-    console.log(req.files)
+
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
         const imageUrl = await uploadToCloudinary(file.buffer, 'ptixiaki')
-        console.log(imageUrl)
+
         await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
         // uploadedImages.push(imageUrl)
       }

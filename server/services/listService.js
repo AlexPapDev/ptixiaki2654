@@ -47,14 +47,47 @@ const getListsByUser = async (userId) => {
   return result.rows
 }
 
-const getMonumentsInList = async (listId) => {
-  const result = await db.query(`
-    SELECT m.*
-    FROM Monuments m
-    JOIN ListMonuments lm ON lm.monumentId = m.monumentId
-    WHERE lm.listId = $1
-  `, [listId])
-  return result.rows
+async function getListInfo(listId) {
+  try {
+    const listResult = await db.query(
+      'SELECT listId, userId, name, description, createdDate, updatedDate FROM Lists WHERE listId = $1',
+      [listId]
+    );
+
+    if (listResult.rows.length === 0) {
+      return null
+    }
+
+    const listInfo = listResult.rows[0];
+
+    const monumentsResult = await db.query(
+      `SELECT
+        m.monumentId,
+        m.name,
+        m.name_noaccents,
+        m.name_greeklish,
+        m.description,
+        m.address,
+        m.latitude,
+        m.longitude,
+        m.status,
+        m.approved_by,
+        m.created_by,
+        m.createdDate,
+        m.updatedDate
+      FROM Monuments m
+      JOIN ListMonuments lm ON m.monumentId = lm.monumentId
+      WHERE lm.listId = $1`,
+      [listId]
+    )
+
+    listInfo.monuments = monumentsResult.rows
+
+    return listInfo
+  } catch (error) {
+    console.error('Error fetching list info with monuments:', error)
+    throw error
+  }
 }
 
 const createList = async (userId, name, description) => {
@@ -116,7 +149,7 @@ export default {
   getAllLists,
   getFilteredLists,
   getListsByUser,
-  getMonumentsInList,
+  getListInfo,
   createList,
   addMonumentToList,
   addMonumentsToList,
