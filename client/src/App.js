@@ -31,6 +31,7 @@ import { ToastContainer } from 'react-toastify'
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '@mantine/core/styles.css'
+import '@mantine/dropzone/styles.css'
 function App() {
   return (
     <MantineThemeProvider>

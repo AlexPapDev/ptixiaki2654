@@ -1,10 +1,15 @@
 import { useState } from 'react'
-import { Group, Text } from '@mantine/core'
-import { Upload, Image, X } from 'lucide-react'
+import { Group, Text, Image, Stack, SimpleGrid } from '@mantine/core'
+import { Upload, Image as ImageIcon, X } from 'lucide-react'
 import { Dropzone } from '@mantine/dropzone'
 // TODO: implement loading state
 const FileDropzone = ({onFilesChange, multiple = false}) => {
   const [files, setFiles] = useState([])
+
+  const previews = files.map((file, index) => {
+    const imageUrl = URL.createObjectURL(file);
+    return <Image key={index} src={imageUrl} onLoad={() => URL.revokeObjectURL(imageUrl)} />;
+  })
 
   const handleDrop = (accepted) => {
     const newFiles = [...files, ...accepted]
@@ -16,7 +21,7 @@ const FileDropzone = ({onFilesChange, multiple = false}) => {
     console.warn('Rejected files:', rejected)
     
   }
-  return (<>
+  return (<Stack>
     <Dropzone
       onDrop={handleDrop}
       onReject={handleReject}
@@ -32,7 +37,7 @@ const FileDropzone = ({onFilesChange, multiple = false}) => {
           <X size={52} stroke={1.5} />
         </Dropzone.Reject>
         <Dropzone.Idle>
-          <Image size={52} color="grey" />
+          <ImageIcon size={52} color="grey" />
         </Dropzone.Idle>
 
         <div>
@@ -45,6 +50,9 @@ const FileDropzone = ({onFilesChange, multiple = false}) => {
         </div>
       </Group>
     </Dropzone>
-  </>)
+    <SimpleGrid cols={{ base: 1, sm: 4 }} mt={previews.length > 0 ? 'xs' : 0}>
+      {previews}
+    </SimpleGrid>
+  </Stack>)
 }
 export default FileDropzone
