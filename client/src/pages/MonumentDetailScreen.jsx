@@ -17,12 +17,12 @@ import useMonumentDetail from '../hooks/useMonumentDetail'
 import useDeleteMonument from '../hooks/useDeleteMonument'
 import useAddMonumentPhoto from '../hooks/useAddMonumentPhoto'
 import MonumentDetailGrid from '../components/MonumentDetailGrid'
-import MonumentDetailTextInfo from '../components/MonumentDetailTextInfo'
 import MonumentDetailMap from '../components/MonumentDetailMap'
 import WorkingHours from '../components/WorkingHours'
 import MonumentDetailActions from '../components/MonumentDetailActions'
 import MonumentDetailAddress from '../components/MonumentDetailAddress'
 import MonumentDetailDescription from '../components/MonumentDetailDescription'
+import MonumentDetailCategories from '../components/MonumentDetailCategories'
 import { toast } from 'react-toastify'
 const MonumentDetail = () => {
   const { monumentId } = useParams()
@@ -67,6 +67,8 @@ const MonumentDetail = () => {
           />
           <MonumentDetailAddress initialAddress={monument.address} />
           <MonumentDetailDescription monumentId={monumentId} initialDescription={monument.description}/>
+          <Divider mt="md" pb="md" />
+          <MonumentDetailCategories initialCategories={monument.categories}/>
           <Divider mt="md" pb="md" />
           <WorkingHours
             monumentId={monumentId}
