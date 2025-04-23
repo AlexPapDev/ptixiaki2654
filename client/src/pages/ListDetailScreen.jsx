@@ -1,6 +1,6 @@
 import React from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { Grid, Box, Title } from '@mantine/core'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import { Grid, Paper, Text, Box, Title, Container } from '@mantine/core'
 import MonumentsMap from '../components/MonumentsMap'
 import MonumentDetailGrid from '../components/MonumentDetailGrid'
 import useListDetail from '../hooks/useListDetail'
@@ -10,17 +10,24 @@ const ListDetail = () => {
   const { listId } = useParams()
   const navigate = useNavigate()
   const { list, loading, error } = useListDetail(listId)
-
+  const { user } = list || {}
   return (<Box>
-    <Grid>
-      <Grid.Col span={6}>
-        <Box>
+    <Grid p="none" gutter={0}>
+      <Grid.Col span={6} >
+        <Paper shadow="md">
           {/* TODO: change name of grid */}
           <MonumentDetailGrid />
-        </Box>
-        <Title>{list.name}</Title>
+        
+          <Container>
+            <Title>{list?.name}</Title>
+            <Text fw={600}>{list?.description}</Text>
+            <Text c="gray.5" component={Link} to={`/user/${user?.userid}`}>
+              By {user?.lastname}
+            </Text>
+          </Container>
+        </Paper>
       </Grid.Col>
-      <Grid.Col span={6}>
+      <Grid.Col padding="0" p="none" span={6} style={{padding: '0 !important'}}>
         <Box className="list_map_section">
           <MonumentsMap data={[]} />
         </Box>

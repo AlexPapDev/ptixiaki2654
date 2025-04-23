@@ -1,7 +1,7 @@
 import axios from 'axios'
 import useAuthStore from '../utils/AuthStore'
 import useConfirmModal from './useConfirmModal'
-
+import { Text } from '@mantine/core'
 const useDeleteMonument = (monumentId, onSuccess) => {
   const { token } = useAuthStore()
   const { openConfirm } = useConfirmModal()
@@ -25,6 +25,11 @@ const useDeleteMonument = (monumentId, onSuccess) => {
       message: 'Are you sure you want to delete this monument? This action cannot be undone.',
       labels: { confirm: 'Delete', cancel: 'Cancel' },
       onConfirm: deleteMonument,
+      children: (
+        <Text size="sm">
+          {'Are you sure you want to delete this monument? This action cannot be undone.'}
+        </Text>
+      )
     })
   }
 

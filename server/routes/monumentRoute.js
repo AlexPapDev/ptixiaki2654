@@ -54,7 +54,8 @@ router.post('/', upload.array('image', 5), async (req, res) => {
     }
 
     // Fetch category IDs safely
-    const categoryIds = categories ? await monumentService.getCategoryIds(categories) : []
+    console.log(categories, typeof categories, Array.isArray(categories))
+    const categoryIds = Array.isArray(categories) ? await monumentService.getCategoryIds(categories.split()) : []
 
     // Validate user existence
     const user = await userService.getUserByField('userid', userid)
@@ -73,7 +74,7 @@ router.post('/', upload.array('image', 5), async (req, res) => {
     const name_noaccents = removeGreekTonos(name)
     const name_greeklish = transliterateString(name)
 
-    await db.query('BEGIN') // Start transaction
+    await db.query('BEGIN')
 
     // Insert monument
     const newMonument = await monumentService.createMonument(
@@ -88,21 +89,12 @@ router.post('/', upload.array('image', 5), async (req, res) => {
       userid,
     )
 
-    let imageUrl = null
-    
-    // Upload image only if provided
-    // if (req.file) {
-    //   imageUrl = await uploadToCloudinary(req.file.buffer, 'ptixiaki')
-    //   await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
-    // }
-    // const uploadedImages = []
-
+    // files
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
         const imageUrl = await uploadToCloudinary(file.buffer, 'ptixiaki')
-
+        console.log('imageUrl', imageUrl)
         await monumentService.addMonumentImage(newMonument.monumentid, imageUrl, true)
-        // uploadedImages.push(imageUrl)
       }
     }
 
@@ -111,11 +103,24 @@ router.post('/', upload.array('image', 5), async (req, res) => {
       await monumentService.addMonumentCategories(newMonument.monumentid, categoryIds)
     }
 
+    const daysOfWeek = [0, 1, 2, 3, 4, 5, 6] // Sunday to Saturday
+    const defaultHours = daysOfWeek.map(day => ({
+      monumentid: monumentId,
+      day_of_week: day,
+      open_time: null,
+      close_time: null,
+      is_open_24_hours: false,
+      is_closed: true,
+    }))
+
+    // Assuming your monumentService has a function to create multiple hours
+    await monumentService.createMonumentHours(defaultHours)
+
     await db.query('COMMIT') // Commit transaction
 
     res.status(201).json({
       status: 'success',
-      data: { monument: newMonument, imageUrl },
+      data: { monument: newMonument },
     })
   } catch (error) {
     await db.query('ROLLBACK') // Rollback transaction on failure
@@ -124,6 +129,67 @@ router.post('/', upload.array('image', 5), async (req, res) => {
     res.status(500).json({
       status: 'error',
       message: 'Failed to create monument.',
+    })
+  }
+})
+
+router.post('/:monumentId/photos', upload.array('image', 5), async (req, res) => {
+  console.log('add monument photo')
+  const { monumentId } = req.params
+
+  try {
+    if (!monumentId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Missing monumentId in the request parameters.',
+      })
+    }
+
+    // Validate if the monument exists
+    const existingMonument = await monumentService.getMonumentById(monumentId)
+    if (!existingMonument) {
+      return res.status(404).json({
+        status: 'error',
+        message: `Monument with ID ${monumentId} not found.`,
+      })
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'No images provided for upload.',
+      })
+    }
+
+    await db.query('BEGIN')
+
+    for (const file of req.files) {
+      try {
+        const imageUrl = await uploadToCloudinary(file.buffer, 'ptixiaki')
+        console.log('imageUrl', imageUrl)
+        await monumentService.addMonumentImage(monumentId, imageUrl, false) // Assuming 'false' for is_main flag for newly added images
+      } catch (uploadError) {
+        console.error(`Error uploading image to Cloudinary: ${uploadError.message}`)
+        await db.query('ROLLBACK') // Rollback on any image upload failure
+        return res.status(500).json({
+          status: 'error',
+          message: 'Failed to upload one or more images.',
+        })
+      }
+    }
+
+    await db.query('COMMIT')
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Photos added successfully to the monument.',
+    })
+  } catch (error) {
+    await db.query('ROLLBACK')
+    console.error(`Error adding photos to monument ${monumentId}: ${error.message}`)
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to add photos to the monument.',
     })
   }
 })
@@ -270,29 +336,49 @@ router.patch('/:monumentid/reject', authenticateUser, checkRole(['admin', 'ambas
   }
 })
 
+router.put('/:monumentId/hours', authenticateUser, async (req, res) => {
+  console.log('monument hours')
+  const { monumentId } = req.params
+  const { hours } = req.body
 
-// Update a specific monument
-router.put('/:id', async (req, res) => {
-  const { id } = req.params
-  const { description } = req.body
-
-  if (!description) {
-    return res.status(400).json({
-      status: 'error',
-      message: 'Description is required.',
-    })
+  if (!Array.isArray(hours)) {
+    return res.status(400).json({ status: 'error', message: 'Invalid hours data.' })
   }
 
   try {
-    const updatedMonument = await db.query(
-      `UPDATE monuments
-       SET description = $1
-       WHERE monumentId = $2
-       RETURNING *`,
-      [description, id]
-    )
+    await db.query('BEGIN')
 
-    if (updatedMonument.rows.length === 0) {
+    // Delete existing hours for the monument
+    await db.query('DELETE FROM monumenthours WHERE monumentid = $1', [monumentId])
+
+    // Insert the new working hours
+    if (hours.length > 0) {
+      const values = hours.map(hour => `(${monumentId}, ${hour.day_of_week}, ${hour.open_time === null ? 'NULL' : `'${hour.open_time}'`}, ${hour.close_time === null ? 'NULL' : `'${hour.close_time}'`}, ${hour.is_open_24_hours}, ${hour.is_closed})`).join(',')
+      const query = `
+        INSERT INTO monumenthours (monumentid, day_of_week, open_time, close_time, is_open_24_hours, is_closed)
+        VALUES ${values}
+      `
+      await db.query(query)
+    }
+
+    await db.query('COMMIT')
+    res.status(200).json({ status: 'success', message: 'Working hours updated successfully.' })
+  } catch (error) {
+    await db.query('ROLLBACK')
+    console.error('Error updating working hours:', error)
+    res.status(500).json({ status: 'error', message: 'Failed to update working hours.' })
+  }
+})
+
+router.patch('/:id', async (req, res) => {
+  console.log('update monument')
+  const { id } = req.params
+  const { description } = req.body
+
+  try {
+    const updatedMonument = await monumentService.updateMonument(id, { description })
+
+    if (!updatedMonument) {
       return res.status(404).json({
         status: 'error',
         message: 'Monument not found.',
@@ -301,10 +387,18 @@ router.put('/:id', async (req, res) => {
 
     res.status(200).json({
       status: 'success',
-      data: { monument: updatedMonument.rows[0] },
+      data: { monument: updatedMonument },
     })
-  } catch (err) {
-    console.error(err.message)
+  } catch (error) {
+    console.error('Error updating monument:', error.message)
+
+    // Handle specific errors from the service layer if needed
+    if (error.message === 'Description is required.') {
+      return res.status(400).json({ status: 'error', message: error.message })
+    }
+
+    // Generic error handling
+    res.status(500).json({ status: 'error', message: 'Failed to update monument' })
   }
 })
 

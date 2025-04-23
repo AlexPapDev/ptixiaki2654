@@ -44,6 +44,49 @@ const useDataStore = create((set, get) => ({
     }
   },
 
+  editMonument: async (monumentId, fieldName, fieldValue) => {
+    set({ isEditingMonument: true, monumentEditingError: null })
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.patch(
+        `${API_BASE_URL}/api/monuments/${monumentId}`, 
+        { [fieldName]: fieldValue },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      set({ isEditingMonument: false })
+      return { success: true, data: response.data }
+    } catch (error) {
+      console.error('Error creating monument:', error)
+      set({ isEditingMonument: false, monumentEditingError: error.response?.data?.error || 'Failed to edit monument' })
+      return { success: false, error: error.response?.data?.error || 'Failed to edit monument' }
+    }
+  },
+
+  updateMonumentWorkingHours: async (monumentId, hoursData) => {
+    set({ isEditingMonumentHours: true, monumentHoursEditingError: null })
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.put(
+        `${API_BASE_URL}/api/monuments/${monumentId}/hours`,
+        { hours: hoursData },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      set({ isEditingMonumentHours: false })
+      return { success: true, data: response.data }
+    } catch (error) {
+      console.error('Error updating monument hours:', error)
+      set({
+        isEditingMonumentHours: false,
+        monumentHoursEditingError: error.response?.data?.error || 'Failed to update working hours',
+      })
+      return { success: false, error: error.response?.data?.error || 'Failed to update working hours' }
+    }
+  },
+
+
   // --- List Actions ---
   startCreateList: () => set({ creatingList: true, currentList: { monuments: [] }, listCreationError: null }),
   setListData: (data) => set((state) => ({ currentList: { ...state.currentList, ...data } })),

@@ -15,11 +15,14 @@ import {
 } from '@mantine/core'
 import useMonumentDetail from '../hooks/useMonumentDetail'
 import useDeleteMonument from '../hooks/useDeleteMonument'
+import useAddMonumentPhoto from '../hooks/useAddMonumentPhoto'
 import MonumentDetailGrid from '../components/MonumentDetailGrid'
 import MonumentDetailTextInfo from '../components/MonumentDetailTextInfo'
 import MonumentDetailMap from '../components/MonumentDetailMap'
 import WorkingHours from '../components/WorkingHours'
-
+import MonumentDetailActions from '../components/MonumentDetailActions'
+import MonumentDetailAddress from '../components/MonumentDetailAddress'
+import MonumentDetailDescription from '../components/MonumentDetailDescription'
 import { toast } from 'react-toastify'
 const MonumentDetail = () => {
   const { monumentId } = useParams()
@@ -32,6 +35,10 @@ const MonumentDetail = () => {
     navigate('/monuments', { replace: true })
   })
 
+  const { handleAddPhoto } = useAddMonumentPhoto(monumentId,  () => {
+    toast.success('Photo added succesfully  successfully!', { position: 'top-right' })
+  })
+
   if (loading || error) {
     return (
       <Center h="100%">
@@ -40,14 +47,12 @@ const MonumentDetail = () => {
     )
   }
 
+  const loggedIn = isLoggedIn()
+
   return (
     <Container>
       <Group pt="lg">
         <Title order={2}>{monument?.name}</Title>
-        {isLoggedIn() && <>
-          <Button color="teal">Edit</Button>
-          <Button color="red" onClick={handleDeleteClick}>Delete</Button>
-          </>}
       </Group>
 
       <Box mt="lg">
@@ -56,11 +61,16 @@ const MonumentDetail = () => {
 
       <Grid>
         <Grid.Col span={7}>
-          <MonumentDetailTextInfo monument={monument} />
+          <MonumentDetailActions loggedIn={loggedIn} 
+            handleAddPhoto={handleAddPhoto}
+            handleDelete={handleDeleteClick}
+          />
+          <MonumentDetailAddress initialAddress={monument.address} />
+          <MonumentDetailDescription monumentId={monumentId} initialDescription={monument.description}/>
           <Divider mt="md" pb="md" />
           <WorkingHours
-            hoursPerDay={monument.workingHours}
-            isPublic={monument.isPublic}
+            monumentId={monumentId}
+            initialHours={monument.hours}
           />
         </Grid.Col>
         <Grid.Col pl="md" span={5} pt="xl">

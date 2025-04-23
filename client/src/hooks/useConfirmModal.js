@@ -4,15 +4,11 @@ import { Button, Text } from '@mantine/core'
 export default function useConfirmModal() {
   const modals = useModals()
 
-  const openConfirm = ({ title, message, labels = {}, onConfirm, onCancel }) => {
+  const openConfirm = ({ title, message, labels = {}, onConfirm, onCancel, children }) => {
     modals.openConfirmModal({
       title: title || 'Are you sure?',
       centered: true,
-      children: (
-        <Text size="sm">
-          {message || 'This action is permanent. Do you want to continue?'}
-        </Text>
-      ),
+      children,
       labels: {
         confirm: labels.confirm || 'Confirm',
         cancel: labels.cancel || 'Cancel',

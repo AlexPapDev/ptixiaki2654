@@ -16,7 +16,7 @@ const CategoriesBar = ({hideClearFilters}) => {
         <Menu.Dropdown>
           {CATEGORIES.map(category => (
             // TODO: put the appropriate urls, they are wrong now
-            <MenuItemLink to={`/monuments/${category}`} size="sm">{category}</MenuItemLink>
+            <MenuItemLink key={category} to={`/monuments/${category}`} size="sm">{category}</MenuItemLink>
           ))}
         </Menu.Dropdown>
       </Menu>

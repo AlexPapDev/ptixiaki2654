@@ -25,6 +25,47 @@ const createMonument = async (
   return result.rows[0]
 }
 
+const updateMonument = async (monumentId, updateData) => {
+  const { description } = updateData
+
+  if (!description) {
+    throw new Error('Description is required.')
+  }
+
+  try {
+    const updatedMonument = await db.query(
+      `UPDATE monuments
+       SET description = $1
+       WHERE monumentId = $2
+       RETURNING *`,
+      [description, monumentId]
+    )
+
+    if (updatedMonument.rows.length === 0) {
+      return null
+    }
+
+    return updatedMonument.rows[0]
+  } catch (error) {
+    console.error('Error updating monument in database:', error)
+    throw error
+  }
+}
+
+const createMonumentHours = async (hoursData) => {
+  try {
+    const values = hoursData.map(hour => `(${hour.monumentid}, ${hour.day_of_week}, ${hour.open_time === null ? 'NULL' : `'${hour.open_time}'`}, ${hour.close_time === null ? 'NULL' : `'${hour.close_time}'`}, ${hour.is_open_24_hours}, ${hour.is_closed})`).join(',')
+    const query = `
+      INSERT INTO monumenthours (monumentid, day_of_week, open_time, close_time, is_open_24_hours, is_closed)
+      VALUES ${values}
+    `
+    await db.query(query)
+  } catch (error) {
+    console.error('Error creating default monument hours:', error)
+    throw error
+  }
+}
+
 const addMonumentImage = async (monumentId, imageUrl, isMain) => {
   await db.query(
     `INSERT INTO monumentimages (monumentid, imageurl, ismain) VALUES ($1, $2, $3)`,
@@ -56,17 +97,20 @@ const addMonumentCategories = async (monumentId, categoryIds) => {
 
 const getMonumentById = async (id) => {
   const query = `
-    SELECT 
-      m.*, 
+    SELECT
+      m.*,
       COALESCE(json_agg(DISTINCT c.name) FILTER (WHERE c.name IS NOT NULL), '[]') AS categories,
-      COALESCE(json_agg(DISTINCT mi.imageurl) FILTER (WHERE mi.imageurl IS NOT NULL), '[]') AS images
+      COALESCE(json_agg(DISTINCT mi.imageurl) FILTER (WHERE mi.imageurl IS NOT NULL), '[]') AS images,
+      COALESCE(json_agg(DISTINCT (row_to_json(mh)::jsonb)) FILTER (WHERE mh.id IS NOT NULL), '[]') AS hours
     FROM monuments m
     LEFT JOIN monumentcategories mc ON m.monumentId = mc.monumentId
     LEFT JOIN categories c ON mc.categoryId = c.categoryId
     LEFT JOIN MonumentImages mi ON m.monumentId = mi.monumentid
+    LEFT JOIN monumenthours mh ON m.monumentId = mh.monumentId
     WHERE m.monumentId = $1
-    GROUP BY m.monumentId
+    GROUP BY m.monumentId;
   `
+
   const { rows } = await db.query(query, [id])
 
   return rows.length > 0 ? rows[0] : null
@@ -141,6 +185,8 @@ const deleteMonument = async (monumentid) => {
 
 export default { 
   createMonument,
+  updateMonument,
+  createMonumentHours,
   addMonumentImage,
   getCategoryIds,
   addMonumentCategories,

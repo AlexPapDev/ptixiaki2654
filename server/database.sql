@@ -80,5 +80,16 @@ CREATE TABLE monumentcategories (
   PRIMARY KEY (monumentid, categoryid)
 );
 
+CREATE TABLE monumenthours (
+  id SERIAL PRIMARY KEY,
+  monumentid INT REFERENCES monuments(monumentid) ON DELETE CASCADE,
+  day_of_week smallint,
+  open_time time without time zone,
+  close_time time without time zone,
+  is_open_24_hours boolean DEFAULT false,
+  is_closed boolean DEFAULT false,
+  CONSTRAINT monumenthours_day_of_week_check CHECK (day_of_week >= 0 AND day_of_week <= 6)
+)
+
 INSERT INTO categories (name) VALUES 
 ('Byzantine'), ('Roman'), ('Christian'), ('Ottoman'), ('Jewish'), ('Neoclassical'), ('Contemporary'), ('UNESCO Heritage'), ('Commercial'), ('Religious');

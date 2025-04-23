@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
-import { Container, Group, Button, Paper, UnstyledButton, Text, Flex } from '@mantine/core'
+import { Container, Group, Button, Paper } from '@mantine/core'
 import { CATEGORIES } from '../utils/constants'
 import TabButton from '../components/TabButton'
 const CategoriesBar = ({hideClearFilters}) => {

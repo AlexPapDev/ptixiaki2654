@@ -4,11 +4,9 @@ import { getCloudinaryUrl } from '../utils/helpers'
 import { Gallery } from "react-grid-gallery"
 const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
 
-const MonumentDetailGrid = ({ images }) => {
-  // const imageUrls = getCloudinaryUrl(images, { width: 1000 })
-  const imageUrls = [
-    DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE
-  ]
+const MonumentDetailGrid = ({ images = [] }) => {
+  // const images = getCloudinaryUrl(images, { width: 1000 })
+  const imageUrls = [...getCloudinaryUrl(images, { width: 1000 }), ...Array(Math.max(0, 5 - images.length)).fill(DEFAULT_IMAGE)]
   return (
     <Box mt="md" sx={(theme) => ({
       width: '100%',
@@ -28,7 +26,7 @@ const MonumentDetailGrid = ({ images }) => {
           <Grid>
             <Grid.Col span={6}>
               <Image
-                src={imageUrls[0]}
+                src={imageUrls[1]}
                 alt="Thumbnail 1"
                 radius="md"
                 style={{
@@ -40,7 +38,7 @@ const MonumentDetailGrid = ({ images }) => {
             </Grid.Col >
             <Grid.Col span={6}>
               <Image
-                src={imageUrls[0]}
+                src={imageUrls[2]}
                 alt="Thumbnail 2"
                 radius="md"
                 style={{
@@ -52,7 +50,7 @@ const MonumentDetailGrid = ({ images }) => {
             </Grid.Col>
             <Grid.Col span={6}>
               <Image
-                src={imageUrls[0]}
+                src={imageUrls[3]}
                 alt="Thumbnail 1"
                 radius="md"
                 style={{
@@ -64,7 +62,7 @@ const MonumentDetailGrid = ({ images }) => {
             </Grid.Col>
             <Grid.Col span={6}>
               <Image
-                src={imageUrls[0]}
+                src={imageUrls[4]}
                 alt="Thumbnail 2"
                 radius="md"
                 style={{

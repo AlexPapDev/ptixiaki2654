@@ -82,7 +82,6 @@ const NewMonument = () => {
       toast.success('Record created successfully!', { position: 'top-right' })
       setTimeout(() => navigate('/monuments'), 1500)
     }
-
   }
 
   return (
