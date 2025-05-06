@@ -63,6 +63,25 @@ const useDataStore = create((set, get) => ({
     }
   },
 
+  editMonumentCategories: async (monumentId, categories) => {
+    set({ isEditingMonument: true, monumentEditingError: null })
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.patch(
+        `${API_BASE_URL}/api/monuments/${monumentId}/categories`, 
+        { categories },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+      set({ isEditingMonument: false })
+      return { success: true, data: response.data }
+    } catch (error) {
+      console.error('Error creating monument:', error)
+      set({ isEditingMonument: false, monumentEditingError: error.response?.data?.error || 'Failed to edit monument' })
+      return { success: false, error: error.response?.data?.error || 'Failed to edit monument' }
+    }
+  },
+
   updateMonumentWorkingHours: async (monumentId, hoursData) => {
     set({ isEditingMonumentHours: true, monumentHoursEditingError: null })
     try {
@@ -141,24 +160,23 @@ const useDataStore = create((set, get) => ({
 
   // --- Actions for adding/removing monuments from a list ---
   addMonumentToList: async (listId, monumentId) => {
-    // set({ addingMonumentToList: true, addMonumentToListError: null })
-    // try {
-    //   const token = localStorage.getItem('token')
-    //   const response = await axios.post(
-    //     `${API_BASE_URL}/api/lists/${listId}/monuments`,
-    //     { monumentId },
-    //     { headers: { Authorization: `Bearer ${token}` } }
-    //   )
-    //   set((state) => ({
-    //     addingMonumentToList: false,
-    //     currentList: state.currentList ? { ...state.currentList, monuments: [...(state.currentList.monuments || []), response.data] } : null, // Optimistic update, adjust as needed
-    //   }))
-    //   return { success: true, data: response.data }
-    // } catch (error) {
-    //   console.error('Error adding monument to list:', error)
-    //   set({ addingMonumentToList: false, addMonumentToListError: error.response?.data?.error || 'Failed to add monument to list' })
-    //   return { success: false, error: error.response?.data?.error || 'Failed to add monument to list' }
-    // }
+    set({ addingMonumentToList: true, addMonumentToListError: null })
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.post(
+        `${API_BASE_URL}/api/lists/${listId}/monuments`,
+        { listId, monumentId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      set({
+        addingMonumentToList: false,
+      })
+      return { success: true, data: response.data }
+    } catch (error) {
+      console.error('Error adding monument to list:', error)
+      set({ addingMonumentToList: false, addMonumentToListError: error.response?.data?.error || 'Failed to add monument to list' })
+      return { success: false, error: error.response?.data?.error || 'Failed to add monument to list' }
+    }
   },
 
   removeMonumentFromList: async (listId, monumentId) => {

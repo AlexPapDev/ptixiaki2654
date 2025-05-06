@@ -55,7 +55,8 @@ router.post('/', upload.array('image', 5), async (req, res) => {
 
     // Fetch category IDs safely
     console.log(categories, typeof categories, Array.isArray(categories))
-    const categoryIds = Array.isArray(categories) ? await monumentService.getCategoryIds(categories.split()) : []
+    const categoryArray = Array.isArray(categories) ? categories : categories.split(',')
+    const categoryIds = await monumentService.getCategoryIds(categoryArray)
 
     // Validate user existence
     const user = await userService.getUserByField('userid', userid)
@@ -105,7 +106,7 @@ router.post('/', upload.array('image', 5), async (req, res) => {
 
     const daysOfWeek = [0, 1, 2, 3, 4, 5, 6] // Sunday to Saturday
     const defaultHours = daysOfWeek.map(day => ({
-      monumentid: monumentId,
+      monumentid: newMonument.monumentid,
       day_of_week: day,
       open_time: null,
       close_time: null,
@@ -399,6 +400,40 @@ router.patch('/:id', async (req, res) => {
 
     // Generic error handling
     res.status(500).json({ status: 'error', message: 'Failed to update monument' })
+  }
+})
+
+router.patch('/:id/categories', async (req, res) => {
+  console.log('update monument categories')
+  const { id } = req.params
+  const { categories } = req.body
+  console.log(req.body)
+  console.log(req.params)
+  try {
+    console.log(categories, typeof categories, Array.isArray(categories))
+    const categoryIds = Array.isArray(categories) ? await monumentService.getCategoryIds(categories) : []
+
+    let updateCategories
+    if (categoryIds.length > 0) {
+      await monumentService.addMonumentCategories(id, categoryIds, true)
+    }
+
+    if (!updateCategories) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Monument not found.',
+      })
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: { categories: updateCategories },
+    })
+  } catch (error) {
+    console.error('Error adding categories:', error.message)
+
+    // Generic error handling
+    res.status(500).json({ status: 'error', message: 'Failed to add categories' })
   }
 })
 

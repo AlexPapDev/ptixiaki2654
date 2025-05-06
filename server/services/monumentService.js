@@ -77,15 +77,24 @@ const getCategoryIds = async (categoryNames) => {
   console.log('getCategoryIds', categoryNames, typeof categoryNames)
   const categories = await db.query(
     `SELECT categoryid FROM categories WHERE name = ANY($1::text[])`,
-    [categoryNames.split(',')]
+    [categoryNames]
   )
   return categories.rows.map(category => category.categoryid)
 }
 
-const addMonumentCategories = async (monumentId, categoryIds) => {
-  const values = categoryIds.map((categoryId, index) => `($1, $${index + 2})`).join(", ")
-  const query = `INSERT INTO monumentcategories (monumentId, categoryId) VALUES ${values} RETURNING *`
+const addMonumentCategories = async (monumentId, categoryIds, isUpdate = false) => {
   try {
+    if (isUpdate) {
+      await db.query('DELETE FROM monumentcategories WHERE monumentId = $1', [monumentId]);
+      console.log(`Existing categories for monument ID ${monumentId} deleted.`);
+    }
+    if (!categoryIds || categoryIds.length === 0) {
+      console.log('No categories to add')
+      return []
+    }
+    const values = categoryIds.map((categoryId, index) => `($1, $${index + 2})`).join(", ")
+    const query = `INSERT INTO monumentcategories (monumentId, categoryId) VALUES ${values} RETURNING *`
+  
     const result = await db.query(query, [monumentId, ...categoryIds])
     console.log(result.rows)
     return result.rows 

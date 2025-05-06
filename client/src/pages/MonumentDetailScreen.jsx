@@ -37,6 +37,7 @@ const MonumentDetail = () => {
 
   const { handleAddPhoto } = useAddMonumentPhoto(monumentId,  () => {
     toast.success('Photo added succesfully  successfully!', { position: 'top-right' })
+    window.location.reload()
   })
 
   if (loading || error) {
@@ -68,7 +69,7 @@ const MonumentDetail = () => {
           <MonumentDetailAddress initialAddress={monument.address} />
           <MonumentDetailDescription monumentId={monumentId} initialDescription={monument.description}/>
           <Divider mt="md" pb="md" />
-          <MonumentDetailCategories initialCategories={monument.categories}/>
+          <MonumentDetailCategories monumentId={monumentId} initialCategories={monument.categories}/>
           <Divider mt="md" pb="md" />
           <WorkingHours
             monumentId={monumentId}

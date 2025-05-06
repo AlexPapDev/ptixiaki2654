@@ -30,7 +30,7 @@ const MonumentDetailAddress = ({ initialAddress, onSave }) => {
   return (
     <div>
       {!isEditing ? (
-        <Group style={{ position: 'relative' }}>
+        <Group mt="sm" mb="sm" style={{ position: 'relative' }}>
           <Text c="dimmed">{fullStreetName}</Text>
           {/* <MonumentDetailEditButton onEdit={handleEditClick} /> */}
         </Group>

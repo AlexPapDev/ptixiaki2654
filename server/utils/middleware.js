@@ -19,7 +19,7 @@ const authenticateUser = async (req, res, next) => {
 const checkRole = (roles) => (req, res, next) => {
   console.log('checkRole')
   const userRole = req.user.role // Assume user is attached to req
-  console.log(req.user, roles)
+  // console.log(req.user, roles)
   if (!roles.includes(userRole)) {
     console.log(req.user, roles)
     return res.status(403).json({ error: 'Access denied' })

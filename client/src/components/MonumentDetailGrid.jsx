@@ -8,11 +8,12 @@ const MonumentDetailGrid = ({ images = [] }) => {
   // const images = getCloudinaryUrl(images, { width: 1000 })
   const imageUrls = [...getCloudinaryUrl(images, { width: 1000 }), ...Array(Math.max(0, 5 - images.length)).fill(DEFAULT_IMAGE)]
   return (
-    <Box mt="md" sx={(theme) => ({
+    <Box mt="md" className="test-box" style={{
       width: '100%',
-    })}>
-      <Grid style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px) !important', height: '100%', width: '100%' }}>
-        <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px) !important' }}>
+      height: 'calc(60vh - 64px)',
+    }}>
+      <Grid className="grid-test" style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px)', height: '100%', width: '100%' }}>
+        <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px)' }}>
           <Image
             src={imageUrls[0]}
             alt="Main"
