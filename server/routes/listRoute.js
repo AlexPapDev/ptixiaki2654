@@ -17,9 +17,10 @@ router.get('/discover', async (req, res) => {
 })
 
 // Get lists created by the authenticated user
-router.get('/my', authenticateUser, async (req, res) => {
+router.get('/me', authenticateUser, async (req, res) => {
   try {
-    const lists = await listService.getListsByUser(req.user.userId)
+    const lists = await listService.getListsByUser(req.user.userid)
+    console.log('my lists', req.user.userid, lists)
     res.json(lists)
   } catch (err) {
     console.error(err)
@@ -45,7 +46,7 @@ router.get('/:listId', async (req, res) => {
 router.post('/', authenticateUser, async (req, res) => {
   try {
     const { name, description } = req.body
-    const newList = await listService.createList(req.user.userId, name, description)
+    const newList = await listService.createList(req.user.userid, name, description)
     res.status(201).json(newList)
   } catch (err) {
     console.error(err)
@@ -56,7 +57,8 @@ router.post('/', authenticateUser, async (req, res) => {
 // Add monument to list
 router.post('/:listId/monuments/:monumentId', authenticateUser, async (req, res) => {
   try {
-    await listService.addMonumentToList(req.params.listId, req.params.monumentId)
+    const { listId, monumentId } = req.params
+    await listService.addMonumentToList(listId, monumentId)
     res.sendStatus(204)
   } catch (err) {
     console.error(err)
@@ -91,7 +93,7 @@ router.delete('/:listId/monuments/:monumentId', authenticateUser, async (req, re
 router.put('/:listId', authenticateUser, async (req, res) => {
   try {
     const { name, description } = req.body
-    const updatedList = await listService.updateList(req.params.listId, req.user.userId, name, description)
+    const updatedList = await listService.updateList(req.params.listId, req.user.userid, name, description)
     res.json(updatedList)
   } catch (err) {
     console.error(err)
@@ -102,7 +104,7 @@ router.put('/:listId', authenticateUser, async (req, res) => {
 // Delete list
 router.delete('/:listId', authenticateUser, async (req, res) => {
   try {
-    await listService.deleteList(req.params.listId, req.user.userId)
+    await listService.deleteList(req.params.listId, req.user.userid)
     res.sendStatus(204)
   } catch (err) {
     console.error(err)
