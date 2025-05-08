@@ -9,23 +9,24 @@ const ListDetailGrid = ({ images }) => {
   return (<Box style={{height: '100%'}}>
     <SimpleGrid style={{height: '100%'}} cols={{ base: 2, sm: 2, lg: 2 }}> 
       <Box>
-      <Image src={DEFAULT_IMAGE} style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}/>
-                </Box>
+        <Image src={DEFAULT_IMAGE} mt="md" m={0} style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          
+        }}/>
+      </Box>
       <Box style={{height: '100%'}}>
         <Image src={DEFAULT_IMAGE} style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}/>
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}/>
         <Image src={DEFAULT_IMAGE} style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}/>
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}/>
       </Box>
     </SimpleGrid>
   </Box>)

@@ -199,6 +199,21 @@ const useDataStore = create((set, get) => ({
     //   return { success: false, error: error.response?.data?.error || 'Failed to remove monument from list' }
     // }
   },
+
+  getUserLists: async () => {
+    set({ loadingLists: true, loadListsError: null, lists: [] })
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.get(`${API_BASE_URL}/api/lists/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      // set({ lists: response.data, loadingLists: false })
+      return response.data
+    } catch (error) {
+      console.error('Error fetching lists:', error)
+      set({ loadingLists: false, loadListsError: error.response?.data?.error || 'Failed to fetch lists' })
+    }
+  },
 }))
 
 export default useDataStore

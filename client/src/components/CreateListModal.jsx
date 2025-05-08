@@ -1,4 +1,3 @@
-// src/components/CreateListModal.js
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Container, Divider, Textarea, Title, Radio, Group, Text, Button, TextInput } from '@mantine/core'
@@ -11,7 +10,7 @@ const CreateListModal = ({ id, context, close }) => {
     initialValues: {
       listName: '',
       description: '',
-      privacy: 'public',
+      privacy: 'public', 
     },
     rules: {
       listName: (value) => value.trim().length > 0,
@@ -25,7 +24,7 @@ const CreateListModal = ({ id, context, close }) => {
       name: values.listName,
       description: values.description,
     }
-    debugger
+
     const { success, error, data } = await createList(dataPayload)
     if (success) {
       const { listid } = data
