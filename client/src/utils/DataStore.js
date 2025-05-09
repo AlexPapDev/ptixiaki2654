@@ -5,6 +5,47 @@ import axios from 'axios'
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
 
 const useDataStore = create((set, get) => ({
+  // App-wide state
+  isLoading: false,
+  error: null,
+  
+  // UI state
+  currentView: 'list', // or 'map'
+  setCurrentView: (view) => set({ currentView: view }),
+  
+  // Search state
+  searchQuery: '',
+  searchResults: [],
+  setSearchQuery: (query) => set({ searchQuery: query }),
+  setSearchResults: (results) => set({ searchResults: results }),
+  
+  // Filter state
+  filters: {
+    categories: [],
+    distance: null,
+    rating: null
+  },
+  setFilters: (filters) => set({ filters }),
+  
+  // Sort state
+  sortBy: 'name', // or 'distance', 'rating'
+  sortOrder: 'asc', // or 'desc'
+  setSortBy: (sortBy) => set({ sortBy }),
+  setSortOrder: (sortOrder) => set({ sortOrder }),
+  
+  // Clear all state
+  clearAll: () => set({
+    searchQuery: '',
+    searchResults: [],
+    filters: {
+      categories: [],
+      distance: null,
+      rating: null
+    },
+    sortBy: 'name',
+    sortOrder: 'asc'
+  }),
+
   // State for creating/editing monuments
   creatingMonument: false,
   // editingMonumentId: null,

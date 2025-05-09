@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken'
 import userService from '../services/userService.js'
 const authenticateUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1] // Extract token
+  console.log('token', token)
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' })
   }

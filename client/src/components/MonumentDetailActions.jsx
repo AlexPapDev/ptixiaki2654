@@ -3,9 +3,9 @@ import { Button, Group, FileButton } from '@mantine/core'
 import { Bookmark, Share, Camera, Trash2 } from 'lucide-react'
 import AddImagesButton from './AddImagesButton'
 import AddToListButton from './AddToListButton'
-const MonumentDetailActions = ({handleDelete, handleAddPhoto, loggedIn = false}) => {
+const MonumentDetailActions = ({handleDelete, handleAddPhoto, loggedIn = false, monumentId}) => {
   return (<Group>
-    <AddToListButton />
+    <AddToListButton monumentId={monumentId}/>
     {/* <Button color="teal" leftSection={<Bookmark size={14} />}>Save</Button> */}
     <AddImagesButton onChange={handleAddPhoto}/>
     <Button variant="outline" leftSection={<Share size={14} />}>Share</Button>

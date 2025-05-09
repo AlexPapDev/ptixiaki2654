@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import useAuthStore from '../utils/AuthStore'
+import useUserStore from '../stores/domain/UserStore'
 import {
   TextInput,
   PasswordInput,
@@ -32,6 +33,7 @@ const SignUp = ({ onClose }) => {
   })
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
+  const { signupUser } = useUserStore()
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -47,28 +49,28 @@ const SignUp = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const { firstname, lastname, email, password, confirmPassword } = formData
-    if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match!')
+    setErrorMessage(null)
+
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage('Passwords do not match')
       return
     }
 
-    try {
-      const result = await axios.post(`${API_BASE_URL}/api/users/`, {
-        firstname,
-        lastname,
-        email,
-        password,
-      })
-      console.log(result.data.message)
+    const result = await signupUser({
+      firstname: formData.firstname,
+      lastname: formData.lastname,
+      email: formData.email,
+      password: formData.password,
+    })
+
+    if (result.success) {
       navigate({
         pathname: '/otpverification',
         search: `?email=${formData.email}`,
       })
       onClose()
-    } catch (error) {
-      console.error(error)
-      setErrorMessage('Error: ' + (error.response?.data?.error || 'Registration failed'))
+    } else {
+      setErrorMessage(result.error)
     }
   }
 

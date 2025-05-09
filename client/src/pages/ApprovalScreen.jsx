@@ -1,61 +1,48 @@
 import { useEffect, useState, useRef, useCallback } from "react"
 import axios from "axios"
+import useMonumentStore from '../stores/domain/MonumentStore'
+import { toast } from 'react-toastify'
 
 const ApprovalScreen = () => {
-  const [pendingMonuments, setPendingMonuments] = useState([])
+  const [monuments, setMonuments] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const { getPendingMonuments, approveMonument, rejectMonument } = useMonumentStore()
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001"
   const token = localStorage.getItem("token")
   const hasFetched = useRef(false) // Prevents useEffect from running twice in Strict Mode
 
-  // Fetch pending monuments
-  const fetchPendingMonuments = useCallback(async () => {
-    if (!token) return // Prevent API call if token is missing
-    try {
-      const result = await axios.get(`${API_BASE_URL}/api/monuments/pending`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      setPendingMonuments(result.data.monuments || []) // Ensure state is updated correctly
-    } catch (error) {
-      console.error("Error fetching monuments:", error)
-    }
-  }, [API_BASE_URL, token])
-
   useEffect(() => {
-    if (!hasFetched.current) {
-      fetchPendingMonuments()
-      hasFetched.current = true // Mark as fetched to prevent duplicate calls
-    }
-  }, [fetchPendingMonuments])
+    fetchPendingMonuments()
+  }, [])
 
-  // Approve a monument
-  const approveMonument = async (monumentId) => {
-    try {
-      const response = await axios.patch(`${API_BASE_URL}/api/monuments/${monumentId}/approve`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (response.status === 200) {
-        setPendingMonuments((prev) => prev.filter((m) => m.monumentid !== monumentId))
-      } else {
-        console.error("Failed to approve monument")
-      }
-    } catch (error) {
-      console.error("Error approving monument:", error)
+  const fetchPendingMonuments = async () => {
+    const result = await getPendingMonuments()
+    if (result.success) {
+      setMonuments(result.data)
+    } else {
+      setError(result.error)
+    }
+    setLoading(false)
+  }
+
+  const handleApprove = async (monumentId) => {
+    const result = await approveMonument(monumentId)
+    if (result.success) {
+      setMonuments(monuments.filter(m => m._id !== monumentId))
+      toast.success('Monument approved successfully')
+    } else {
+      toast.error(result.error)
     }
   }
 
-  // Reject a monument
-  const rejectMonument = async (monumentId) => {
-    try {
-      const response = await axios.patch(`${API_BASE_URL}/api/monuments/${monumentId}/reject`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (response.status === 200) {
-        setPendingMonuments((prev) => prev.filter((m) => m.monumentid !== monumentId))
-      } else {
-        console.error("Failed to reject monument")
-      }
-    } catch (error) {
-      console.error("Error rejecting monument:", error)
+  const handleReject = async (monumentId) => {
+    const result = await rejectMonument(monumentId)
+    if (result.success) {
+      setMonuments(monuments.filter(m => m._id !== monumentId))
+      toast.success('Monument rejected successfully')
+    } else {
+      toast.error(result.error)
     }
   }
 
@@ -63,12 +50,12 @@ const ApprovalScreen = () => {
     <div style={styles.container}>
       <h2 style={styles.title}>Pending Monument Approvals</h2>
 
-      {pendingMonuments.length === 0 ? (
+      {monuments.length === 0 ? (
         <p style={styles.noData}>No monuments pending approval.</p>
       ) : (
         <div>
-          {pendingMonuments.map((monument) => (
-            <div key={monument.monumentid} style={styles.card}>
+          {monuments.map((monument) => (
+            <div key={monument._id} style={styles.card}>
               
               <div style={styles.card}>
                 <img src={monument.images[0] || ''} style={{width: '100px', height: '100px'}}></img>
@@ -81,13 +68,13 @@ const ApprovalScreen = () => {
                   <div style={styles.buttonContainer}>
                     <button 
                       style={{ ...styles.button, ...styles.approveButton }} 
-                      onClick={() => approveMonument(monument.monumentid)}
+                      onClick={() => handleApprove(monument._id)}
                     >
                       Approve
                     </button>
                     <button 
                       style={{ ...styles.button, ...styles.rejectButton }} 
-                      onClick={() => rejectMonument(monument.monumentid)}
+                      onClick={() => handleReject(monument._id)}
                     >
                       Reject
                     </button>

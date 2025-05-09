@@ -6,6 +6,8 @@ import { Button, Text, Alert, Container, LoadingOverlay } from '@mantine/core'
 import UserProfileEdit from '../components/UserProfileEdit'
 import UserProfileView from '../components/UserProfileView'
 import UserNotFound from '../components/UserNotFound'
+import useUserStore from '../stores/domain/UserStore'
+import { toast } from 'react-toastify'
 
 const UserProfile = () => {
   const { user, isLoggedIn, updateUser } = useAuthStore()
@@ -14,67 +16,38 @@ const UserProfile = () => {
   const [isEditMode, setIsEditMode] = useState(false)
   const [error, setError] = useState(null)
   const [notFound, setNotFound] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const { getUserProfile, updateUserProfile } = useUserStore()
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
 
   useEffect(() => {
-    if (userId) {
-      // Fetch user only if userId is present in the URL and it's not the logged-in user's profile
-      if (Number(userId) !== Number(user?.userid)) {
-        fetchUser(userId)
-      } else {
-        // If it's the logged-in user's profile, reset states
-        setPageUser(user) // Directly set pageUser for own profile
-        setNotFound(false)
-      }
+    fetchUserProfile()
+  }, [userId])
+
+  const fetchUserProfile = async () => {
+    const result = await getUserProfile(userId)
+    if (result.success) {
+      setPageUser(result.data)
+      setError(null)
+      setNotFound(false)
     } else {
-      // If no userId in URL, it's the logged-in user's profile
-      setPageUser(user) // Directly set pageUser for own profile
+      setPageUser(null)
+      setError(result.error)
       setNotFound(false)
     }
-  }, [user, userId])
-
-
-  const fetchUser = async (userId) => {
-    setLoading(true)
-    try {
-      const result = await axios.get(`${API_BASE_URL}/api/users/`, { params: { id: userId } })
-      if (result.data?.data) {
-        setPageUser(result.data.data)
-        setError(null)
-        setNotFound(false)
-      } else {
-        // Handle the case where the user is not found on the server
-        setPageUser(null)
-        setError(null)
-        setNotFound(true)
-      }
-    } catch (err) {
-      setPageUser(null)
-      setError('Failed to fetch user data. Please try again later.')
-      setNotFound(false) // Reset notFound on error
-    } finally {
-      setLoading(false) // Set loading to false after fetching (success or error)
-    }
+    setLoading(false)
   }
 
-  const handleUpdate = async (updatedData) => {
-    try {
-      const res = await axios.patch(`${API_BASE_URL}/api/users/${userId}`, updatedData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
-      if (res?.data?.user) {
-        updateUser(res.data.user)
-        setPageUser(res.data.user)
-        setIsEditMode(false)
-        setError(null)
-        return res
-      } else {
-        setError('Failed to update profile data.')
-      }
-    } catch (err) {
-      setError('Failed to update profile. Please try again later.')
+  const handleUpdateProfile = async (updatedData) => {
+    const result = await updateUserProfile(userId, updatedData)
+    if (result.success) {
+      updateUser(result.data)
+      setPageUser(result.data)
+      setIsEditMode(false)
+      toast.success('Profile updated successfully')
+    } else {
+      setError(result.error)
     }
   }
 
@@ -112,7 +85,7 @@ const UserProfile = () => {
       )}
 
       {isEditMode ? (
-        <UserProfileEdit onSave={handleUpdate} user={user} updateUser={updateUser} />
+        <UserProfileEdit onSave={handleUpdateProfile} user={user} updateUser={updateUser} />
       ) : (
         (isOwnProfile || pageUser) && <UserProfileView user={pageUser || user} />
       )}

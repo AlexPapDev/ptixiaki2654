@@ -1,10 +1,10 @@
 import { Box, Group, LoadingOverlay} from '@mantine/core'
 import { useEffect, useState, useCallback } from 'react'
-import axios from 'axios'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
 import useDataStore from '../utils/DataStore'
 import { toast } from 'react-toastify'
+import useMonumentStore from '../stores/domain/MonumentStore'
 
 import NewMonumentMap from '../components/NewMonumentMap'
 import NewMonumentForm from '../components/NewMonumentForm'
@@ -14,7 +14,9 @@ const NewMonument = () => {
   const { lat, lng } = Object.fromEntries(searchParams)
   const navigate = useNavigate()
   const { isLoggedIn, user } = useAuthStore()
-  const { createMonument, isCreatingMonument, monumentCreationError } = useDataStore() // Get state and action from dataStore
+  const { createMonument, isCreatingMonument, monumentCreationError } = useDataStore()
+  const [error, setError] = useState(null)
+  const { getMonumentAddress } = useMonumentStore()
 
   const [loading, setLoading] = useState(false)
   const [address, setAddress] = useState({
@@ -38,11 +40,13 @@ const NewMonument = () => {
     const fetchAddress = async () => {
       try {
         setLoading(true)
-        const res = await axios.post(`${API_BASE_URL}/api/monuments/get-address`, {
+        const result = await getMonumentAddress({
           latitude: lat,
           longitude: lng,
         })
-        setAddress(res.data.data.address || {})
+        if (result) {
+          setAddress(result.data.address || {})
+        }
       } catch (err) {
         console.error(err)
         setAddress({ road: 'Error', house_number: '', city: '', postcode: '' })
@@ -51,7 +55,7 @@ const NewMonument = () => {
       }
     }
     fetchAddress()
-  }, [lat, lng, API_BASE_URL])
+  }, [lat, lng])
 
   useEffect(() => {
     if (monumentCreationError) {

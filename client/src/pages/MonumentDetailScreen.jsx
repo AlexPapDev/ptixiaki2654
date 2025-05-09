@@ -65,6 +65,7 @@ const MonumentDetail = () => {
           <MonumentDetailActions loggedIn={loggedIn} 
             handleAddPhoto={handleAddPhoto}
             handleDelete={handleDeleteClick}
+            monumentId={monumentId}
           />
           <MonumentDetailAddress initialAddress={monument.address} />
           <MonumentDetailDescription monumentId={monumentId} initialDescription={monument.description}/>

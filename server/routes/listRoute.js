@@ -45,6 +45,7 @@ router.get('/:listId', async (req, res) => {
 // Create a new list
 router.post('/', authenticateUser, async (req, res) => {
   try {
+    console.log('create list')
     const { name, description } = req.body
     const newList = await listService.createList(req.user.userid, name, description)
     res.status(201).json(newList)
@@ -57,6 +58,7 @@ router.post('/', authenticateUser, async (req, res) => {
 // Add monument to list
 router.post('/:listId/monuments/:monumentId', authenticateUser, async (req, res) => {
   try {
+    console.log('add monument to list')
     const { listId, monumentId } = req.params
     await listService.addMonumentToList(listId, monumentId)
     res.sendStatus(204)
@@ -69,8 +71,9 @@ router.post('/:listId/monuments/:monumentId', authenticateUser, async (req, res)
 // add multiple monuments to list
 router.post('/:listId/monuments', authenticateUser, async (req, res) => {
   try {
+    console.log('wrong add monument to list')
     const { monumentIds } = req.body // expects: [1, 2, 3]
-    await listService.addMultipleMonumentsToList(req.params.listId, monumentIds)
+    // await listService.addMultipleMonumentsToList(req.params.listId, monumentIds)
     res.sendStatus(204)
   } catch (err) {
     console.error(err)

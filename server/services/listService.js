@@ -38,10 +38,23 @@ const getFilteredLists = async ({ search = '', userId }) => {
   return result.rows
 }
 
-
 const getListsByUser = async (userId) => {
   const result = await db.query(
-    'SELECT * FROM Lists WHERE userId = $1 ORDER BY createdDate DESC',
+    `
+    SELECT
+      l.*,
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT('monumentId', lm.monumentId)
+        ) FILTER (WHERE lm.monumentId IS NOT NULL),
+        '[]'::json
+      ) AS monuments
+    FROM Lists l
+    LEFT JOIN listmonuments lm ON l.listId = lm.listId
+    WHERE l.userId = $1
+    GROUP BY l.listId
+    ORDER BY l.createdDate DESC
+    `,
     [userId]
   )
   return result.rows
