@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Container, Divider, Textarea, Title, Radio, Group, Text, Button, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import useDataStore from '../utils/DataStore'
-const CreateListModal = ({ id, context, close }) => {
+const CreateListModal = ({ id, context, close, suppressNavigate = false }) => {
   const { createList } = useDataStore()
   const navigate = useNavigate()
   const form = useForm({
@@ -28,7 +28,7 @@ const CreateListModal = ({ id, context, close }) => {
     const { success, error, data } = await createList(dataPayload)
     if (success) {
       const { listid } = data
-      navigate(`/list/${listid}`)
+      if (!suppressNavigate) navigate(`/list/${listid}`)
       close()
     } else {
       console.log(error)

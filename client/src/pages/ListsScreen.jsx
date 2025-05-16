@@ -35,7 +35,7 @@ const ListsScreen = () => {
           <Tabs.Tab value="myLists" leftSection={<Library size={12} />} disabled={!loggedIn}>
             <Text m="xs">My Lists</Text>
           </Tabs.Tab>
-          <Tabs.Tab value="liked" leftSection={<Star size={12} />}>
+          <Tabs.Tab value="liked" leftSection={<Star size={12} />} disabled={!loggedIn}>
             <Text m="xs">
               Liked Lists
             </Text>
@@ -56,7 +56,7 @@ const ListsScreen = () => {
         <Route index element={<Navigate to="discover" replace />} />
           {/* <Route index element={<Navigate to="discover" replace />} /> */}
         <Route path="discover" element={<DiscoverLists />} />
-        <Route path="mine" element={<MyLists />} />
+        <Route path="myLists" element={<MyLists />} />
         <Route path="following" element={<FollowingLists />} />
       </Routes>
     </Container>

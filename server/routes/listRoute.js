@@ -31,6 +31,7 @@ router.get('/me', authenticateUser, async (req, res) => {
 // Get list info with monuments
 router.get('/:listId', async (req, res) => {
   try {
+    console.log('get list info')
     const list = await listService.getListInfo(req.params.listId)
     if (!list) {
       return res.status(404).json({ error: 'List not found' });

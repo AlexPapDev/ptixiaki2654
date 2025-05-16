@@ -11,7 +11,7 @@ const ListDetail = () => {
   const { listId } = useParams()
   const navigate = useNavigate()
   const { list, loading, error } = useListDetail(listId)
-  const { user } = list || {}
+  const { user, monuments = [] } = list || {}
   return (<Box>
     <Grid p="none" gutter={0}>
       <Grid.Col span={6} >

@@ -10,8 +10,9 @@ const useListDetail = (listId) => {
   useEffect(() => {
     const fetchMonument = async () => {
       try {
+        setLoading(true)
         const result = await axios.get(`${API_BASE_URL}/api/lists/${listId}`)
-        const listData = result
+        const listData = result.data
         setList(listData)
       } catch (err) {
         console.error(err)

@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
 import useAuthStore from '../utils/AuthStore'
-import { Stack, Text, Card,  Group, Title, Button } from '@mantine/core'
-
+import { Box, Grid, TextInput, Text, Card,  Group, Title, Button, ActionIcon } from '@mantine/core'
+import { Search } from 'lucide-react'
+import ListCard from './ListCard'
+import useDataStore from '../utils/DataStore'
 const MyLists = () => {
   const { user } = useAuthStore()
   const [lists, setLists] = useState([])
   const [loading, setLoading] = useState(true)
-
+  const { getUserLists } = useDataStore()
   useEffect(() => {
     const fetchLists = async () => {
       setLoading(true)
       try {
-        // Replace with actual API call
-        const fakeData = [
-          { id: 1, title: 'Best Coffee Shops', description: 'My go-to places for a latte.' },
-          { id: 2, title: 'Weekend Hikes', description: 'Scenic trails I love.' }
-        ]
-        setLists(fakeData)
+        const lists = await getUserLists()
+        debugger
+        setLists(lists)
+        debugger
       } catch (err) {
         console.error('Error fetching my lists:', err)
       } finally {
@@ -28,10 +28,27 @@ const MyLists = () => {
       fetchLists()
     }
   }, [user])
-  return (<>
-    <Stack>
+  const onClickButton = () => {
 
-    </Stack>
-  </>)
+  }
+  return (<Box >
+    <Group mt="lg" mb="md" justify="space-between">
+      <Text size="lg" fw={700}>Search lists created by you</Text>
+      <TextInput
+        placeholder="e.g churches"
+        radius="xl"
+        rightSection={
+          <ActionIcon size={32} radius="lg" color="primary" variant="filled" onClick={onClickButton}>
+            <Search size={20} color="white"/>
+          </ActionIcon>
+        }
+      />
+    </Group>
+
+    <Text mb="sm">Latest lists</Text>
+    <Grid>
+      {lists.map(list => (<Grid.Col span={4}><ListCard list={list}/></Grid.Col>))}
+    </Grid>
+  </Box>)
 }
 export default MyLists

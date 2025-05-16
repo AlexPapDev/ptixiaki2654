@@ -32,7 +32,7 @@ const MonumentDetailDescription = ({ monumentId, initialDescription, onSave }) =
     <div>
       {!isEditing ? (
         <Group style={{ position: 'relative' }} justify="space-between">
-          <Text fw={600}>{savedDescription || 'No description available.'}</Text>
+          <Text fw={600} style={{maxWidth: '85%'}}>{savedDescription || 'No description available.'}</Text>
           <MonumentDetailEditButton onEdit={handleEditClick} />
         </Group>
       ) : (

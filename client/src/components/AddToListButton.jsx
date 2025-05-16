@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from '@mantine/core'
 import { useModals } from '@mantine/modals'
 import AddToListModal from './AddToListModal'
+import CreateListModal from './CreateListModal'
 import { Bookmark } from 'lucide-react'
 import useDataStore from '../utils/DataStore'
 const AddToListButton = ({loggedIn = false, monumentId}) => {
@@ -13,7 +14,15 @@ const AddToListButton = ({loggedIn = false, monumentId}) => {
     modals.openModal({
       // title: 'Add Monument To List',
       centered: true,
-      children: <AddToListModal lists={lists} monumentId={monumentId}/>,
+      children: <AddToListModal lists={lists} monumentId={monumentId} openCreateList={openCreateListModal}/>,
+    })
+  }
+  const openCreateListModal = () => {
+    debugger
+    const id = modals.openModal({
+      title: 'Create New List',
+      centered: true,
+      children: <CreateListModal close={() => modals.closeModal(id)} suppressNavigate/>,
     })
   }
   return (

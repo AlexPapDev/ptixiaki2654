@@ -44,9 +44,7 @@ const getListsByUser = async (userId) => {
     SELECT
       l.*,
       COALESCE(
-        JSON_AGG(
-          JSON_BUILD_OBJECT('monumentId', lm.monumentId)
-        ) FILTER (WHERE lm.monumentId IS NOT NULL),
+        JSON_AGG(lm.monumentId) FILTER (WHERE lm.monumentId IS NOT NULL),
         '[]'::json
       ) AS monuments
     FROM Lists l
@@ -61,11 +59,12 @@ const getListsByUser = async (userId) => {
 }
 
 async function getListInfo(listId) {
+  console.log('getListInfo', listId)
   try {
     const listResult = await db.query(
       'SELECT listId, userId, name, description, createdDate, updatedDate FROM Lists WHERE listId = $1',
       [listId]
-    );
+    )
 
     if (listResult.rows.length === 0) {
       return null
