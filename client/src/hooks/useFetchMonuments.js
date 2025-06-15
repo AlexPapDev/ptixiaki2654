@@ -16,7 +16,7 @@ const useFetchMonuments = (passedTerm, category, mapBounds) => {
       !mapBounds._ne.lat || !mapBounds._ne.lng ||
       !mapBounds._sw.lat || !mapBounds._sw.lng
     ) {
-      setLoading(false)
+      setLoading(true)
       return
     }
 
