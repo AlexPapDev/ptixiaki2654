@@ -44,11 +44,19 @@ const getListsByUser = async (userId) => {
     SELECT
       l.*,
       COALESCE(
-        JSON_AGG(lm.monumentId) FILTER (WHERE lm.monumentId IS NOT NULL),
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'monumentId', m.monumentId,
+            'name', m.name,
+            'mainImage', mi.imageurl
+          )
+        ) FILTER (WHERE m.monumentId IS NOT NULL),
         '[]'::json
       ) AS monuments
     FROM Lists l
     LEFT JOIN listmonuments lm ON l.listId = lm.listId
+    LEFT JOIN monuments m ON lm.monumentId = m.monumentId
+    LEFT JOIN monumentimages mi ON m.monumentId = mi.monumentid AND mi.ismain = true
     WHERE l.userId = $1
     GROUP BY l.listId
     ORDER BY l.createdDate DESC
