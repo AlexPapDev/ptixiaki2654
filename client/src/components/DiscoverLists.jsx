@@ -1,32 +1,36 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ListCard from '../components/ListCard'
 import { Grid, Card,Group, Image, Box, ActionIcon, Text, TextInput } from '@mantine/core'
 import { Search } from 'lucide-react'
-const tempLists = [
-  {
-    monuments: [],
-    name: 'testlist 1',
-    description: 'desfkdjfdkjdkg',
-    createdBy: {
-      userid: '1',
-      name: 'monuma',
-    }
-  },
-  {
-    monuments: [],
-    name: 'testlist 2',
-    description: 'asdfgkg asdfasdfasdfasdf asdfaghfagafdga asdfasfgad',
-    createdBy: {
-      userid: null,
-      name: 'monuma'
-    }
-  },
-]
 
+import useDataStore from '../utils/DataStore'
 const DiscoverLists = () => {
-  const onClickButton = () => {
+  const [lists, setLists] = useState([])
+  const [tempSearchText, setTempSearchText] = useState('')
+  const [searchText, setSearchText] = useState(tempSearchText)
+  const [loading, setLoading] = useState(true)
+  const { getDiscoverLists } = useDataStore()
+  useEffect(() => {
+    const fetchLists = async () => {
+      setLoading(true)
+      try {
+        const lists = await getDiscoverLists(searchText)
+        debugger
+        setLists(lists)
+      } catch (err) {
+        console.error('Error fetching my lists:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
 
+
+      fetchLists()
+
+  }, [searchText])
+  const onClickButton = async () => {
+    setSearchText(tempSearchText)
   }
   return (<Box >
     <Group mt="lg" mb="md" justify="space-between">
@@ -44,7 +48,7 @@ const DiscoverLists = () => {
 
     <Text mb="sm">Latest lists</Text>
     <Grid>
-      {tempLists.map(list => (<Grid.Col span={4}><ListCard list={list}/></Grid.Col>))}
+      {lists.map(list => (<Grid.Col span={4}><ListCard list={list}/></Grid.Col>))}
     </Grid>
   </Box>)
 }

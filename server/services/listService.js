@@ -1,13 +1,32 @@
 import db from '../config/db.js'
 
-const getAllLists = async () => {
-  const result = await db.query(`
-    SELECT l.*, u.username
+const getAllLists = async (searchText) => {
+  const result = await db.query(
+    `
+    SELECT
+      l.*,
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'monumentId', m.monumentId,
+            'name', m.name,
+            'mainImage', mi.imageurl
+          )
+        ) FILTER (WHERE m.monumentId IS NOT NULL),
+        '[]'::json
+      ) AS monuments
     FROM Lists l
-    JOIN Users u ON l.userId = u.userId
+    LEFT JOIN listmonuments lm ON l.listId = lm.listId
+    LEFT JOIN monuments m ON lm.monumentId = m.monumentId
+    LEFT JOIN monumentimages mi ON m.monumentId = mi.monumentid AND mi.ismain = true
+    WHERE (NULLIF($1, '') IS NULL OR l.name ILIKE '%' || $1 || '%')
+    GROUP BY l.listId
     ORDER BY l.createdDate DESC
-  `)
-  return result.rows
+    LIMIT 9
+    `,
+    [searchText]
+  )
+  return result.rows || []
 }
 
 const getFilteredLists = async ({ search = '', userId }) => {

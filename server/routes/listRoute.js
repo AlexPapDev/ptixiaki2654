@@ -8,7 +8,8 @@ const router = express.Router()
 // Get all public lists (placeholder for now)
 router.get('/discover', async (req, res) => {
   try {
-    const lists = await listService.getAllLists()
+    const { searchText } = req.query
+    const lists = await listService.getAllLists(searchText)
     res.json(lists)
   } catch (err) {
     console.error(err)

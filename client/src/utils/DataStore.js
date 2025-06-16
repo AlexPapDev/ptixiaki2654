@@ -255,6 +255,17 @@ const useDataStore = create((set, get) => ({
       set({ loadingLists: false, loadListsError: error.response?.data?.error || 'Failed to fetch lists' })
     }
   },
+
+  getDiscoverLists: async (searchText = '') => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/lists/discover`, {
+        params: { searchText }
+      })
+    } catch (error) {
+      console.error('Error fetching lists:', error)
+      set({ loadingLists: false, loadListsError: error.response?.data?.error || 'Failed to fetch lists' })
+    }
+  }
 }))
 
 export default useDataStore
