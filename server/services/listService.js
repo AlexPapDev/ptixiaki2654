@@ -57,7 +57,7 @@ const getFilteredLists = async ({ search = '', userId }) => {
   return result.rows
 }
 
-const getListsByUser = async (userId) => {
+const getListsByUser = async (userId, searchText) => {
   const result = await db.query(
     `
     SELECT
@@ -71,18 +71,21 @@ const getListsByUser = async (userId) => {
           )
         ) FILTER (WHERE m.monumentId IS NOT NULL),
         '[]'::json
-      ) AS monuments
+      ) AS monuments,
+      TRIM(CONCAT(u.firstname, ' ', u.lastname)) AS full_name
     FROM Lists l
+    LEFT JOIN Users u ON l.userId = u.userId
     LEFT JOIN listmonuments lm ON l.listId = lm.listId
     LEFT JOIN monuments m ON lm.monumentId = m.monumentId
     LEFT JOIN monumentimages mi ON m.monumentId = mi.monumentid AND mi.ismain = true
     WHERE l.userId = $1
-    GROUP BY l.listId
-    ORDER BY l.createdDate DESC
+      AND (NULLIF($2, '') IS NULL OR l.name ILIKE '%' || $2 || '%')
+    GROUP BY l.listId, u.firstname, u.lastname
+    ORDER BY l.createdDate DESC;
     `,
-    [userId]
+    [userId, searchText]
   )
-  return result.rows
+  return result.rows || []
 }
 
 async function getListInfo(listId) {

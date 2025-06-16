@@ -241,12 +241,13 @@ const useDataStore = create((set, get) => ({
     // }
   },
 
-  getUserLists: async () => {
+  getUserLists: async (searchText = '') => {
     set({ loadingLists: true, loadListsError: null, lists: [] })
     try {
       const token = localStorage.getItem('token')
       const response = await axios.get(`${API_BASE_URL}/api/lists/me`, {
         headers: { Authorization: `Bearer ${token}` },
+        params: { searchText }
       })
       // set({ lists: response.data, loadingLists: false })
       return response.data
@@ -261,6 +262,7 @@ const useDataStore = create((set, get) => ({
       const response = await axios.get(`${API_BASE_URL}/api/lists/discover`, {
         params: { searchText }
       })
+      return response.data
     } catch (error) {
       console.error('Error fetching lists:', error)
       set({ loadingLists: false, loadListsError: error.response?.data?.error || 'Failed to fetch lists' })

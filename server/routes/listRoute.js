@@ -20,7 +20,9 @@ router.get('/discover', async (req, res) => {
 // Get lists created by the authenticated user
 router.get('/me', authenticateUser, async (req, res) => {
   try {
-    const lists = await listService.getListsByUser(req.user.userid)
+    console.log('/lists/me')
+    const { searchText } = req.query
+    const lists = await listService.getListsByUser(req.user.userid, searchText)
     console.log('my lists', req.user.userid, lists)
     res.json(lists)
   } catch (err) {
