@@ -7,16 +7,17 @@ import useDataStore from '../utils/DataStore'
 const MyLists = () => {
   const { user } = useAuthStore()
   const [lists, setLists] = useState([])
+  const [tempSearchText, setTempSearchText] = useState('')
+  const [searchText, setSearchText] = useState(tempSearchText)
   const [loading, setLoading] = useState(true)
   const { getUserLists } = useDataStore()
   useEffect(() => {
     const fetchLists = async () => {
       setLoading(true)
       try {
-        const lists = await getUserLists()
+        const lists = await getUserLists(searchText)
         debugger
         setLists(lists)
-        debugger
       } catch (err) {
         console.error('Error fetching my lists:', err)
       } finally {
@@ -27,9 +28,9 @@ const MyLists = () => {
     if (user) {
       fetchLists()
     }
-  }, [user])
-  const onClickButton = () => {
-
+  }, [user, searchText])
+  const onClickButton = async () => {
+    setSearchText(tempSearchText)
   }
   return (<Box >
     <Group mt="lg" mb="md" justify="space-between">
@@ -37,6 +38,7 @@ const MyLists = () => {
       <TextInput
         placeholder="e.g churches"
         radius="xl"
+        onChange={(e) => setTempSearchText(e.target.value)}
         rightSection={
           <ActionIcon size={32} radius="lg" color="primary" variant="filled" onClick={onClickButton}>
             <Search size={20} color="white"/>
