@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import Supercluster from 'supercluster'
 import { Button } from '@mantine/core'
 const MonumentsMap = ({ data = [] }) => {
-  console.log('render map')
+  // console.log('render map')
   const { mapBounds, setMapBounds } = useAppStore()
   const { isLoggedIn } = useAuthStore()
   const mapRef = useRef(null)

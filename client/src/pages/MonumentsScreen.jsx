@@ -6,7 +6,7 @@ import MonumentCard from '../components/MonumentCard'
 import { Group, Card, Skeleton, Box } from '@mantine/core'
 import NoResults from '../components/NoResults'
 import { motion } from 'framer-motion'
-import useFetchMonuments from '../hooks/useFetchMonuments' // Import the custom hook
+import useFetchMonuments from '../hooks/useFetchMonuments'
 
 const Monuments = () => {
   const { searchTerm, mapBounds, clickedMonumentMarker } = useAppStore()
@@ -15,7 +15,7 @@ const Monuments = () => {
   const category = searchParams.get('cat') || ''
 
   const { monuments, loading, error } = useFetchMonuments(passedTerm, category, mapBounds)
-
+  // console.log('loading: ' + loading)
   const renderSkeletonCards = () => {
     return Array.from({ length: 6 }).map((_, index) => (
       <Card key={`skeleton-${index}`} shadow="sm" padding="lg" radius="md" withBorder>

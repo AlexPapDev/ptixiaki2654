@@ -51,24 +51,24 @@ const useListStore = create((set, get) => ({
     }
   },
 
-  getUserLists: async () => {
-    set({ loadingLists: true, loadListsError: null })
-    try {
-      const token = localStorage.getItem('token')
-      const response = await axios.get(`${API_BASE_URL}/api/lists/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      set({ lists: response.data, loadingLists: false })
-      return { success: true, data: response.data }
-    } catch (error) {
-      console.error('Error fetching lists:', error)
-      set({ 
-        loadingLists: false, 
-        loadListsError: error.response?.data?.error || 'Failed to fetch lists' 
-      })
-      return { success: false, error: error.response?.data?.error || 'Failed to fetch lists' }
-    }
-  },
+  // getUserLists: async () => {
+  //   set({ loadingLists: true, loadListsError: null })
+  //   try {
+  //     const token = localStorage.getItem('token')
+  //     const response = await axios.get(`${API_BASE_URL}/api/lists/me`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     set({ lists: response.data, loadingLists: false })
+  //     return { success: true, data: response.data }
+  //   } catch (error) {
+  //     console.error('Error fetching lists:', error)
+  //     set({ 
+  //       loadingLists: false, 
+  //       loadListsError: error.response?.data?.error || 'Failed to fetch lists' 
+  //     })
+  //     return { success: false, error: error.response?.data?.error || 'Failed to fetch lists' }
+  //   }
+  // },
 
   addMonumentToList: async (listId, monumentId) => {
     set({ addingMonumentToList: true, addMonumentToListError: null })
