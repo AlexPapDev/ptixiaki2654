@@ -19,16 +19,21 @@ const ListDetail = () => {
       <Grid.Col span={6} >
         {/* <Paper shadow="md"> */}
           {/* TODO: change name of grid */}
-          <MonumentDetailGrid images={monumentImages}/>
+          <ListDetailGrid images={monumentImages}/>
           {/* <ListDetailGrid /> */}
         
-          <Container>
+          <Stack align="flex-start" pl="lg" pt="md" gap="sm">
             <Title>{list?.name}</Title>
             <Text fw={600}>{list?.description}</Text>
             <Text c="gray.5" component={Link} to={`/user/${user?.userid}`}>
               By {list?.full_name}
             </Text>
-          </Container>
+            <Button color="teal" leftSection={<Heart size={14} />} onClick={onFollowListHandler}>
+              Follow List
+            </Button>
+            
+          </Stack>
+          <ListDetailMonuments monuments={monuments}/>
         {/* </Paper> */}
       </Grid.Col>
       <Grid.Col padding="0" p="none" span={6} style={{padding: '0 !important'}}>
