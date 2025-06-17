@@ -12,19 +12,21 @@ const ListDetail = () => {
   const navigate = useNavigate()
   const { list, loading, error } = useListDetail(listId)
   const { user, monuments = [] } = list || {}
+  if (!list) return <></>
+  const monumentImages = monuments.slice(0, 5).map(mon => mon.main_image_url)
   return (<Box>
     <Grid p="none" gutter={0}>
       <Grid.Col span={6} >
         {/* <Paper shadow="md"> */}
           {/* TODO: change name of grid */}
-          <MonumentDetailGrid />
+          <MonumentDetailGrid images={monumentImages}/>
           {/* <ListDetailGrid /> */}
         
           <Container>
             <Title>{list?.name}</Title>
             <Text fw={600}>{list?.description}</Text>
             <Text c="gray.5" component={Link} to={`/user/${user?.userid}`}>
-              By {user?.lastname}
+              By {list?.full_name}
             </Text>
           </Container>
         {/* </Paper> */}

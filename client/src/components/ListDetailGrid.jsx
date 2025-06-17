@@ -1,34 +1,77 @@
 import { SimpleGrid, Grid, Group, Image,Box } from '@mantine/core'
-import SquareImage from '../components/SquareImage'
+import { getCloudinaryUrl } from '../utils/helpers'
 const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
 
 const ListDetailGrid = ({ images }) => {
-  const imageUrls = [
-    DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE,DEFAULT_IMAGE
-  ]
-  return (<Box style={{height: '100%'}}>
-    <SimpleGrid style={{height: '100%'}} cols={{ base: 2, sm: 2, lg: 2 }}> 
-      <Box>
-        <Image src={DEFAULT_IMAGE} mt="md" m={0} style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          
-        }}/>
-      </Box>
-      <Box style={{height: '100%'}}>
-        <Image src={DEFAULT_IMAGE} style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-        }}/>
-        <Image src={DEFAULT_IMAGE} style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-        }}/>
-      </Box>
-    </SimpleGrid>
-  </Box>)
+  const imageUrls = [...getCloudinaryUrl(images, { width: 1000 }), ...Array(Math.max(0, 5 - images.length)).fill(DEFAULT_IMAGE)]
+  
+  return (
+    <Box className="test-box">
+      <Grid padding="none" className="grid-test" gutter="xs" type="media" style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px)', height: '100%', width: '100%' }}>
+        <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px)' }}>
+          <Image
+            src={imageUrls[0]}
+            alt="Main"
+            radius="md"
+            style={{
+              height: '100%',
+            }}
+          />
+        </Grid.Col>
+        <Grid.Col span={6}>
+          <Grid padding="none" gutter="none" type="media">
+            <Grid.Col span={6} padding="none" gutter="xs">
+              <Image
+                src={imageUrls[1]}
+                alt="Thumbnail 1"
+                radius="md"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Grid.Col >
+            <Grid.Col span={6} padding="none">
+              <Image
+                src={imageUrls[2]}
+                alt="Thumbnail 2"
+                radius="md"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Image
+                src={imageUrls[3]}
+                alt="Thumbnail 1"
+                radius="md"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Image
+                src={imageUrls[4]}
+                alt="Thumbnail 2"
+                radius="md"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Grid.Col>
+          </Grid>
+        </Grid.Col>
+      </Grid>
+    </Box>
+  );
 }
 export default ListDetailGrid

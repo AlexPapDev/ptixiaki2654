@@ -12,7 +12,7 @@ const MonumentDetailGrid = ({ images = [] }) => {
       width: '100%',
       height: 'calc(60vh - 64px)',
     }}>
-      <Grid className="grid-test" style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px)', height: '100%', width: '100%' }}>
+      <Grid padding="none" className="grid-test" gutter="xs" type="media" style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px)', height: '100%', width: '100%' }}>
         <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px)' }}>
           <Image
             src={imageUrls[0]}
@@ -24,8 +24,8 @@ const MonumentDetailGrid = ({ images = [] }) => {
           />
         </Grid.Col>
         <Grid.Col span={6}>
-          <Grid>
-            <Grid.Col span={6}>
+          <Grid padding="none" gutter="none" type="media">
+            <Grid.Col span={6} padding="none" gutter="xs">
               <Image
                 src={imageUrls[1]}
                 alt="Thumbnail 1"
@@ -37,7 +37,7 @@ const MonumentDetailGrid = ({ images = [] }) => {
                 }}
               />
             </Grid.Col >
-            <Grid.Col span={6}>
+            <Grid.Col span={6} padding="none">
               <Image
                 src={imageUrls[2]}
                 alt="Thumbnail 2"

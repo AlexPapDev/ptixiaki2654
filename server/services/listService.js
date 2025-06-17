@@ -92,14 +92,25 @@ async function getListInfo(listId) {
   console.log('getListInfo', listId)
   try {
     const listResult = await db.query(
-      'SELECT listId, userId, name, description, createdDate, updatedDate FROM Lists WHERE listId = $1',
+      `SELECT
+        l.listId,
+        l.userId,
+        l.name,
+        l.description,
+        l.createdDate,
+        l.updatedDate,
+        u.firstname,
+        u.lastname
+      FROM Lists l
+      JOIN Users u ON l.userId = u.userId
+      WHERE l.listId = $1`,
       [listId]
     )
-
     if (listResult.rows.length === 0) {
       return null
     }
 
+    listResult.rows[0].full_name = listResult.rows[0].lastname + ' ' + listResult.rows[0].firstname
     const listInfo = listResult.rows[0];
 
     const monumentsResult = await db.query(
@@ -116,10 +127,15 @@ async function getListInfo(listId) {
         m.approved_by,
         m.created_by,
         m.createdDate,
-        m.updatedDate
+        m.updatedDate,
+        COALESCE(
+            (SELECT mi.imageurl FROM MonumentImages mi WHERE mi.monumentId = m.monumentId AND mi.ismain = TRUE LIMIT 1),
+            (SELECT mi.imageurl FROM MonumentImages mi WHERE mi.monumentId = m.monumentId LIMIT 1)
+        ) AS main_image_url
       FROM Monuments m
       JOIN ListMonuments lm ON m.monumentId = lm.monumentId
-      WHERE lm.listId = $1`,
+      WHERE lm.listId = $1
+      `,
       [listId]
     )
 
