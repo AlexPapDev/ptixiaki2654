@@ -20,7 +20,7 @@ const ListDetail = () => {
   const monumentImages = monuments.slice(0, 5).map(mon => mon.main_image_url)
   return (<Box>
     <Grid p="none" gutter={0}>
-      <Grid.Col span={6} >
+      <Grid.Col span={6} className="list_detail_section">
         {/* <Paper shadow="md"> */}
           {/* TODO: change name of grid */}
           <ListDetailGrid images={monumentImages}/>

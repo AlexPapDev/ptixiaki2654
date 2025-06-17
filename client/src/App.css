@@ -59,6 +59,7 @@
 .list_detail_section {
   width: 48vw;
   max-width: 50vw;
+  min-height: calc(100vh - var(--map-height-top-distance_no-categories) + 16px);
 }
 
 .list_map_section {
