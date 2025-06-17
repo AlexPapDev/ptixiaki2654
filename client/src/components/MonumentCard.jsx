@@ -35,7 +35,7 @@ const MonumentCard = ({ monument, selected = false }) => {
       </Text>
 
       <Group mt="xs" gap="xs" style={{ height: 30 }}>
-        {categories.slice(0, 3).map(category => (
+        {categories?.slice(0, 3).map(category => (
           <Badge key={`badge-${monumentid}-${category}`} size="sm" color="green">
             {category}
           </Badge>

@@ -1,4 +1,4 @@
-import { SimpleGrid, Grid, Group, Image,Box } from '@mantine/core'
+import { SimpleGrid, Grid, Stack, Group, Image,Box } from '@mantine/core'
 import { getCloudinaryUrl } from '../utils/helpers'
 const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
 
@@ -7,70 +7,70 @@ const ListDetailGrid = ({ images }) => {
   
   return (
     <Box className="test-box">
-      <Grid padding="none" className="grid-test" gutter="xs" type="media" style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px)', height: '100%', width: '100%' }}>
-        <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px)' }}>
+      <SimpleGrid cols={2} spacing="none" verticalSpacing="none" padding="none" className="grid-test" gutter="xs" type="media" style={{ maxHeight: 'calc(60vh - 64px)', height: '100%', width: '100%' }}>
+        <div padding="none" span={6} style={{ maxHeight: 'calc(60vh - 64px)' }}>
           <Image
             src={imageUrls[0]}
             alt="Main"
-            radius="md"
+            // radius="md"
             style={{
               height: '100%',
             }}
           />
-        </Grid.Col>
-        <Grid.Col span={6}>
-          <Grid padding="none" gutter="none" type="media">
-            <Grid.Col span={6} padding="none" gutter="xs">
+        </div>
+        <Stack span={6}>
+          <SimpleGrid  cols={2} spacing="none" verticalSpacing="none"  padding="none" gutter="none" type="media">
+            <div span={6} padding="none" gutter="xs">
               <Image
                 src={imageUrls[1]}
                 alt="Thumbnail 1"
-                radius="md"
+                // radius="md"
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                 }}
               />
-            </Grid.Col >
-            <Grid.Col span={6} padding="none">
+            </div >
+            <div span={6} padding="none">
               <Image
                 src={imageUrls[2]}
                 alt="Thumbnail 2"
-                radius="md"
+                // radius="md"
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                 }}
               />
-            </Grid.Col>
-            <Grid.Col span={6}>
+            </div>
+            <div span={6} padding="none">
               <Image
                 src={imageUrls[3]}
                 alt="Thumbnail 1"
-                radius="md"
+                // radius="md"
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                 }}
               />
-            </Grid.Col>
-            <Grid.Col span={6}>
+            </div>
+            <div span={6}>
               <Image
                 src={imageUrls[4]}
                 alt="Thumbnail 2"
-                radius="md"
+                // radius="md"
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
                 }}
               />
-            </Grid.Col>
-          </Grid>
-        </Grid.Col>
-      </Grid>
+            </div>
+          </SimpleGrid>
+        </Stack>
+      </SimpleGrid>
     </Box>
   );
 }

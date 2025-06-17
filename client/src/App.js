@@ -54,7 +54,7 @@ function MainLayout() {
   const isHomePage = location.pathname === '/'
 
   const showCategoriesBar = isBiggerThanMd && (isMonumentsPage || isHomePage)
-  const headerHeight = showCategoriesBar ? 112 : 74
+  const headerHeight = showCategoriesBar ? 112 : 58
 
   const showNavLinks = !isBiggerThanSm && (isMonumentsPage || isHomePage)
   return (

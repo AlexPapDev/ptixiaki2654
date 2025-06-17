@@ -56,16 +56,23 @@
   overflow-y: auto;
 }
 
+.list_detail_section {
+  width: 48vw;
+  max-width: 50vw;
+}
+
 .list_map_section {
   position: sticky;
   /* width: 35vw; */
-  top: var(--map-height-top-distance);
+  top: var(--map-height-top-distance_no-categories);
   height: calc(100vh - var(--map-height-top-distance_no-categories));
   overflow-y: auto;
+  width: 50vw;
+  max-width: 50vw;
 }
 
 .no-categories-map-height {
-  height: calc(100vh - var(--map-height-top-distance) + 48px);
+  height: calc(100vh - var(--map-height-top-distance_no-categories));
 }
 
 .tab-button {

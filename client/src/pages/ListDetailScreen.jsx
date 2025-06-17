@@ -42,7 +42,7 @@ const ListDetail = () => {
       </Grid.Col>
       <Grid.Col padding="0" p="none" span={6} style={{padding: '0 !important'}}>
         <Box className="list_map_section">
-          <MonumentsMap data={[]} />
+          <MonumentsMap data={monuments} />
         </Box>
       </Grid.Col>
     </Grid>

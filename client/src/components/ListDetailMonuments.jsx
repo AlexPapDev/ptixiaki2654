@@ -5,7 +5,7 @@ const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon
 
 const ListDetailMonuments = ({ monuments = [] }) => {
   // const imageUrls = [...getCloudinaryUrl(images, { width: 1000 }), ...Array(Math.max(0, 5 - images.length)).fill(DEFAULT_IMAGE)]
-  return (<Stack px="lg" pt="lg" gap="sm">
+  return (<Stack px="lg" py="lg" gap="sm" >
     <Text>{monuments.length} monuments</Text>
     {monuments.map(monument => <ListMonumentCard monument={monument} />)}
   </Stack>)
