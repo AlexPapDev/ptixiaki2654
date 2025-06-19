@@ -8,10 +8,13 @@ const useListDetail = (listId) => {
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
 
   useEffect(() => {
-    const fetchMonument = async () => {
+    const fetchList = async () => {
       try {
         setLoading(true)
-        const result = await axios.get(`${API_BASE_URL}/api/lists/${listId}`)
+        const token = localStorage.getItem('token')
+        const result = await axios.get(`${API_BASE_URL}/api/lists/${listId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
         const listData = result.data
         setList(listData)
       } catch (err) {
@@ -23,7 +26,7 @@ const useListDetail = (listId) => {
     }
 
     if (listId) {
-      fetchMonument()
+      fetchList()
     }
   }, [listId])
 
