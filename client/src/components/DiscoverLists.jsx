@@ -25,8 +25,7 @@ const DiscoverLists = () => {
       }
     }
 
-
-      fetchLists()
+    fetchLists()
 
   }, [searchText])
   const onClickButton = async () => {
