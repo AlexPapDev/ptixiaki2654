@@ -146,7 +146,6 @@ const useDataStore = create((set, get) => ({
     }
   },
 
-
   // --- List Actions ---
   startCreateList: () => set({ creatingList: true, currentList: { monuments: [] }, listCreationError: null }),
   setListData: (data) => set((state) => ({ currentList: { ...state.currentList, ...data } })),
@@ -239,6 +238,32 @@ const useDataStore = create((set, get) => ({
     //   console.error('Error removing monument from list:', error)
     //   return { success: false, error: error.response?.data?.error || 'Failed to remove monument from list' }
     // }
+  },
+
+  followList: async (listId) => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.post(`${API_BASE_URL}/api/lists/follow`, 
+        { listId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      return { success: true, data: response.data }
+    } catch (error) {
+      return { success: false, error: error.response?.data?.error || 'Failed to follow list' }
+    }
+  },
+
+  unfollowList: async (listId) => {
+    try {
+      debugger
+      const token = localStorage.getItem('token')
+      const response = await axios.delete(`${API_BASE_URL}/api/lists/unfollow/${listId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      return { success: true, data: response.data }
+    } catch (error) {
+      return { success: false, error: error.response?.data?.error || 'Failed to follow list' }
+    }
   },
 
   getUserLists: async (searchText = '') => {
