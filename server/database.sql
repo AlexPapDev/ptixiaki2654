@@ -60,7 +60,8 @@ CREATE TABLE Lists (
   name VARCHAR(255) NOT NULL,
   description TEXT,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_public BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE ListMonuments (
@@ -90,6 +91,13 @@ CREATE TABLE monumenthours (
   is_closed boolean DEFAULT false,
   CONSTRAINT monumenthours_day_of_week_check CHECK (day_of_week >= 0 AND day_of_week <= 6)
 )
+
+CREATE TABLE FollowedLists (
+  followerId INT NOT NULL REFERENCES Users(userId) ON DELETE CASCADE,
+  listId INT NOT NULL REFERENCES Lists(listId) ON DELETE CASCADE,
+  followedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (followerId, listId)
+);
 
 INSERT INTO categories (name) VALUES 
 ('Byzantine'), ('Roman'), ('Christian'), ('Ottoman'), ('Jewish'), ('Neoclassical'), ('Contemporary'), ('UNESCO Heritage'), ('Commercial'), ('Religious');
