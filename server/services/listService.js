@@ -20,6 +20,7 @@ const getAllLists = async (searchText) => {
     LEFT JOIN monuments m ON lm.monumentId = m.monumentId
     LEFT JOIN monumentimages mi ON m.monumentId = mi.monumentid AND mi.ismain = true
     WHERE (NULLIF($1, '') IS NULL OR l.name ILIKE '%' || $1 || '%')
+      AND l.is_public = TRUE
     GROUP BY l.listId
     ORDER BY l.createdDate DESC
     LIMIT 9
@@ -81,18 +82,18 @@ const getListsByUser = async (userId, searchText) => {
     WHERE l.userId = $1
       AND (NULLIF($2, '') IS NULL OR l.name ILIKE '%' || $2 || '%')
     GROUP BY l.listId, u.firstname, u.lastname
-    ORDER BY l.createdDate DESC;
+    ORDER BY l.createdDate DESC
     `,
     [userId, searchText]
   )
   return result.rows || []
 }
 
-async function getListInfo(listId) {
-  console.log('getListInfo', listId)
+async function getListInfo(listId, viewerUserId = null) {
+  console.log('getListInfo', listId, 'viewerUserId:', viewerUserId)
   try {
-    const listResult = await db.query(
-      `SELECT
+    const query = `
+      SELECT
         l.listId,
         l.userId,
         l.name,
@@ -100,18 +101,48 @@ async function getListInfo(listId) {
         l.createdDate,
         l.updatedDate,
         u.firstname,
-        u.lastname
+        u.lastname,
+        CASE
+          WHEN $1::INT IS NOT NULL THEN EXISTS (
+            SELECT 1
+            FROM FollowedLists fl
+            WHERE fl.listId = l.listId AND fl.followerId = $1
+          )
+          ELSE FALSE
+        END AS is_followed_by_current_user
       FROM Lists l
       JOIN Users u ON l.userId = u.userId
-      WHERE l.listId = $1`,
-      [listId]
+      WHERE l.listId = $2`
+    const listResult = await db.query(query, [viewerUserId, listId]
+      // `SELECT
+      //   l.listId,
+      //   l.userId,
+      //   l.name,
+      //   l.description,
+      //   l.createdDate,
+      //   l.updatedDate,
+      //   u.firstname,
+      //   u.lastname,
+      //   CASE
+      //     WHEN $2 IS NOT NULL THEN EXISTS (
+      //       SELECT 1
+      //       FROM FollowedLists fl
+      //       WHERE fl.listId = l.listId AND fl.followerId = $2::INT
+      //     )
+      //     ELSE FALSE
+      //   END AS is_followed_by_current_user
+      // FROM Lists l
+      // JOIN Users u ON l.userId = u.userId
+      // WHERE l.listId = $1`,
+      // [listId, 41]
     )
+
     if (listResult.rows.length === 0) {
       return null
     }
 
     listResult.rows[0].full_name = listResult.rows[0].lastname + ' ' + listResult.rows[0].firstname
-    const listInfo = listResult.rows[0];
+    const listInfo = listResult.rows[0]
 
     const monumentsResult = await db.query(
       `SELECT
@@ -203,6 +234,74 @@ const deleteList = async (listId, userId) => {
   )
 }
 
+const followList = async (listId, userId) => {
+  try {
+    // Existing follow check
+    const checkQuery = `
+      SELECT *
+      FROM FollowedLists
+      WHERE followerId = $1 AND listId = $2
+    `
+    const checkResult = await db.query(checkQuery, [userId, listId])
+
+    if (checkResult.rows.length > 0) {
+      return { status: 409, message: 'You are already following this list.' }
+    }
+
+    // Insertion
+    const insertQuery = `
+      INSERT INTO FollowedLists (followerId, listId)
+      VALUES ($1, $2)
+      RETURNING *
+    `
+    const result = await db.query(insertQuery, [userId, listId])
+
+    if (result.rows.length > 0) {
+      return { status: 201, message: 'List followed successfully!', data: result.rows[0] }
+    } else {
+      return { status: 500, message: 'Failed to follow list. Please try again.' }
+    }
+
+  } catch (error) {
+    console.error('Error in listService.followList:', error)
+    throw new Error('Database operation failed while following the list.')
+  }
+}
+
+const unfollowList = async (listId, userId) => {
+  try {
+    const checkQuery = `
+      SELECT *
+      FROM FollowedLists
+      WHERE followerId = $1 AND listId = $2
+    `
+    const checkResult = await db.query(checkQuery, [userId, listId])
+
+    if (checkResult.rows.length === 0) {
+      return { status: 404, message: 'You are not following this list.' } // 404 Not Found
+    }
+
+    // 2. Delete the record from the FollowedLists table
+    const deleteQuery = `
+      DELETE FROM FollowedLists
+      WHERE followerId = $1 AND listId = $2
+      RETURNING *
+    `
+    const result = await db.query(deleteQuery, [userId, listId])
+
+    if (result.rows.length > 0) {
+      return { status: 200, message: 'List unfollowed successfully!' } // 200 OK
+    } else {
+      // This case should ideally not be reached if checkResult.rows.length > 0
+      return { status: 500, message: 'Failed to unfollow list. Please try again.' }
+    }
+
+  } catch (error) {
+    console.error('Error in listService.unfollowList:', error)
+    throw new Error('Database operation failed while unfollowing the list.')
+  }
+}
+
 export default {
   getAllLists,
   getFilteredLists,
@@ -213,5 +312,7 @@ export default {
   addMonumentsToList,
   removeMonumentFromList,
   updateList,
-  deleteList
+  deleteList,
+  followList,
+  unfollowList,
 }
