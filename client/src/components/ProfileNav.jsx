@@ -2,14 +2,12 @@ import { useState } from "react"
 import { Menu, Button, Avatar, Divider, Text } from "@mantine/core"
 import { Menu as MenuIcon } from "lucide-react"
 import { useNavigate } from 'react-router-dom'
-import useAppStore from '../utils/AppStore'
 import useAuthStore from '../utils/AuthStore'
 import { INIT_MAP_STATE } from '../utils/constants'
 import MenuItemLink from './MenuItemLink'
 import useAuthModals from '../hooks/useAuthModals'
 
 export default function ProfileNav() {
-  const { openAuthModal } = useAppStore()
   const { isLoggedIn, user, logoutUser } = useAuthStore()
   const [opened, setOpened] = useState(false)
   const loggedIn = isLoggedIn()
@@ -49,7 +47,7 @@ export default function ProfileNav() {
           }
           onClick={() => {
             if (!loggedIn) {
-              openAuthModal('login')
+              openLoginModal('login')
             }
           }} >
           Create Monument
