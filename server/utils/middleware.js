@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken'
 import userService from '../services/userService.js'
 const authenticateUser = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1] // Extract token
-  console.log('token', token)
+  const token = req.headers.authorization?.split(' ')[1]
   if (!token) {
     return res.status(401).json({ error: 'Unauthorized' })
   }
@@ -28,7 +27,28 @@ const checkRole = (roles) => (req, res, next) => {
   next()
 }
 
+// if user is logged in attach them to req.user and continue, if not make req.user and continue
+const attachUserIfLoggedIn = async (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1]
+
+  if (!token) {
+    req.user = null
+    return next()
+  }
+
+  try {
+    const user = await userService.verifyToken(token)
+    req.user = user
+    next()
+  } catch (err) {
+    console.error("Optional authentication failed:", err.message)
+    req.user = null
+    next()
+  }
+}
+
 export { 
   authenticateUser,
   checkRole,
+  attachUserIfLoggedIn,
 }
