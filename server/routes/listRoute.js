@@ -1,6 +1,6 @@
 import express from 'express'
 import db from '../config/db.js'
-import { authenticateUser } from '../utils/middleware.js'
+import { authenticateUser, attachUserIfLoggedIn } from '../utils/middleware.js'
 import listService from '../services/listService.js'
 
 const router = express.Router()
@@ -32,12 +32,14 @@ router.get('/me', authenticateUser, async (req, res) => {
 })
 
 // Get list info with monuments
-router.get('/:listId', async (req, res) => {
+router.get('/:listId', attachUserIfLoggedIn, async (req, res) => {
   try {
     console.log('get list info')
-    const list = await listService.getListInfo(req.params.listId)
+    const { user } = req
+    console.log(user)
+    const list = await listService.getListInfo(req.params.listId, req.user?.userid)
     if (!list) {
-      return res.status(404).json({ error: 'List not found' });
+      return res.status(404).json({ error: 'List not found' })
     }
     res.json(list)
   } catch (err) {
@@ -116,6 +118,60 @@ router.delete('/:listId', authenticateUser, async (req, res) => {
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Failed to delete list' })
+  }
+})
+
+router.post('/follow', authenticateUser, async (req, res) => {
+  const { listId } = req.body
+  const userid = req.user.userid
+  console.log('list follow', userid, req.body)
+  const listIdNum = Number(listId)
+  // Input validation
+  if (!listId) {
+    return res.status(400).json({ message: 'listId is required.' })
+  }
+  if (typeof listIdNum !== 'number' || listIdNum <= 0) {
+    return res.status(400).json({ message: 'listId must be a positive number.' })
+  }
+
+  try {
+    const result = await listService.followList(listIdNum, userid)
+
+    if (result.status === 201) {
+      return res.status(result.status).json({ message: result.message, data: result.data })
+    } else {
+      return res.status(result.status).json({ message: result.message })
+    }
+  } catch (error) {
+    console.error('Error in POST /follow route:', error)
+    res.status(500).json({ message: 'An unexpected error occurred while processing your request.' })
+  }
+})
+
+router.delete('/unfollow/:listId', authenticateUser, async (req, res) => {
+  console.log('unfollow list')
+  const { listId } = req.params
+  const userid = req.user.userid
+  const listIdNum = Number(listId)
+  // Input validation
+  if (!listId) {
+    return res.status(400).json({ message: 'listId is required.' })
+  }
+  if (typeof listIdNum !== 'number' || listIdNum <= 0) {
+    return res.status(400).json({ message: 'listId must be a positive number.' })
+  }
+
+  try {
+    const result = await listService.unfollowList(listIdNum, userid)
+
+    if (result.status === 201) {
+      return res.status(result.status).json({ message: result.message, data: result.data })
+    } else {
+      return res.status(result.status).json({ message: result.message })
+    }
+  } catch (error) {
+    console.error('Error in POST /unfollow route:', error)
+    res.status(500).json({ message: 'An unexpected error occurred while processing your request.' })
   }
 })
 
