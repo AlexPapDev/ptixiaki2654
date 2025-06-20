@@ -1,17 +1,14 @@
 import React from 'react'
 import { Image, AspectRatio } from '@mantine/core'
 
-const SquareImage = ({ src, alt = "Image" }) => (
-  <AspectRatio>
+const SquareImage = ({ src, alt = "Image", fallbackSrc, height, radius, outerStyle = {} }) => (
+  <AspectRatio style={outerStyle}>
     <Image
       src={src}
       alt={alt}
-      style={{
-        // width: '100%',
-        // height: '100%',
-        // objectFit: 'cover',
-        // display: 'block',
-      }}
+      fallbackSrc={fallbackSrc}
+      height={height}
+      radius={radius}
     />
   </AspectRatio>
 )
