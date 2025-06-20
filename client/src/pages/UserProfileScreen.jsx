@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
-import { Button, Text, Alert, Container, LoadingOverlay } from '@mantine/core'
+import { Button, Box, Text, Alert, Container, LoadingOverlay } from '@mantine/core'
 import UserProfileEdit from '../components/UserProfileEdit'
 import UserProfileView from '../components/UserProfileView'
 import UserNotFound from '../components/UserNotFound'
@@ -19,8 +18,6 @@ const UserProfile = () => {
   const [loading, setLoading] = useState(true)
   const { getUserProfile, updateUserProfile } = useUserStore()
 
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
-
   useEffect(() => {
     fetchUserProfile()
   }, [userId])
@@ -28,7 +25,7 @@ const UserProfile = () => {
   const fetchUserProfile = async () => {
     const result = await getUserProfile(userId)
     if (result.success) {
-      setPageUser(result.data)
+      setPageUser(result.data.data)
       setError(null)
       setNotFound(false)
     } else {
@@ -42,8 +39,8 @@ const UserProfile = () => {
   const handleUpdateProfile = async (updatedData) => {
     const result = await updateUserProfile(userId, updatedData)
     if (result.success) {
-      updateUser(result.data)
-      setPageUser(result.data)
+      updateUser(result.data.data)
+      setPageUser(result.data.data)
       setIsEditMode(false)
       toast.success('Profile updated successfully')
     } else {
@@ -70,26 +67,26 @@ const UserProfile = () => {
   const isOwnProfile = Number(userId) === Number(user?.userid)
 
   return (
-    <Container style={{ maxWidth: 800, margin: 'auto', position: 'relative' }}>
-      <LoadingOverlay visible={loading} overlayBlur={2} /> {/* Loading overlay */}
+    <Box >
+      <LoadingOverlay visible={loading} /> {/* Loading overlay */}
       {error && (
         <Alert title="Error" color="red" style={{ marginBottom: '20px' }}>
           {error}
         </Alert>
       )}
-
+{/* 
       {isOwnProfile && (
         <Button onClick={() => setIsEditMode(!isEditMode)} style={{ marginBottom: '20px' }}>
           {isEditMode ? 'Cancel' : 'Edit Profile'}
         </Button>
-      )}
+      )} */}
 
       {isEditMode ? (
         <UserProfileEdit onSave={handleUpdateProfile} user={user} updateUser={updateUser} />
       ) : (
         (isOwnProfile || pageUser) && <UserProfileView user={pageUser || user} />
       )}
-    </Container>
+    </Box>
   )
 }
 
