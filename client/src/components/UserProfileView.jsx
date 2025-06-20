@@ -1,46 +1,52 @@
-import { Card, Text, Image, Group, Stack, ActionIcon } from '@mantine/core'
+import { Card, Text, Grid, Title, Box, Group,Center, Paper,Stack, ActionIcon , useMantineTheme} from '@mantine/core'
 import { Pencil, User, UserRoundPlus } from 'lucide-react'
-
+import SquareImage from './SquareImage'
 const ProfileActionButton = ({ text, Icon}) => {
+
   return <Stack justify="center" align="center">
-    <ActionIcon variant="filled" aria-label="Settings">
+    <ActionIcon variant="white" size="lg" aria-label="Settings">
       <Icon size={16} />
     </ActionIcon>
     <Text>{text}</Text>
   </Stack>
 }
 const UserProfileView = ({ user }) => {
+  const theme = useMantineTheme();
+  const { firstname, lastname, email, role, createddate } = user
+  console.log(user)
   if (!user) return <Text>Loading user data...</Text>
 
-  return (<>
-      <Group style={{ marginBottom: '20px' }}>
-        <Stack>
-          <Card>
-            <Image
-              src={user.profileimageurl || '/profile_placeholder.png'}
-              alt="Profile Picture"
-              width={120}
-              height={120}
-              radius="full"
-            />
-            <Text align="center" size="xl" weight={500}>
-            {user.firstname} {user.lastname}
-            </Text>
-            <Group align="center">
-              <ProfileActionButton text="Edit Profile" Icon={Pencil}/>
-              <ProfileActionButton text="Add Photo" Icon={User}/>
-              <ProfileActionButton text="Follow People" Icon={UserRoundPlus}/>
-            </Group>
-            {/* here should go any list items */}
-          </Card>
+  return (<Grid className="full-height top-distance_no-categories">
+    <Grid.Col span={{ base: 12, md: 6, lg: 6 }} style={{padding: 0}}>
+      <Box className="full-height" mt="xl">
+        <Stack align="center" justify="center">
+          <Title >
+            {firstname} {lastname}
+          </Title>
+          <Text>
+            Email: {email}
+          </Text>
+          <Text>
+            Role: {role}
+          </Text>
         </Stack>
-      </Group>
-      
-      <Text align="center" color="dimmed" size="sm" style={{ marginBottom: '10px' }}>
-        {user.email}
-      </Text>
-      <Text size="sm">Role: {user.role}</Text>
-  </>)
+      </Box>
+    </Grid.Col>
+    <Grid.Col span={{ base: 12, md: 6, lg: 6 }} style={{padding: 0}}>
+      <Stack bg={theme.primaryColor} className=" full-height" sx={{color:'primary'}} align="center" justify="center">
+        <Box style={{height:'300px', width:'300px'}}>
+          <Paper shadow="lg">
+            <SquareImage src={user.profileimageurl} fallbackSrc='/profile_placeholder.png'/>
+          </Paper>
+        </Box>
+        <Group align="center" mt="md">
+          <ProfileActionButton text="Edit Profile" Icon={Pencil}/>
+          <ProfileActionButton text="Add Photo" Icon={User}/>
+          <ProfileActionButton text="Follow People" Icon={UserRoundPlus}/>
+        </Group>
+      </Stack>
+    </Grid.Col>
+  </Grid>)
 }
 
 export default UserProfileView
