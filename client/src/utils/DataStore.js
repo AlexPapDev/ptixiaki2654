@@ -167,7 +167,7 @@ const useDataStore = create((set, get) => ({
     }
   },
 
-  startEditList: async (listId) => {
+  editList: async (listId) => {
     // set({ editingListId: listId, currentList: null, listUpdateError: null })
     // try {
     //   const token = localStorage.getItem('token')
@@ -179,22 +179,6 @@ const useDataStore = create((set, get) => ({
     //   console.error('Error fetching list for edit:', error)
     //   set({ editingListId: null, listUpdateError: error.response?.data?.error || 'Failed to fetch list details' })
     //   return { success: false, error: error.response?.data?.error || 'Failed to fetch list details' }
-    // }
-  },
-
-  updateList: async (listId, listData) => {
-    // set({ updatingList: true, listUpdateError: null })
-    // try {
-    //   const token = localStorage.getItem('token')
-    //   const response = await axios.put(`${API_BASE_URL}/api/lists/${listId}`, listData, {
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   })
-    //   set({ updatingList: false, currentList: null, editingListId: null })
-    //   return { success: true, data: response.data }
-    // } catch (error) {
-    //   console.error('Error updating list:', error)
-    //   set({ updatingList: false, listUpdateError: error.response?.data?.error || 'Failed to update list' })
-    //   return { success: false, error: error.response?.data?.error || 'Failed to update list' }
     // }
   },
 
@@ -271,6 +255,22 @@ const useDataStore = create((set, get) => ({
     try {
       const token = localStorage.getItem('token')
       const response = await axios.get(`${API_BASE_URL}/api/lists/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { searchText }
+      })
+      // set({ lists: response.data, loadingLists: false })
+      return response.data
+    } catch (error) {
+      console.error('Error fetching lists:', error)
+      set({ loadingLists: false, loadListsError: error.response?.data?.error || 'Failed to fetch lists' })
+    }
+  },
+
+    getFollowedLists: async (searchText = '') => {
+    set({ loadingLists: true, loadListsError: null, lists: [] })
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.get(`${API_BASE_URL}/api/lists/following`, {
         headers: { Authorization: `Bearer ${token}` },
         params: { searchText }
       })
