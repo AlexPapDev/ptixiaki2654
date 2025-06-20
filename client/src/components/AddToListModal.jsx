@@ -42,7 +42,7 @@ const AddToListModal = ({ lists = [], monumentId, openCreateList }) => {
       </Title>
       <Paper shadow="none" radius="xs" withBorder p="sm">
         {lists.map((list, i, arr) => {
-          const hasMonument = list.monuments && list.monuments.includes(Number(monumentId))
+          const hasMonument = list.monuments?.map(monument => monument.monumentId).includes(Number(monumentId))
           return (
             <ListItem
               key={list.listid}
