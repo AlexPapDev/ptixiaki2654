@@ -16,11 +16,11 @@ const ListCard = ({ list }) => {
         <Link to={destinationUrl} style={{ textDecoration: 'none' }}>
           <Grid>
             <Grid.Col p={0} span={8}>
-              <SquareImage src={fullUrls[0] || DEFAULT_IMAGE} />
+              <SquareImage src={fullUrls[0]} fallbackSrc={DEFAULT_IMAGE} />
             </Grid.Col>
             <Grid.Col p={0} span={4}>
-              <SquareImage src={fullUrls[1] || DEFAULT_IMAGE} />
-              <SquareImage src={fullUrls[2] || DEFAULT_IMAGE} />
+              <SquareImage src={fullUrls[1]} fallbackSrc={DEFAULT_IMAGE} />
+              <SquareImage src={fullUrls[2]} fallbackSrc={DEFAULT_IMAGE} />
             </Grid.Col>
           </Grid>
         </Link>
