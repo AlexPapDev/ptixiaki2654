@@ -1,11 +1,11 @@
 import React from 'react'
-import { Button } from '@mantine/core'
+import { Button, ActionIcon } from '@mantine/core'
 import { useModals } from '@mantine/modals'
 import AddToListModal from './AddToListModal'
 import CreateListModal from './CreateListModal'
 import { Bookmark } from 'lucide-react'
 import useDataStore from '../utils/DataStore'
-const AddToListButton = ({loggedIn = false, monumentId}) => {
+const AddToListButton = ({loggedIn = false, monumentId, isIcon = false}) => {
   const modals = useModals()
   const { getUserLists } = useDataStore()
 
@@ -26,9 +26,14 @@ const AddToListButton = ({loggedIn = false, monumentId}) => {
     })
   }
   return (
-    <Button color="teal" leftSection={<Bookmark size={14} />} onClick={openAddToListModal}>
-      Save
-    </Button>
+    isIcon ?
+      <ActionIcon size="lg"  onClick={openAddToListModal}>
+        <Bookmark size={20}/>
+      </ActionIcon>
+    :
+      <Button color="teal" leftSection={<Bookmark size={14} />} onClick={openAddToListModal}>
+        Save
+      </Button>
   )
 }
 
