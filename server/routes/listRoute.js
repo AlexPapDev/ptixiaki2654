@@ -31,6 +31,20 @@ router.get('/me', authenticateUser, async (req, res) => {
   }
 })
 
+// get lists followed by the authenticated user
+router.get('/following', authenticateUser, async (req, res) => {
+  try {
+    console.log('/lists/following')
+    const { searchText } = req.query
+    const lists = await listService.getFollowedListsByUser(req.user.userid, searchText)
+    console.log('my lists', req.user.userid, lists)
+    res.json(lists)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to fetch user lists' })
+  }
+})
+
 // Get list info with monuments
 router.get('/:listId', attachUserIfLoggedIn, async (req, res) => {
   try {

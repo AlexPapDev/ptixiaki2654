@@ -89,6 +89,38 @@ const getListsByUser = async (userId, searchText) => {
   return result.rows || []
 }
 
+const getFollowedListsByUser = async (userId, searchText) => {
+  const result = await db.query(
+    `
+    SELECT
+      l.*,
+      COALESCE(
+        JSON_AGG(
+          JSON_BUILD_OBJECT(
+            'monumentId', m.monumentId,
+            'name', m.name,
+            'mainImage', mi.imageurl
+          )
+        ) FILTER (WHERE m.monumentId IS NOT NULL),
+        '[]'::json
+      ) AS monuments,
+      TRIM(CONCAT(u.firstname, ' ', u.lastname)) AS full_name
+    FROM FollowedLists fl -- Start from FollowedLists
+    JOIN Lists l ON fl.listId = l.listId -- Join with Lists table
+    LEFT JOIN Users u ON l.userId = u.userId
+    LEFT JOIN listmonuments lm ON l.listId = lm.listId
+    LEFT JOIN monuments m ON lm.monumentId = m.monumentId
+    LEFT JOIN monumentimages mi ON m.monumentId = mi.monumentid AND mi.ismain = true
+    WHERE fl.followerId = $1 -- Filter by followerId
+      AND (NULLIF($2, '') IS NULL OR l.name ILIKE '%' || $2 || '%')
+    GROUP BY l.listId, u.firstname, u.lastname, fl.followedDate -- Include followedDate for ordering
+    ORDER BY fl.followedDate DESC; -- Order by followedDate
+    `,
+    [userId, searchText]
+  )
+  return result.rows || []
+}
+
 async function getListInfo(listId, viewerUserId = null) {
   console.log('getListInfo', listId, 'viewerUserId:', viewerUserId)
   try {
@@ -100,6 +132,7 @@ async function getListInfo(listId, viewerUserId = null) {
         l.description,
         l.createdDate,
         l.updatedDate,
+        l.is_public,
         u.firstname,
         u.lastname,
         CASE
@@ -306,6 +339,7 @@ export default {
   getAllLists,
   getFilteredLists,
   getListsByUser,
+  getFollowedListsByUser,
   getListInfo,
   createList,
   addMonumentToList,
