@@ -1,20 +1,25 @@
 import React from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { Grid, Stack, Text, Box, Title, Container } from '@mantine/core'
+import { Grid, Stack, Text, Box, Radio, Group } from '@mantine/core'
 import MonumentsMap from '../components/MonumentsMap'
 import ListDetailMonuments from '../components/ListDetailMonuments'
+import ListDetailTitle from '../components/ListDetailTitle'
+import ListDetailDescription from '../components/ListDetailDescription'
 import FollowListButton from '../components/FollowListButton'
 import ListDetailGrid from '../components/ListDetailGrid'
 import useListDetail from '../hooks/useListDetail'
+import useAuthStore from '../utils/AuthStore'
 const ListDetail = () => {
   const { listId } = useParams()
-  const navigate = useNavigate()
   const { list, loading, error } = useListDetail(listId)
-  const { user, monuments = [] } = list || {}
+  const { user } = useAuthStore()
+  const { user: listUser, monuments = [] } = list || {}
 
-  if (!list) return <>
+  const isOwnList = list && list?.userid === user?.userid
+  if (!list && !loading) return <>
     <Text pt="md">List Not Found!</Text>
   </>
+  if (!list && loading) return <></>
   const monumentImages = monuments.slice(0, 5).map(mon => mon.main_image_url)
   return (<Box>
     <Grid p="none" gutter={0}>
@@ -22,12 +27,18 @@ const ListDetail = () => {
           <ListDetailGrid images={monumentImages}/>
         
           <Stack align="flex-start" pl="lg" pt="md" gap="sm">
-            <Title>{list?.name}</Title>
-            <Text fw={600}>{list?.description}</Text>
-            <Text c="gray.5" component={Link} to={`/user/${user?.userid}`}>
+            <ListDetailTitle listId={listId} initialTitle={list?.name} showEdit={isOwnList}/>
+            <ListDetailDescription listId={listId} initialDescription={list?.description} showEdit={isOwnList}/>
+            {isOwnList && <Radio.Group>
+              <Group>
+                <Radio value="public" label="Public"/>
+                <Radio value="private" label="Private"/>
+              </Group>
+            </Radio.Group>}
+            <Text c="gray.5" component={Link} to={`/user/${listUser?.userid}`}>
               By {list?.full_name}
             </Text>
-            <FollowListButton listId={listId} isInitiallyFollowing={list.is_followed_by_current_user}/>
+            <FollowListButton listId={listId} isInitiallyFollowing={list?.is_followed_by_current_user}/>
             
           </Stack>
           <ListDetailMonuments monuments={monuments}/>
