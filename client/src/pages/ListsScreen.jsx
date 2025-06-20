@@ -35,10 +35,8 @@ const ListsScreen = () => {
           <Tabs.Tab value="myLists" leftSection={<Library size={12} />} disabled={!loggedIn}>
             <Text m="xs">My Lists</Text>
           </Tabs.Tab>
-          <Tabs.Tab value="liked" leftSection={<Star size={12} />} disabled={!loggedIn}>
-            <Text m="xs">
-              Liked Lists
-            </Text>
+          <Tabs.Tab value="following" leftSection={<Star size={12} />} disabled={!loggedIn}>
+            <Text m="xs">Followed Lists</Text>
           </Tabs.Tab>
         </Tabs.List>
       {/* </Container> */}
