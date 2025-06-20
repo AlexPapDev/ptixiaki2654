@@ -12,7 +12,7 @@ const MonumentCard = ({ monument, selected = false }) => {
   const road = address?.road || 'Unknown Road'
   const houseNumber = address?.house_number || ''
   const fullStreetName = `${road} ${houseNumber}`.trim()
-  const image = getCloudinaryUrl(images?.[0], { width: 700 }) || DEFAULT_IMAGE
+  const image = getCloudinaryUrl(images?.[0], { width: 1200 }) || DEFAULT_IMAGE
   const destinationUrl = `/monuments/${monumentid}`
 
   return (
