@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Text, Textarea, Stack, Group, Button } from '@mantine/core'
-import MonumentDetailEditButton from './MonumentDetailEditButton'
+import EditButton from './EditButton'
 import useDataStore from '../utils/DataStore'
 const MonumentDetailDescription = ({ monumentId, initialDescription, onSave }) => {
   const { editMonument } = useDataStore()
@@ -33,7 +33,7 @@ const MonumentDetailDescription = ({ monumentId, initialDescription, onSave }) =
       {!isEditing ? (
         <Group style={{ position: 'relative' }} justify="space-between">
           <Text fw={600} style={{maxWidth: '85%'}}>{savedDescription || 'No description available.'}</Text>
-          <MonumentDetailEditButton onEdit={handleEditClick} />
+          <EditButton onEdit={handleEditClick} />
         </Group>
       ) : (
         <Stack>

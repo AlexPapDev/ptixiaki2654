@@ -1,6 +1,6 @@
 import { Stack, Grid, Box, Text, TextInput, Switch, Button, ActionIcon, Group } from '@mantine/core'
 import { useState, useEffect } from 'react'
-import MonumentDetailEditButton from './MonumentDetailEditButton'
+import EditButton from './EditButton'
 import useDataStore from '../utils/DataStore' // Adjust path as needed
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -78,7 +78,7 @@ const WorkingHoursDisplay = ({ hoursData, onEdit }) => {
       <Stack>
         <Group justify="space-between">
           <Text fw={600} align="left">Working Hours</Text>
-          <MonumentDetailEditButton onEdit={onEdit} style={{ position: 'absolute', right: '5px' }} />
+          <EditButton onEdit={onEdit} style={{ position: 'absolute', right: '5px' }} />
         </Group>
         <Switch
           label="Open 24h"

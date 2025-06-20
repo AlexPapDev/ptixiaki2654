@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Text, Group, TextInput, Stack, Button } from '@mantine/core'
-import MonumentDetailEditButton from './MonumentDetailEditButton'
+import EditButton from './EditButton'
 
 const MonumentDetailAddress = ({ initialAddress, onSave }) => {
   const [isEditing, setIsEditing] = useState(false)
@@ -32,7 +32,6 @@ const MonumentDetailAddress = ({ initialAddress, onSave }) => {
       {!isEditing ? (
         <Group mt="sm" mb="sm" style={{ position: 'relative' }}>
           <Text c="dimmed">{fullStreetName}</Text>
-          {/* <MonumentDetailEditButton onEdit={handleEditClick} /> */}
         </Group>
       ) : (
         <Stack>

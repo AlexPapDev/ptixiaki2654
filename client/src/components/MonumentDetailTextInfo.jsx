@@ -1,6 +1,6 @@
 import { Stack, Text, Divider, Title, Badge, Box, Group, TextInput, Textarea, Button } from '@mantine/core'
 import { useState } from 'react'
-import MonumentDetailEditButton from './MonumentDetailEditButton'
+import EditButton from './EditButton'
 
 // --- Address Section ---
 
@@ -12,7 +12,7 @@ const AddressDisplay = ({ address, onEdit }) => {
   return (
     <Group style={{position:'relative'}}>
       <Text c="dimmed">{fullStreetName}</Text>
-      <MonumentDetailEditButton onEdit={onEdit}/>
+      <EditButton onEdit={onEdit}/>
     </Group>
   )
 }

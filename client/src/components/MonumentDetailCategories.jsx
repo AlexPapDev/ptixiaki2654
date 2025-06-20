@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Title, Group, Badge, Button, MultiSelect } from '@mantine/core'
-import MonumentDetailEditButton from './MonumentDetailEditButton'
+import EditButton from './EditButton'
 import { CATEGORIES } from '../utils/constants'
 import useDataStore from '../utils/DataStore'
 const MonumentDetailCategories = ({ monumentId, initialCategories = [], onSave }) => {
@@ -37,7 +37,7 @@ const MonumentDetailCategories = ({ monumentId, initialCategories = [], onSave }
       <Group justify="space-between">
         <Title pb="sm">Categories</Title>
         {!editing ? (
-          <MonumentDetailEditButton onEdit={handleEditClick} />
+          <EditButton onEdit={handleEditClick} />
         ) : (
           <Group spacing="xs">
             <Button onClick={handleSaveClick} size="sm">Save</Button>
