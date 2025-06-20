@@ -210,3 +210,17 @@ li {
 .align-left {
   text-align: left;
 }
+
+.bg-color_main {
+  background-color: red
+}
+
+.top-distance_no-categories {
+  padding-top: 8px;
+  overflow: hidden;
+}
+
+.full-height {
+  height: calc(100vh - var(--map-height-top-distance_no-categories) + 2px);
+  overflow: hidden;
+}
