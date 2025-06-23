@@ -195,6 +195,21 @@ router.post('/:monumentId/photos', upload.array('image', 5), async (req, res) =>
   }
 })
 
+router.get('/eras', async (req, res) => {
+  try {
+    console.log('eras')
+    const result = await monumentService.getEras()
+    res.status(200).json({
+      data: result,
+      status: 'success',
+      message: 'Photos added successfully to the monument.',
+    })
+  } catch (err) {
+    console.error('Error fetching eras:', err);
+    res.status(500).json({ message: 'Failed to fetch eras.' });
+  }
+})
+
 // Get monuments within map bounds and optional search query
 router.get('/', async (req, res) => {
   console.log('monuments get')

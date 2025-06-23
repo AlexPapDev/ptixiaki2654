@@ -192,6 +192,12 @@ const deleteMonument = async (monumentid) => {
   return result.rowCount
 }
 
+const getEras = async () => {
+  const query = `SELECT eraId, name, description FROM Eras ORDER BY name`
+  const result = await db.query(query)
+  return result.rows
+}
+
 export default { 
   createMonument,
   updateMonument,
@@ -205,4 +211,5 @@ export default {
   getMonumentById,
   getMonumentsByStatus,
   deleteMonument,
+  getEras,
 }
