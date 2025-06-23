@@ -3,7 +3,7 @@ import { useForm } from '@mantine/form'
 import { Title, Stack, Group, TextInput, Textarea, MultiSelect, Button} from '@mantine/core'
 import FileDropzone from './FileDropzone'
 import { CATEGORIES } from '../utils/constants'
-const NewMonumentForm = ({handleSubmit, loading, address = {}}) => {
+const NewMonumentForm = ({handleSubmit, loading, address = {}, onAddEra}) => {
   const fullStreetName = `${address.road} ${address.house_number || ''}`
 
   const form = useForm({
@@ -27,7 +27,7 @@ const NewMonumentForm = ({handleSubmit, loading, address = {}}) => {
   return (<>
     <Title mt="sm" order={3}>Create a New Monument</Title>
     <form onSubmit={form.onSubmit(handleSubmit)}>
-      <Stack>
+      <Stack mb="md">
         <Group grow>
           <TextInput
             label="Monument Name"
@@ -83,6 +83,10 @@ const NewMonumentForm = ({handleSubmit, loading, address = {}}) => {
         />
 
         <FileDropzone onFilesChange={onFilesChange} multiple></FileDropzone>
+
+        <Button onClick={onAddEra} variant="outline" mt="sm">
+          Add Era Description
+        </Button>
 
         <Button type="submit" loading={loading} fullWidth>
           Create Monument
