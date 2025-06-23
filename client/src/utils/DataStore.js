@@ -292,6 +292,16 @@ const useDataStore = create((set, get) => ({
       console.error('Error fetching lists:', error)
       set({ loadingLists: false, loadListsError: error.response?.data?.error || 'Failed to fetch lists' })
     }
+  },
+
+  getEras: async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/monuments/eras`)
+      return response.data
+      // return []
+    } catch (error) {
+      console.error('Error fetching eras:', error)
+    }
   }
 }))
 
