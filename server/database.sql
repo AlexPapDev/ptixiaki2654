@@ -99,5 +99,11 @@ CREATE TABLE FollowedLists (
   PRIMARY KEY (followerId, listId)
 );
 
+CREATE TABLE Eras (
+  eraId SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  description TEXT
+);
+
 INSERT INTO categories (name) VALUES 
 ('Byzantine'), ('Roman'), ('Christian'), ('Ottoman'), ('Jewish'), ('Neoclassical'), ('Contemporary'), ('UNESCO Heritage'), ('Commercial'), ('Religious');
