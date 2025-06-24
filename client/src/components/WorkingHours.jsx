@@ -1,4 +1,4 @@
-import { Stack, Grid, Box, Text, TextInput, Switch, Button, ActionIcon, Group } from '@mantine/core'
+import { Stack, Grid, Box, Text, TextInput, Switch, Button, Title, Group } from '@mantine/core'
 import { useState, useEffect } from 'react'
 import EditButton from './EditButton'
 import useDataStore from '../utils/DataStore' // Adjust path as needed
@@ -77,7 +77,7 @@ const WorkingHoursDisplay = ({ hoursData, onEdit }) => {
     <Box position="relative" style={{ position: 'relative' }}>
       <Stack>
         <Group justify="space-between">
-          <Text fw={600} align="left">Working Hours</Text>
+           <Title order={3} align="left">Working Hours</Title>
           <EditButton onEdit={onEdit} style={{ position: 'absolute', right: '5px' }} />
         </Group>
         <Switch

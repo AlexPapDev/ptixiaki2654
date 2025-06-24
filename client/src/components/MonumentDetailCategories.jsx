@@ -35,7 +35,7 @@ const MonumentDetailCategories = ({ monumentId, initialCategories = [], onSave }
   return (
     <>
       <Group justify="space-between">
-        <Title pb="sm">Categories</Title>
+        <Title order={3} pb="sm">Categories</Title>
         {!editing ? (
           <EditButton onEdit={handleEditClick} />
         ) : (
