@@ -23,6 +23,7 @@ import MonumentDetailActions from '../components/MonumentDetailActions'
 import MonumentDetailAddress from '../components/MonumentDetailAddress'
 import MonumentDetailDescription from '../components/MonumentDetailDescription'
 import MonumentDetailCategories from '../components/MonumentDetailCategories'
+import MonumentEras from '../components/MonumentEras'
 import { toast } from 'react-toastify'
 const MonumentDetail = () => {
   const { monumentId } = useParams()
@@ -49,9 +50,10 @@ const MonumentDetail = () => {
   }
 
   const loggedIn = isLoggedIn()
-
+  const monumenteras = monument.monumenteras
+  const hasEras = monumenteras?.length
   return (
-    <Container>
+    <Container pb="xl">
       <Group pt="lg">
         <Title order={2}>{monument?.name}</Title>
       </Group>
@@ -88,6 +90,10 @@ const MonumentDetail = () => {
           </Box>
         </Grid.Col>
       </Grid>
+      {hasEras && (<>
+        <Divider mt="md" pb="md" />
+        <MonumentEras monumenteras={monumenteras}/>
+      </>)}
     </Container>
   )
 }

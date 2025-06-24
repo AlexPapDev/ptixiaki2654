@@ -99,7 +99,7 @@ const NewMonument = () => {
       children: (
         <AddMonumentEraForm
           availableEras={availableEras.filter(
-            (era) => !monumentEras.some((me) => me.eraId === era.eraId)
+            (era) => !monumentEras.some((me) => me.eraid === era.eraid)
           )} // Filter out eras already added
           onAdd={(newEraDetails) => {
             setMonumentEras((prev) => [...prev, newEraDetails]);
@@ -108,7 +108,7 @@ const NewMonument = () => {
         />
       ),
       centered: true,
-      size: 'md',
+      size: 'lg',
     });
   };
 
@@ -119,6 +119,7 @@ const NewMonument = () => {
 
 
   const handleSubmit = async (values) => {
+    console.log('new monument screen handle submit', values)
     const formData = new FormData()
     formData.append('name', values.name)
     formData.append('description', values.description)

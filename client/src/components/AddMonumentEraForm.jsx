@@ -1,44 +1,47 @@
-import React from 'react';
-import { useForm } from '@mantine/form';
-import { Select, Textarea, Button, Stack } from '@mantine/core';
+import { useForm } from '@mantine/form'
+import { Select, Textarea, Button, Stack } from '@mantine/core'
 
 const AddMonumentEraForm = ({ availableEras, onAdd }) => {
+
   const form = useForm({
     initialValues: {
-      eraId: '',
-      eraDescription: '',
+      eraid: '',
+      name: '',
+      eradescription: '',
     },
     validate: {
-      eraId: (value) => (value ? null : 'Please select an era'),
-      eraDescription: (value) => (value ? null : 'Description is required for this era'),
+      eraid: (value) => (value ? null : 'Please select an era'),
+      eradescription: (value) => (value ? null : 'Description is required for this era'),
     },
   });
 
   const handleSubmit = (values) => {
-    const selectedEra = availableEras.find(era => era.eraId === parseInt(values.eraId));
+    const selectedEra = availableEras.find(era => era.eraid === parseInt(values.eraid))
+
     if (selectedEra) {
       onAdd({
-        eraId: selectedEra.eraId,
-        eraName: selectedEra.name, // Store the name for display purposes
-        description: values.eraDescription,
-      });
+        eraid: selectedEra.eraid,
+        name: selectedEra.name, // Store the name for display purposes
+        description: values.eradescription,
+      })
     }
-  };
-
+  }
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <Stack>
         <Select
           label="Select Era"
           placeholder="Choose an era"
-          data={availableEras.map((era) => ({ value: String(era.eraId), label: era.name }))}
-          {...form.getInputProps('eraId')}
+          data={availableEras.map((era) => ({ value: String(era.eraid), label: era.name }))}
+          {...form.getInputProps('eraid')}
         />
         <Textarea
+          autosize
           label="Era Specific Description"
           placeholder="Describe the monument in this era..."
-          minRows={4}
-          {...form.getInputProps('eraDescription')}
+          minRows={8}
+          maxRows={16}
+          {...form.getInputProps('eradescription')}
         />
         <Button type="submit">Add Era</Button>
       </Stack>
