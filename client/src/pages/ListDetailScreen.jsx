@@ -9,6 +9,7 @@ import FollowListButton from '../components/FollowListButton'
 import ListDetailGrid from '../components/ListDetailGrid'
 import useListDetail from '../hooks/useListDetail'
 import useAuthStore from '../utils/AuthStore'
+import ListPrivacyToggle from '../components/ListPrivacyToggle'
 const ListDetail = () => {
   const { listId } = useParams()
   const { list, loading, error } = useListDetail(listId)
@@ -29,12 +30,7 @@ const ListDetail = () => {
           <Stack align="flex-start" pl="lg" pt="md" gap="sm">
             <ListDetailTitle listId={listId} initialTitle={list?.name} showEdit={isOwnList}/>
             <ListDetailDescription listId={listId} initialDescription={list?.description} showEdit={isOwnList}/>
-            {isOwnList && <Radio.Group>
-              <Group>
-                <Radio value="public" label="Public"/>
-                <Radio value="private" label="Private"/>
-              </Group>
-            </Radio.Group>}
+            {isOwnList && <ListPrivacyToggle listId={listId} initialIsPublic={list.is_public}/>}
             <Text c="gray.5" component={Link} to={`/user/${listUser?.userid}`}>
               By {list?.full_name}
             </Text>

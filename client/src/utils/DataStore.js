@@ -167,19 +167,20 @@ const useDataStore = create((set, get) => ({
     }
   },
 
-  editList: async (listId) => {
-    // set({ editingListId: listId, currentList: null, listUpdateError: null })
-    // try {
-    //   const token = localStorage.getItem('token')
-    //   const response = await axios.get(`${API_BASE_URL}/api/lists/${listId}`, {
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   })
-    //   set({ currentList: response.data })
-    // } catch (error) {
-    //   console.error('Error fetching list for edit:', error)
-    //   set({ editingListId: null, listUpdateError: error.response?.data?.error || 'Failed to fetch list details' })
-    //   return { success: false, error: error.response?.data?.error || 'Failed to fetch list details' }
-    // }
+  editList: async (listId, fieldName, fieldValue) => {
+    set({ editingListId: listId, currentList: null, listUpdateError: null })
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.put(`${API_BASE_URL}/api/lists/${listId}`, 
+        { [fieldName]: fieldValue },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      return { success: true, data: response.data }
+    } catch (error) {
+      console.error('Error fetching list for edit:', error)
+      set({ editingListId: null, listUpdateError: error.response?.data?.error || 'Failed to fetch list details' })
+      return { success: false, error: error.response?.data?.error || 'Failed to fetch list details' }
+    }
   },
 
   // --- Actions for adding/removing monuments from a list ---

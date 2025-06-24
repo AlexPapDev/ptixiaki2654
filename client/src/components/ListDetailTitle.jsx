@@ -8,7 +8,9 @@ const ListDetailTitle = ({ monumentId, initialTitle, onSave, showEdit = false })
   const [editedTitle, setEditedTitle] = useState(initialTitle)
   const [savedTitle, setSavedTitle] = useState(initialTitle)
 
-  const handleEditClick = () => setIsEditing(true)
+  const handleEditClick = () => {
+    setIsEditing(true)
+  }
   const handleCancelClick = () => {
     setEditedTitle(initialTitle)
     setIsEditing(false)
@@ -27,7 +29,6 @@ const ListDetailTitle = ({ monumentId, initialTitle, onSave, showEdit = false })
   const handleInputChange = (event) => {
     setEditedTitle(event.currentTarget.value)
   }
-
   return (
     <div>
       {!isEditing ? (
@@ -41,7 +42,6 @@ const ListDetailTitle = ({ monumentId, initialTitle, onSave, showEdit = false })
             label="Title"
             value={editedTitle || ''}
             onChange={handleInputChange}
-            minRows={3}
           />
           <Group position="right" mt="sm">
             <Button variant="outline" size="xs" onClick={handleCancelClick}>Cancel</Button>
