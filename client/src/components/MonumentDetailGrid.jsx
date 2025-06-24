@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Group, Image,Box } from '@mantine/core'
+import { Grid, Group, Image,Box, AspectRatio } from '@mantine/core'
 import { getCloudinaryUrl } from '../utils/helpers'
 import { Gallery } from "react-grid-gallery"
 const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
@@ -23,21 +23,24 @@ const MonumentDetailGrid = ({ images = [] }) => {
             }}
           />
         </Grid.Col>
-        <Grid.Col span={6}>
-          <Grid padding="none" gutter="none" type="media">
+        <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px)' }}>
+          <Grid padding="none" gutter="none" type="media" style={{ maxHeight: 'calc(60vh - 64px)' }}>
             <Grid.Col span={6} padding="none" gutter="xs">
-              <Image
-                src={imageUrls[1]}
-                alt="Thumbnail 1"
-                radius="md"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
+              <AspectRatio ratio={462 / 358}>
+                <Image
+                  src={imageUrls[1]}
+                  alt="Thumbnail 1"
+                  radius="md"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </AspectRatio>
             </Grid.Col >
             <Grid.Col span={6} padding="none">
+              <AspectRatio ratio={462 / 358}>
               <Image
                 src={imageUrls[2]}
                 alt="Thumbnail 2"
@@ -48,30 +51,35 @@ const MonumentDetailGrid = ({ images = [] }) => {
                   objectFit: 'cover',
                 }}
               />
+              </AspectRatio>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Image
-                src={imageUrls[3]}
-                alt="Thumbnail 1"
-                radius="md"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
+              <AspectRatio ratio={462 / 358}>
+                <Image
+                  src={imageUrls[3]}
+                  alt="Thumbnail 1"
+                  radius="md"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </AspectRatio>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Image
-                src={imageUrls[4]}
-                alt="Thumbnail 2"
-                radius="md"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
+              <AspectRatio ratio={462 / 358}>
+                <Image
+                  src={imageUrls[4]}
+                  alt="Thumbnail 2"
+                  radius="md"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </AspectRatio>
             </Grid.Col>
           </Grid>
         </Grid.Col>
