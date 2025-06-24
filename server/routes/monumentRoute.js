@@ -38,13 +38,15 @@ router.post('/get-address', async (req, res) => {
 // Create a new monument
 router.post('/', upload.array('image', 5), async (req, res) => {
   try {
-    const { name, description, latitude, longitude, userid, categories } = req.body
+    const { name, description, latitude, longitude, userid, categories, monumentEras: monumentErasString } = req.body
     if (!name || !description || !latitude || !longitude || !userid) {
       return res.status(400).json({
         status: 'error',
         message: 'Missing required fields.',
       })
     }
+
+    const monumentEras = JSON.parse(monumentErasString)
 
     // Validate latitude & longitude
     const lat = parseFloat(latitude)
@@ -102,6 +104,11 @@ router.post('/', upload.array('image', 5), async (req, res) => {
     // Insert categories
     if (categoryIds.length > 0) {
       await monumentService.addMonumentCategories(newMonument.monumentid, categoryIds)
+    }
+
+    if (monumentEras.length > 0) {
+      const result = await monumentService.addMonumentEras(newMonument.monumentid, monumentEras)
+      console.log('eras result', result)
     }
 
     const daysOfWeek = [0, 1, 2, 3, 4, 5, 6] // Sunday to Saturday

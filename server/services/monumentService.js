@@ -97,9 +97,54 @@ const addMonumentCategories = async (monumentId, categoryIds, isUpdate = false) 
   
     const result = await db.query(query, [monumentId, ...categoryIds])
     console.log(result.rows)
-    return result.rows 
+    return result.rows
   } catch (error) {
     console.error("Error inserting monument categories:", error)
+    throw error
+  }
+}
+
+const addMonumentEras = async (monumentId, monumentEras) => {
+  const placeholders = monumentEras.map((_, index) => {
+    const eraIdPlaceholder = `$${2 * index + 2}`; // eraid starts from $2, then $4, etc.
+    const descriptionPlaceholder = `$${2 * index + 3}`; // description starts from $3, then $5, etc.
+    return `($1, ${eraIdPlaceholder}, ${descriptionPlaceholder})`;
+  }).join(', ');
+
+  const values = monumentEras.flatMap(era => [era.eraid, era.description])
+  console.log(monumentId, values, placeholders)
+  const query = `
+    INSERT INTO monumenteradetails (monumentid, eraid, eramonumentdescription)
+    VALUES ${placeholders}
+    RETURNING *;
+  `
+
+  const result = await db.query(query, [monumentId, ...values]);
+  return result.rows
+}
+
+const updateMonumentEra = async (id, eramonumentdescription) => {
+  try {
+    const query = `
+      UPDATE monumenteradetails
+      SET eramonumentdescription = $1,
+        updatedDate = CURRENT_TIMESTAMP
+      WHERE id = $2
+      RETURNING *;
+    `;
+    const values = [eramonumentdescription, id];
+
+    const result = await db.query(query, values);
+
+    // Check if any row was updated
+    if (result.rows.length > 0) {
+      return result.rows[0]; // Return the updated row
+    } else {
+      console.warn(`No monument era detail found with ID: ${id}`);
+      return null; // No record found to update
+    }
+  } catch (error) {
+    console.error(`Error updating monument era detail with ID ${id}:`, error);
     throw error
   }
 }
@@ -110,12 +155,27 @@ const getMonumentById = async (id) => {
       m.*,
       COALESCE(json_agg(DISTINCT c.name) FILTER (WHERE c.name IS NOT NULL), '[]') AS categories,
       COALESCE(json_agg(DISTINCT mi.imageurl) FILTER (WHERE mi.imageurl IS NOT NULL), '[]') AS images,
-      COALESCE(json_agg(DISTINCT (row_to_json(mh)::jsonb)) FILTER (WHERE mh.id IS NOT NULL), '[]') AS hours
+      COALESCE(json_agg(DISTINCT (row_to_json(mh)::jsonb)) FILTER (WHERE mh.id IS NOT NULL), '[]') AS hours,
+      COALESCE(
+        json_agg(
+          DISTINCT jsonb_build_object(
+            'id', med.id,
+            'monumentId', med.monumentId,
+            'eraId', med.eraId,
+            'eraMonumentDescription', med.eraMonumentDescription,
+            'eraDescription', e.eradescription,
+            'eraName', e.name,
+            'eraOrder', e.eraorder
+          )
+        ) FILTER (WHERE med.id IS NOT NULL),
+      '[]') AS monumenteras
     FROM monuments m
     LEFT JOIN monumentcategories mc ON m.monumentId = mc.monumentId
     LEFT JOIN categories c ON mc.categoryId = c.categoryId
     LEFT JOIN MonumentImages mi ON m.monumentId = mi.monumentid
     LEFT JOIN monumenthours mh ON m.monumentId = mh.monumentId
+    LEFT JOIN monumenteradetails med ON m.monumentId = med.monumentId
+    LEFT JOIN eras e ON med.eraId = e.eraId
     WHERE m.monumentId = $1
     GROUP BY m.monumentId;
   `
@@ -193,7 +253,7 @@ const deleteMonument = async (monumentid) => {
 }
 
 const getEras = async () => {
-  const query = `SELECT eraId, name, description FROM Eras ORDER BY name`
+  const query = `SELECT eraid, name, eradescription FROM Eras ORDER BY eraorder`
   const result = await db.query(query)
   return result.rows
 }
@@ -205,6 +265,8 @@ export default {
   addMonumentImage,
   getCategoryIds,
   addMonumentCategories,
+  addMonumentEras,
+  updateMonumentEra,
   // getPendingMonuments,
   approveMonument,
   rejectMonument,

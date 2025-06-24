@@ -92,6 +92,8 @@ CREATE TABLE monumenthours (
   CONSTRAINT monumenthours_day_of_week_check CHECK (day_of_week >= 0 AND day_of_week <= 6)
 )
 
+
+
 CREATE TABLE FollowedLists (
   followerId INT NOT NULL REFERENCES Users(userId) ON DELETE CASCADE,
   listId INT NOT NULL REFERENCES Lists(listId) ON DELETE CASCADE,
@@ -100,10 +102,18 @@ CREATE TABLE FollowedLists (
 );
 
 CREATE TABLE Eras (
-  eraId SERIAL PRIMARY KEY,
+  eraid SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL UNIQUE,
-  description TEXT
+  eradescription TEXT,
+  eraOrder INT NOT NULL
 );
+
+CREATE TABLE monumenteradetails (
+  id SERIAL PRIMARY KEY,
+  monumentid INT REFERENCES monuments(monumentid) ON DELETE CASCADE,
+  eraid INT REFERENCES eras(eraid) ON DELETE CASCADE,
+  eramonumentdescription TEXT
+)
 
 INSERT INTO categories (name) VALUES 
 ('Byzantine'), ('Roman'), ('Christian'), ('Ottoman'), ('Jewish'), ('Neoclassical'), ('Contemporary'), ('UNESCO Heritage'), ('Commercial'), ('Religious');
