@@ -115,8 +115,20 @@ router.delete('/:listId/monuments/:monumentId', authenticateUser, async (req, re
 // Update list info
 router.put('/:listId', authenticateUser, async (req, res) => {
   try {
-    const { name, description } = req.body
-    const updatedList = await listService.updateList(req.params.listId, req.user.userid, name, description)
+    const listId = req.params.listId
+    const userid = req.user.userid
+    const fieldToUpdate = Object.keys(req.body)[0]
+    const fieldValue = req.body[fieldToUpdate]
+    const allowedFields = ['name', 'description', 'is_public']
+
+    if (!allowedFields.includes(fieldName)) {
+      return res.status(400).json({ error: `Invalid field '${fieldName}' for update.` })
+    }
+
+    const updatedList = await listService.updateList(listId, userid, fieldToUpdate, fieldValue)
+        if (!updatedList) {
+      return res.status(404).json({ error: 'List not found or unauthorized to update.' });
+    }
     res.json(updatedList)
   } catch (err) {
     console.error(err)

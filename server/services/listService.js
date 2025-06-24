@@ -249,13 +249,14 @@ const removeMonumentFromList = async (listId, monumentId) => {
   )
 }
 
-const updateList = async (listId, userId, name, description) => {
-  const result = await db.query(
-    `UPDATE Lists
-     SET name = $1, description = $2, updatedDate = CURRENT_TIMESTAMP
-     WHERE listId = $3 AND userId = $4
-     RETURNING *`,
-    [name, description, listId, userId]
+const updateList = async (listId, userId, fieldName, fieldValue) => {
+  const result = await db.query(`
+      UPDATE Lists
+      SET "${fieldName}" = $1, updatedDate = CURRENT_TIMESTAMP
+      WHERE listId = $2 AND userId = $3
+      RETURNING *;
+    `,
+    [fieldValue, listId, userId]
   )
   return result.rows[0]
 }
