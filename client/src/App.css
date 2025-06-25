@@ -51,7 +51,7 @@
 .map_section {
   position: sticky;
   width: 35vw;
-  top: var(--map-height-top-distance);
+  top: 0px;
   height: calc(100vh - var(--map-height-top-distance));
   overflow-y: auto;
 }
