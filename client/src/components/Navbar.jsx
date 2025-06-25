@@ -13,7 +13,8 @@ const links = [
   { link: '/articles', label: 'Articles' },
 ]
 
-const Navbar = ({ toggleNavbar, navbarOpened }) => {
+const Navbar = ({ isTextInputNearTop = false, toggleNavbar, navbarOpened }) => {
+  // console.log('isTextInputNearTop', isTextInputNearTop)
   const theme = useMantineTheme()
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
   const isXlOrBigger = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`)
@@ -36,14 +37,13 @@ const Navbar = ({ toggleNavbar, navbarOpened }) => {
           
         </Group>
 
-        {/* This is the part that will be absolutely positioned */}
-        <Box px="md" style={{
+        {!isTextInputNearTop && <Box px="md" style={{
           flex: '1 0 auto',
           minWidth: !isSmOrSmaller ? '348px' : null,
           maxWidth: !isSmOrSmaller ? '500px' : null,
         }}>
           <SearchInput />
-        </Box>
+        </Box>}
 
         <Group visibleFrom="sm" ml={30} gap="md" justify="flex-end" wrap="nowrap" style={{flex: groupFlex}} >
           <NavLinks />

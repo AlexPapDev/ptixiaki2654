@@ -1,6 +1,5 @@
-import { useState } from 'react'
-
-// Mantine
+// App.js (inside MainLayout function)
+import { useState, useContext } from 'react' // Import useContext
 import { AppShell, Paper } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
 import { useMediaQuery } from '@mantine/hooks'
@@ -33,12 +32,18 @@ import './App.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '@mantine/core/styles.css'
 import '@mantine/dropzone/styles.css'
+
+// Import ScrollProvider and ScrollContext
+import { ScrollProvider, ScrollContext } from './contexts/ScrollContext'; // Adjust path if needed
+
 function App() {
   return (
     <MantineThemeProvider>
       <Router>
         <ModalsProvider>
-          <MainLayout />
+          <ScrollProvider threshold={120}> {/* You can adjust this global threshold if needed */}
+            <MainLayout />
+          </ScrollProvider>
         </ModalsProvider>
       </Router>
     </MantineThemeProvider>
@@ -52,31 +57,60 @@ function MainLayout() {
   const isBiggerThanSm = useMediaQuery('(min-width: 48em)')
   const isMonumentsPage = (location.pathname.startsWith('/monuments') && location.pathname !== '/monuments/new') 
   const isHomePage = location.pathname === '/'
-
+  const { mainScrollRef, textInputTopOffset, scrollPosition, isScrolledPastThreshold } = useContext(ScrollContext);
   const showCategoriesBar = isBiggerThanMd && (isMonumentsPage || isHomePage)
   const headerHeight = showCategoriesBar ? 112 : 74
 
   const showNavLinks = !isBiggerThanSm && (isMonumentsPage || isHomePage)
+
+  // Get the mainScrollRef from the context
+
+
+  console.log('isScrolledPastThreshold', isScrolledPastThreshold)
+
+  // Now you can use textInputTopOffset and scrollPosition here to react in MainLayout or pass down to Navbar
+  // Example: Log when the TextInput is within 50px of the viewport top
+  const isTextInputNearTop = textInputTopOffset !== null && (textInputTopOffset - scrollPosition <= 100);
+
+  // You can pass this 'isTextInputNearTop' state to your Navbar component
+  // or trigger other changes here based on the condition.
+  // For example, if Navbar needs to know:
+  // <Navbar navbarOpened={navbarOpened} toggleNavbar={() => setNavbarOpened((o) => !o)} isTextInputNearTop={isTextInputNearTop} />
+
+  // Optional: Console log for demonstration
+  // useEffect(() => {
+  //   if (isTextInputNearTop) {
+  //     console.log('TextInput is 50px or less from the top of AppShell.Main viewport!');
+  //   } else {
+  //     console.log('TextInput is NOT near the top.');
+  //   }
+  // }, [isTextInputNearTop]);
+
+
   return (
     <AppShell
-      // navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: true } }}
       header={{ height: headerHeight }}
     >
       <AppShell.Header>
         <Paper shadow="sm" radius="none">
-          <Navbar navbarOpened={navbarOpened} toggleNavbar={() => setNavbarOpened((o) => !o)} />
+          <Navbar navbarOpened={navbarOpened} toggleNavbar={() => setNavbarOpened((o) => !o)} isTextInputNearTop={!isScrolledPastThreshold} />
           {showCategoriesBar && <CategoriesBar hideClearFilters={isHomePage}/>}
           {showNavLinks && <CompactNav />}
         </Paper>
       </AppShell.Header>
       
-      {/* <AppShell.Main style={{backgroundColor: '#f8f9fa'}}> */}
-      <AppShell.Main style={{backgroundColor: '#fff'}}>
+      {/* Attach the mainScrollRef to AppShell.Main and ensure it's scrollable */}
+      <AppShell.Main
+        ref={mainScrollRef} // Attach the ref here
+        style={{
+          backgroundColor: '#fff',
+          overflowY: 'auto', // Make sure this area is scrollable
+          height: 'calc(100vh - var(--app-shell-header-height, 0px))', // Ensure it takes full height to be scrollable
+        }}
+      >
         <ToastContainer position='top-right' autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
           <Routes>
             <Route path='/' element={<Home />} />
-            {/* <Route path='/login' element={<Login />} />
-            <Route path='/signup' element={<SignUp />} /> */}
             <Route path='/otpverification' element={<OTPVerification />} />
             <Route path='/profile' element={<ProfileRedirect />} />
             <Route path='/monuments/new' element={<NewMonument />} />

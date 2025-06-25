@@ -1,4 +1,3 @@
-// src/components/NoResults.js
 import React from 'react'
 import { Card, Text, Container, Center } from '@mantine/core'
 import { Search } from 'lucide-react'
