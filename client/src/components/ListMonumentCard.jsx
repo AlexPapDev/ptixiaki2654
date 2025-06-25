@@ -1,10 +1,12 @@
 import { AspectRatio, Text, Stack, Divider, Group, Image,Box } from '@mantine/core'
 import { getCloudinaryUrl } from '../utils/helpers'
+import useAuthStore from '../utils/AuthStore'
 import AddToListButton from './AddToListButton'
 import SquareImage from './SquareImage'
 import { DEFAULT_IMAGE } from '../utils/constants'
 
 const ListMonumentCard = ({ monument }) => {
+  const { isLoggedIn } = useAuthStore()
   const imageUrl = getCloudinaryUrl(monument.main_image_url, { width: 300 })
   return (<Stack>
     <Divider></Divider>
@@ -17,7 +19,7 @@ const ListMonumentCard = ({ monument }) => {
           <Text size="sm" c="dimmed" inline>{monument.description}</Text>
         </Stack>
       </Group>
-      <AddToListButton monumentId={monument.monumentid} isIcon={true}/>
+      {isLoggedIn() && <AddToListButton monumentId={monument.monumentid} isIcon={true}/>}
     </Group>
     
   </Stack>)

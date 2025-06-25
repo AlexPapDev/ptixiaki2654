@@ -6,7 +6,7 @@ import AddMonumentEraForm from './AddMonumentEraForm'
 import useEras from '../hooks/useEras'
 import useDataStore from '../utils/DataStore'
 
-const MonumentEras = ({ monumentId, initialMonumentEras = [] }) => {
+const MonumentEras = ({ monumentId, initialMonumentEras = [], canEdit }) => {
   const { availableEras, loadingEras, errorEras } = useEras()
   const [monumentEras, setMonumentEras] = useState(initialMonumentEras)
   // Find the initial current era or set to null if no eras
@@ -115,7 +115,7 @@ const MonumentEras = ({ monumentId, initialMonumentEras = [] }) => {
       <>
         <Group style={{ position: 'relative' }} justify="space-between">
           <Title order={3}>Eras</Title>
-          {isViewing && erasAvailableToAdd.length && (
+          {canEdit && isViewing && erasAvailableToAdd.length && (
             <AddButtonIcon onClickCustom={() => setIsAdding(true)} />
           )}
         </Group>

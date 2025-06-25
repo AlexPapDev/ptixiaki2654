@@ -72,13 +72,13 @@ const StackItem = ({ day, hour }) => {
   )
 }
 
-const WorkingHoursDisplay = ({ hoursData, onEdit }) => {
+const WorkingHoursDisplay = ({ hoursData, onEdit, canEdit }) => {
   return (
     <Box position="relative" style={{ position: 'relative' }}>
       <Stack>
         <Group justify="space-between">
-           <Title order={3} align="left">Working Hours</Title>
-          <EditButton onEdit={onEdit} style={{ position: 'absolute', right: '5px' }} />
+          <Title order={3} align="left">Working Hours</Title>
+          {canEdit && <EditButton onEdit={onEdit} style={{ position: 'absolute', right: '5px' }} />}
         </Group>
         <Switch
           label="Open 24h"
@@ -153,7 +153,7 @@ const WorkingHoursEditor = ({ initialHoursData, onSave, onCancel }) => {
   )
 }
 
-const WorkingHours = ({ monumentId, initialHours }) => {
+const WorkingHours = ({ monumentId, initialHours, canEdit }) => {
   const [isEditing, setIsEditing] = useState(false)
   const { updateMonumentWorkingHours } = useDataStore()
   const [currentHours, setCurrentHours] = useState(initialHours || [...initialHoursState])
@@ -185,7 +185,7 @@ const WorkingHours = ({ monumentId, initialHours }) => {
   return (
     <>
       {!isEditing ? (
-        <WorkingHoursDisplay hoursData={currentHours} onEdit={handleEdit} />
+        <WorkingHoursDisplay hoursData={currentHours} onEdit={handleEdit} canEdit={canEdit} />
       ) : (
         <WorkingHoursEditor
           initialHoursData={currentHours}

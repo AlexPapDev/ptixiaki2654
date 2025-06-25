@@ -29,7 +29,6 @@ const MonumentDetail = () => {
   const { monumentId } = useParams()
   const navigate = useNavigate()
   const { isLoggedIn } = useAuthStore()
-
   const { monument, loading, error } = useMonumentDetail(monumentId)
   const { handleDeleteClick } = useDeleteMonument(monumentId, () => {
     toast.success('Record deleted successfully!', { position: 'top-right' })
@@ -54,7 +53,7 @@ const MonumentDetail = () => {
   return (
     <Container pb="xl">
       <Group pt="lg">
-        <Title order={2}>{monument?.name}</Title>
+        <Title order={1}>{monument?.name}</Title>
       </Group>
 
       <Box mt="lg">
@@ -68,14 +67,15 @@ const MonumentDetail = () => {
             handleDelete={handleDeleteClick}
             monumentId={monumentId}
           />
-          <MonumentDetailAddress initialAddress={monument.address} />
-          <MonumentDetailDescription monumentId={monumentId} initialDescription={monument.description}/>
+          <MonumentDetailAddress initialAddress={monument.address} canEdit={loggedIn}/>
+          <MonumentDetailDescription monumentId={monumentId} initialDescription={monument.description} canEdit={loggedIn}/>
           <Divider mt="md" pb="md" />
-          <MonumentDetailCategories monumentId={monumentId} initialCategories={monument.categories}/>
+          <MonumentDetailCategories monumentId={monumentId} initialCategories={monument.categories} canEdit={loggedIn}/>
           <Divider mt="md" pb="md" />
           <WorkingHours
             monumentId={monumentId}
             initialHours={monument.hours}
+            canEdit={loggedIn}
           />
         </Grid.Col>
         <Grid.Col pl="md" span={5} pt="xl">
@@ -90,7 +90,7 @@ const MonumentDetail = () => {
         </Grid.Col>
       </Grid>
       <Divider mt="md" pb="md" />
-      <MonumentEras monumentId={monumentId} initialMonumentEras={monumenteras}/>
+      <MonumentEras monumentId={monumentId} initialMonumentEras={monumenteras} canEdit={loggedIn}/>
     </Container>
   )
 }

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Text, Textarea, Stack, Group, Button } from '@mantine/core'
 import EditButton from './EditButton'
 import useDataStore from '../utils/DataStore'
-const MonumentDetailDescription = ({ monumentId, initialDescription, onSave }) => {
+const MonumentDetailDescription = ({ monumentId, initialDescription, canEdit }) => {
   const { editMonument } = useDataStore()
   const [isEditing, setIsEditing] = useState(false)
   const [editedDescription, setEditedDescription] = useState(initialDescription)
@@ -14,14 +14,10 @@ const MonumentDetailDescription = ({ monumentId, initialDescription, onSave }) =
     setIsEditing(false)
   }
   const handleSaveClick = async () => {
-    // onSave(editedDescription)
     const result = await editMonument(monumentId, 'description', editedDescription)
     if (result.success) {
-      // toast.success('Record created successfully!', { position: 'top-right' })
-      // setTimeout(() => navigate('/monuments'), 1500)
       setSavedDescription(editedDescription)
     }
-    console.log(result)
     setIsEditing(false)
   }
   const handleInputChange = (event) => {
@@ -33,7 +29,7 @@ const MonumentDetailDescription = ({ monumentId, initialDescription, onSave }) =
       {!isEditing ? (
         <Group style={{ position: 'relative' }} justify="space-between">
           <Text fw={600} style={{maxWidth: '85%'}}>{savedDescription || 'No description available.'}</Text>
-          <EditButton onEdit={handleEditClick} />
+          {canEdit && <EditButton onEdit={handleEditClick} />}
         </Group>
       ) : (
         <Stack>

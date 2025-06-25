@@ -3,10 +3,10 @@ import { Title, Group, Badge, Button, MultiSelect } from '@mantine/core'
 import EditButton from './EditButton'
 import { CATEGORIES } from '../utils/constants'
 import useDataStore from '../utils/DataStore'
-const MonumentDetailCategories = ({ monumentId, initialCategories = [], onSave }) => {
+const MonumentDetailCategories = ({ monumentId, initialCategories = [], canEdit }) => {
   const [categories, setCategories] = useState(initialCategories);
   const [editing, setEditing] = useState(false);
-  const [newCategories, setNewCategories] = useState(initialCategories); // To hold the edited categories
+  const [newCategories, setNewCategories] = useState(initialCategories)
   const { editMonumentCategories } = useDataStore()
   const handleEditClick = () => {
     setEditing(true)
