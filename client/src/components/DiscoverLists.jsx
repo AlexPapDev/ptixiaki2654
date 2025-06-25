@@ -46,7 +46,7 @@ const DiscoverLists = ({hideSearch}) => {
 
     <Text mb="sm">Latest lists</Text>
     <Grid>
-      {lists.map(list => (<Grid.Col span={4}><ListCard list={list}/></Grid.Col>))}
+      {lists?.map(list => (<Grid.Col span={4}><ListCard list={list}/></Grid.Col>))}
     </Grid>
   </Box>)
 }
