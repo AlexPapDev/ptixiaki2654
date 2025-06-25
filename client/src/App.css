@@ -65,7 +65,7 @@
 .list_map_section {
   position: sticky;
   /* width: 35vw; */
-  top: var(--map-height-top-distance_no-categories);
+  top: 0px;
   height: calc(100vh - var(--map-height-top-distance_no-categories));
   overflow-y: auto;
   width: 50vw;
