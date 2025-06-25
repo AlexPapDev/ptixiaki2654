@@ -1,95 +1,50 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import TabButton from '../components/TabButton'
-import { TextInput, Button, Text, Container, Title, Group,Divider } from '@mantine/core'
-import { Search, Newspaper, Library, Landmark } from 'lucide-react'
-import useAppStore from '../utils/AppStore'
-import DiscoverLists from '../components/DiscoverLists'
+// pages/HomeScreen.jsx
+import { useContext } from 'react'; // Removed unused imports
+import { useNavigate } from 'react-router-dom';
+import { Box,Container, Title } from '@mantine/core'; // Removed TextInput, Button, Text, Group as they are now in HomeSearchInput
+import useAppStore from '../utils/AppStore';
+import DiscoverLists from '../components/DiscoverLists';
+import { ScrollContext } from '../contexts/ScrollContext';
+import WelcomeText from '../components/WelcomeText';
+import HomeSearchInput from '../components/HomeSearchInput'; // Import the new component
+
 const Home = () => {
-  const [activeTab, setActiveTab] = useState('monuments')
-  const [inputTerm, setInputTerm] = useState('')
-  const navigate = useNavigate()
-  const { setSearchTerm } = useAppStore()
-  const placeholder = `Search ${activeTab}`
+  const navigate = useNavigate();
+  const { setSearchTerm } = useAppStore();
+  const { setTextInputTopOffset, isScrolledPastThreshold } = useContext(ScrollContext);
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab)
-  }
-
-  const handleSearch = () => {
-    if (!inputTerm.trim()) return
-
+  // This function will be passed down to HomeSearchInput to handle the actual navigation
+  const handleSearchNavigation = (activeTab, searchTerm) => {
     const routeMap = {
       monuments: '/monuments',
       lists: '/lists',
       articles: '/articles',
-    }
+    };
 
-    const path = routeMap[activeTab]
+    const path = routeMap[activeTab];
     if (path) {
-      const trimmedTerm = inputTerm.trim()
-      setSearchTerm(trimmedTerm)
-      navigate(`${path}?q=${encodeURIComponent(inputTerm.trim())}`)
+      setSearchTerm(searchTerm);
+      navigate(`${path}?q=${encodeURIComponent(searchTerm)}`);
     }
-  }
+  };
 
   return (
     <Container align="center" style={{ alignItems: 'center', justifyContent: 'center', padding: '32px', textAlign: 'center' }}>
       <Title mb="sm" order={1}>Search</Title>
-      <Group gap='lg' align='center' justify="center">
-        <TabButton
-          isActive={activeTab === 'monuments'}
-          Icon={Landmark}
-          onClick={() => handleTabChange('monuments')}
-        >
-          Monuments
-        </TabButton>
-        <TabButton
-          isActive={activeTab === 'lists'}
-          Icon={Library}
-          onClick={() => handleTabChange('lists')}
-        >
-          Lists
-        </TabButton>
-        <TabButton
-          isActive={activeTab === 'articles'}
-          Icon={Newspaper}
-          onClick={() => handleTabChange('articles')}
-        >
-          Articles
-        </TabButton>
-      </Group>
-      <Group justify="center" mb="lg">
-        <TextInput
-          mt="md"
-          radius="100px"
-          placeholder={placeholder}
-          rightSectionWidth={116}
-          onChange={(e) => setInputTerm(e.target.value)}
-          value={inputTerm}
-          style={{ width: '840px' }}
-          size="xl"
-          leftSection={
-            <Search size={24} />
-          }
-          rightSection={
-            <Button
-              size="lg"
-              radius="100px"
-              color="primary"
-              onClick={handleSearch}
-              disabled={!inputTerm.trim()}
-            >
-              <Text fw={600}>Search</Text>
-            </Button>
-          }
-        />
-      </Group>
 
-      
-      <DiscoverLists hideSearch />
+      <HomeSearchInput
+        onSearch={handleSearchNavigation}
+        setTextInputTopOffset={setTextInputTopOffset}
+      />
+
+      <Box my="xl" py="xl">
+        <WelcomeText />
+      </Box>
+      <Box my="xl">
+        <DiscoverLists hideSearch />
+      </Box>
     </Container>
-  )
-}
+  );
+};
 
 export default Home
