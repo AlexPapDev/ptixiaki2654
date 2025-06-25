@@ -6,6 +6,7 @@ import FollowingLists from './FollowingLists'
 import { toast } from 'react-toastify'
 import useAddPhoto from '../hooks/useAddPhoto' // Adjust path as needed
 import { useFileDialog } from '@mantine/hooks'
+import { getCloudinaryUrl } from '../utils/helpers'
 const ProfileActionButton = ({ text, Icon, onClick }) => {
   return (
     <Stack justify="center" align="center">
@@ -19,9 +20,9 @@ const ProfileActionButton = ({ text, Icon, onClick }) => {
 
 const UserProfileView = ({ user }) => {
   const theme = useMantineTheme()
-  // const fileDialog = useFileDialog()
   const fileDialog = useFileDialog()
-  // console.log('fileDialog', fileDialog, 'file', files)
+  const imageSrc = getCloudinaryUrl(user.profileimageurl)
+
   const { addProfilePhoto } = useAddPhoto(user.userid, () => {
     toast.success('Photo added succesfully  successfully!', { position: 'top-right' })
     window.location.reload()
@@ -68,12 +69,11 @@ const UserProfileView = ({ user }) => {
         <Stack bg={theme.primaryColor} sx={{ color: 'primary' }} align="center" justify="center" className="profile-height">
           <Box style={{ height: '300px', width: '300px' }}>
             <Paper shadow="lg">
-              <SquareImage src={user.profileimageurl} fallbackSrc='/profile_placeholder.png' />
+              <SquareImage src={imageSrc} fallbackSrc='/profile_placeholder.png' />
             </Paper>
           </Box>
           <Group align="center" mt="md">
             <ProfileActionButton text="Edit Profile" Icon={Pencil} />
-            {/* Attach handleAddProfilePhoto to the onClick prop */}
             <ProfileActionButton text="Add Photo" Icon={User} onClick={fileDialog.open} />
             <ProfileActionButton text="Follow People" Icon={UserRoundPlus} />
           </Group>
