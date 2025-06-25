@@ -29,30 +29,33 @@ const useUserStore = create((set) => ({
   },
 
   updateUserProfile: async (userId, updatedData) => {
-    set({ isLoading: true, error: null })
+    set({ isLoading: true, error: null });
+    const token = localStorage.getItem('token');
+
     try {
-      const token = localStorage.getItem('token')
       const response = await axios.patch(
         `${API_BASE_URL}/api/users/${userId}`,
         updatedData,
         {
-          headers: { 
-            'Content-Type': updatedData instanceof FormData ? 'multipart/form-data' : 'application/json',
+          headers: {
+            'Content-Type': 'application/json', // Assume JSON for all updates
             Authorization: `Bearer ${token}`
           }
         }
-      )
-      set({ isLoading: false, currentUser: response.data })
-      return { success: true, data: response.data }
+      );
+
+      set({ isLoading: false, currentUser: response.data.user || response.data });
+      return { success: true, data: response.data.user || response.data };
     } catch (error) {
-      console.error('Error updating user profile:', error)
-      set({ 
-        isLoading: false, 
-        error: error.response?.data?.error || 'Failed to update user profile'
+      console.error('Error updating user profile:', error.response?.data || error.message);
+      set({
+        isLoading: false,
+        error: error.response?.data?.message || 'Failed to update user profile.'
       })
-      return { success: false, error: error.response?.data?.error || 'Failed to update user profile' }
+      return { success: false, error: error.response?.data?.message || 'Failed to update user profile.' };
     }
   },
+
 
   signupUser: async (userData) => {
     set({ isLoading: true, error: null })

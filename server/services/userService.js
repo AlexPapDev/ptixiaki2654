@@ -8,7 +8,6 @@ const USER_FIELD_NAMES = [
   'firstname',
   'lastname',
   'email',
-  'profileimageurl',
 ]
 const createUser = async (firstname, lastname, email, password, role) => {
   const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email])
@@ -132,28 +131,19 @@ const getUserByField = async (fieldName, fieldValue, includePrivateFields = fals
   return includePrivateFields ? { ...userBase, ...user } : userBase
 }
 
-const updateUser = async (userId, updatedFields) => {
-  const sanitizedFields = Object.keys(updatedFields)
-    .filter(fieldName => USER_FIELD_NAMES.includes(fieldName))
-
-  if (sanitizedFields.length === 0) {
-    throw new Error('No valid fields to update.')
+const updateUser = async (userId, fieldName, fieldValue) => {
+  if (!USER_FIELD_NAMES.includes(fieldName)) {
+    throw new Error(`Invalid field name: ${fieldName}`);
   }
-
-  const setClause = sanitizedFields
-    .map((field, index) => `"${field}" = $${index + 1}`)
-    .join(', ')
-
-  const values = sanitizedFields.map(field => updatedFields[field])
 
   const query = `
     UPDATE users
-    SET ${setClause}
-    WHERE userid = $${values.length + 1}
+    SET "${fieldName}" = $1
+    WHERE userid = $2
     RETURNING *;
   `
 
-  const result = await db.query(query, [...values, userId])
+  const result = await db.query(query, [fieldValue, userId])
 
   if (result.rowCount === 0) {
     throw new Error('User not found or update failed.')

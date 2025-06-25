@@ -119,35 +119,39 @@ router.post('/login', async (req, res) => {
 router.patch('/:userId', async (req, res) => {
   try {
     const { userId } = req.params
-    const updatedFields = req.body
+    const fieldsToUpdate = Object.keys(req.body)
 
-    // Check if required fields are present
-    if (!userId || !updatedFields) {
+    if (fieldsToUpdate.length !== 1) {
       return res.status(400).json({
         status: 'error',
-        message: 'Missing required fields.',
+        message: 'Only one field can be updated at a time for this endpoint.',
       })
     }
 
-    // Update the user in the database
-    const updatedUser = await userService.updateUser(userId, updatedFields)
+    const fieldName = fieldsToUpdate[0]
+    const fieldValue = req.body[fieldName]
 
-    // If user is not found, return a 404 error
-    if (!updatedUser) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'User not found.',
-      })
-    }
+    const updatedUser = await userService.updateUser(userId, fieldName, fieldValue)
 
-    // Send the response with the updated user
     res.status(200).json({
       status: 'success',
-      message: 'Profile updated successfully',
+      message: `User ${fieldName} updated successfully`,
       user: updatedUser,
     })
   } catch (err) {
-    console.error(err)
+    console.error('Error updating user:', err.message)
+    if (err.message.includes('User not found')) {
+      return res.status(404).json({
+        status: 'error',
+        message: err.message,
+      });
+    }
+    if (err.message.includes('Invalid field name')) {
+      return res.status(400).json({
+        status: 'error',
+        message: err.message,
+      })
+    }
     res.status(500).json({
       status: 'error',
       message: 'Failed to update user profile.',

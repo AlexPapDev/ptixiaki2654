@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Breadcrumbs, Textarea, Stack, Button, Anchor, Text, Title, Group, Loader, Center } from '@mantine/core' // Added Loader and Center for loading state
 import EditButton from './EditButton'
-import AddButton from './AddButton'
+import AddButtonIcon from './AddButtonIcon'
 import AddMonumentEraForm from './AddMonumentEraForm'
 import useEras from '../hooks/useEras'
 import useDataStore from '../utils/DataStore'
@@ -60,7 +60,7 @@ const MonumentEras = ({ monumentId, initialMonumentEras = [] }) => {
         {isViewing && (
           <Group>
             <EditButton onEdit={() => setIsEditing(true)} />
-            <AddButton onClick={() => setIsAdding(true)} />
+            <AddButtonIcon onClickCustom={() => setIsAdding(true)} />
           </Group>
         )}
       </Group>
