@@ -56,7 +56,6 @@ const useUserStore = create((set) => ({
     }
   },
 
-
   signupUser: async (userData) => {
     set({ isLoading: true, error: null })
     try {
