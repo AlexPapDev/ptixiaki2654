@@ -2,7 +2,6 @@ import { useForm } from '@mantine/form'
 import { Select, Textarea, Button, Stack } from '@mantine/core'
 
 const AddMonumentEraForm = ({ availableEras, onAdd }) => {
-
   const form = useForm({
     initialValues: {
       eraid: '',

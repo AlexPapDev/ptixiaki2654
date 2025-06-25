@@ -4,7 +4,7 @@ import { Box, Grid, TextInput, Text, Card,  Group, Title, Button, ActionIcon } f
 import { Search } from 'lucide-react'
 import ListCard from './ListCard'
 import useDataStore from '../utils/DataStore'
-const FollowingLists = () => {
+const FollowingLists = ({hideSearch = false}) => {
   const { user } = useAuthStore()
   const [lists, setLists] = useState([])
   const [tempSearchText, setTempSearchText] = useState('')
@@ -16,7 +16,6 @@ const FollowingLists = () => {
       setLoading(true)
       try {
         const lists = await getFollowedLists(searchText)
-        debugger
         setLists(lists)
       } catch (err) {
         console.error('Error fetching Following lists:', err)
@@ -33,7 +32,7 @@ const FollowingLists = () => {
     setSearchText(tempSearchText)
   }
   return (<Box >
-    <Group mt="lg" mb="md" justify="space-between">
+    {!hideSearch && <Group mt="lg" mb="md" justify="space-between">
       <Text size="lg" fw={700}>Search lists you are following</Text>
       <TextInput
         placeholder="e.g churches"
@@ -45,7 +44,7 @@ const FollowingLists = () => {
           </ActionIcon>
         }
       />
-    </Group>
+    </Group>}
 
     <Grid>
       {lists.map(list => (<Grid.Col span={4}><ListCard list={list}/></Grid.Col>))}

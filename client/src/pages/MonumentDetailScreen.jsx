@@ -15,7 +15,7 @@ import {
 } from '@mantine/core'
 import useMonumentDetail from '../hooks/useMonumentDetail'
 import useDeleteMonument from '../hooks/useDeleteMonument'
-import useAddMonumentPhoto from '../hooks/useAddMonumentPhoto'
+import useAddPhoto from '../hooks/useAddPhoto'
 import MonumentDetailGrid from '../components/MonumentDetailGrid'
 import MonumentDetailMap from '../components/MonumentDetailMap'
 import WorkingHours from '../components/WorkingHours'
@@ -36,7 +36,7 @@ const MonumentDetail = () => {
     navigate('/monuments', { replace: true })
   })
 
-  const { handleAddPhoto } = useAddMonumentPhoto(monumentId,  () => {
+  const { addMonumentPhoto } = useAddPhoto(monumentId,  () => {
     toast.success('Photo added succesfully  successfully!', { position: 'top-right' })
     window.location.reload()
   })
@@ -51,7 +51,6 @@ const MonumentDetail = () => {
 
   const loggedIn = isLoggedIn()
   const monumenteras = monument.monumenteras
-  const hasEras = monumenteras?.length
   return (
     <Container pb="xl">
       <Group pt="lg">
@@ -65,7 +64,7 @@ const MonumentDetail = () => {
       <Grid>
         <Grid.Col span={7}>
           <MonumentDetailActions loggedIn={loggedIn} 
-            handleAddPhoto={handleAddPhoto}
+            handleAddPhoto={addMonumentPhoto}
             handleDelete={handleDeleteClick}
             monumentId={monumentId}
           />
@@ -90,10 +89,8 @@ const MonumentDetail = () => {
           </Box>
         </Grid.Col>
       </Grid>
-      {hasEras && (<>
-        <Divider mt="md" pb="md" />
-        <MonumentEras monumenteras={monumenteras}/>
-      </>)}
+      <Divider mt="md" pb="md" />
+      <MonumentEras monumentId={monumentId} initialMonumentEras={monumenteras}/>
     </Container>
   )
 }

@@ -4,7 +4,7 @@ import { Bookmark, Share, Camera, Trash2 } from 'lucide-react'
 import AddImagesButton from './AddImagesButton'
 import AddToListButton from './AddToListButton'
 const MonumentDetailActions = ({handleDelete, handleAddPhoto, loggedIn = false, monumentId}) => {
-  return (<Group>
+  return (<Group pt="lg" pb="sm">
     <AddToListButton monumentId={monumentId}/>
     {/* <Button color="teal" leftSection={<Bookmark size={14} />}>Save</Button> */}
     <AddImagesButton onChange={handleAddPhoto}/>

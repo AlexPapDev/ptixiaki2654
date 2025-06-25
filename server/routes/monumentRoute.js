@@ -35,6 +35,25 @@ router.post('/get-address', async (req, res) => {
   }
 })
 
+router.post('/add-monument-era', async (req, res) => {
+  console.log('add monument era')
+  const { monumentid, description, eraid } = req.body
+  try {
+    const data = await monumentService.addMonumentEras(monumentid, [{description, eraid}])
+    console.log('monumentService.addMonumentEras result', data)
+    return res.status(201).json({
+      status: 'success',
+      data,
+    })
+  } catch (e) {
+    console.error(e.message)
+    return res.status(500).json({
+      status: 'error',
+      message: 'Failed to add monument era',
+    })
+  }
+})
+
 // Create a new monument
 router.post('/', upload.array('image', 5), async (req, res) => {
   try {
@@ -66,14 +85,11 @@ router.post('/', upload.array('image', 5), async (req, res) => {
       return res.status(404).json({ status: 'error', message: 'User not found.' })
     }
 
-    // Determine approval status
     const isApproved = INSTANT_CREATION_ROLES.includes(user.role)
     const status = isApproved ? 'approved' : 'pending'
 
-    // Get address details (ensure function handles errors gracefully)
     const address = await getAddressDetails(lat, lon)
     
-    // Process name transformations
     const name_noaccents = removeGreekTonos(name)
     const name_greeklish = transliterateString(name)
 
@@ -209,7 +225,7 @@ router.get('/eras', async (req, res) => {
     res.status(200).json({
       data: result,
       status: 'success',
-      message: 'Photos added successfully to the monument.',
+      message: 'fetched eras added successfully',
     })
   } catch (err) {
     console.error('Error fetching eras:', err);

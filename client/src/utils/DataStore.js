@@ -73,9 +73,9 @@ const useDataStore = create((set, get) => ({
     set({ isCreatingMonument: true, monumentCreationError: null })
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.post(`${API_BASE_URL}/api/monuments/`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
-      })
+      const response = await axios.post(`${API_BASE_URL}/api/monuments/`, 
+        formData, 
+        { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }})
       set({ isCreatingMonument: false })
       return { success: true, data: response.data }
     } catch (error) {
@@ -240,7 +240,6 @@ const useDataStore = create((set, get) => ({
 
   unfollowList: async (listId) => {
     try {
-      debugger
       const token = localStorage.getItem('token')
       const response = await axios.delete(`${API_BASE_URL}/api/lists/unfollow/${listId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -267,7 +266,7 @@ const useDataStore = create((set, get) => ({
     }
   },
 
-    getFollowedLists: async (searchText = '') => {
+  getFollowedLists: async (searchText = '') => {
     set({ loadingLists: true, loadListsError: null, lists: [] })
     try {
       const token = localStorage.getItem('token')
@@ -298,10 +297,24 @@ const useDataStore = create((set, get) => ({
   getEras: async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/monuments/eras`)
+      debugger
       return response.data
       // return []
     } catch (error) {
       console.error('Error fetching eras:', error)
+    }
+  },
+
+  addMonumentEra: async (monumentid, monumentEra) => {
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.post(`${API_BASE_URL}/api/monuments/add-monument-era`, 
+        { monumentid, ...monumentEra },
+        { headers: { Authorization: `Bearer ${token}` }}
+      )
+      return response
+    } catch (error) {
+      console.error('Error adding monument eras', error)
     }
   }
 }))

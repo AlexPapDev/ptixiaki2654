@@ -1,15 +1,15 @@
 import bcrypt from 'bcrypt'
 import crypto from 'crypto'
-import db from '../config/db.js'
+import db from '../config/db.js' // Assuming this path is correct for your database connection
 import nodemailer from 'nodemailer'
 import jwt from 'jsonwebtoken'
+import { uploadToCloudinary } from '../utils/helpers.js'
 const USER_FIELD_NAMES = [
   'firstname',
   'lastname',
   'email',
   'profileimageurl',
 ]
-// Create a new user
 const createUser = async (firstname, lastname, email, password, role) => {
   const existingUser = await db.query('SELECT * FROM users WHERE email = $1', [email])
   if (existingUser.rows.length > 0) {
@@ -21,12 +21,11 @@ const createUser = async (firstname, lastname, email, password, role) => {
   const otpExpiry = _minutesFromNow(30)
 
   try {
-    // Start a transaction
     await db.query('BEGIN')
 
     const newUser = await db.query(`
-      INSERT INTO users (firstname, lastname, email, hashedpassword, otp, otpexpiry, role) 
-      VALUES($1, $2, $3, $4, $5, $6, $7) 
+      INSERT INTO users (firstname, lastname, email, hashedpassword, otp, otpexpiry, role)
+      VALUES($1, $2, $3, $4, $5, $6, $7)
       RETURNING *`,
       [firstname, lastname, email, hashedPassword, otp, otpExpiry, role],
     )
@@ -37,11 +36,50 @@ const createUser = async (firstname, lastname, email, password, role) => {
     return newUser.rows[0]
   } catch (error) {
     await db.query('ROLLBACK')
+    console.error('Error creating user:', error);
     throw error
   }
 }
 
-// Send OTP email
+const addUserPhoto = async (userId, imageUrl) => {
+  await db.query(
+    `UPDATE users
+    SET profileimageurl = $1
+    WHERE userId = $2`,
+    [imageUrl, userId]
+  )
+}
+
+const uploadUserProfilePhoto = async (userId, fileBuffer) => {
+  if (!userId) {
+    throw new Error('Missing userId for photo upload.')
+  }
+  if (!fileBuffer) {
+    throw new Error('No image file buffer provided for upload.')
+  }
+
+  try {
+    await db.query('BEGIN');
+
+    const user = await getUserByField('userid', userId)
+    if (!user) {
+      throw new Error('User not found.')
+    }
+
+    const imageUrl = await uploadToCloudinary(fileBuffer, 'ptixiaki')
+    console.log(`Cloudinary URL for user ${userId}: ${imageUrl}`);
+
+    await addUserPhoto(userId, imageUrl)
+
+    await db.query('COMMIT');
+    return { success: true, message: 'User photo added successfully.' };
+  } catch (error) {
+    await db.query('ROLLBACK');
+    console.error(`Error in uploadUserProfilePhoto for user ${userId}:`, error.message);
+    throw new Error(`Failed to upload user photo: ${error.message}`);
+  }
+}
+
 const sendOtp = async (email, otp) => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -63,6 +101,7 @@ const sendOtp = async (email, otp) => {
 
   try {
     await transporter.sendMail(message)
+    console.log(`OTP sent to ${email}`)
   } catch (error) {
     console.error('Error sending OTP:', error)
     throw error
@@ -70,7 +109,7 @@ const sendOtp = async (email, otp) => {
 }
 
 const validateOtp = async (email, otp) => {
-  console.log('validateOtp')
+  console.log('Validating OTP for email:', email)
   const result = await db.query(
     'SELECT userid FROM users WHERE email = $1 AND otp = $2 AND otpExpiry > NOW()',
     [email, otp]
@@ -80,43 +119,36 @@ const validateOtp = async (email, otp) => {
     return { success: false, message: "Invalid OTP or expired" }
   }
 
-  // Invalidate OTP after successful validation
-  await db.query('UPDATE users SET otp = NULL WHERE email = $1', [email])
-  console.log(email, otp, result.rows)
+  await db.query('UPDATE users SET otp = NULL, otpexpiry = NULL WHERE email = $1', [email])
+  console.log(`OTP validated successfully for email: ${email}`)
   return { success: true, message: "OTP validated successfully", user: result.rows[0] }
 }
 
-// Get user by email
 const getUserByField = async (fieldName, fieldValue, includePrivateFields = false) => {
-  const result = await db.query(`SELECT * FROM users WHERE ${fieldName} = $1`, [fieldValue])
-  
-  // Check if the user exists
+  console.log('getUserByField', fieldName, fieldValue)
+  const result = await db.query(`SELECT * FROM users WHERE "${fieldName}" = $1`, [fieldValue])
+  console.log('result', result)
   if (result.rowCount === 0) return null
-  
+  console.log('here')
   const user = result.rows[0]
   const userBase = getUserPublicWithCalculatedFields(user)
-  // Process the user to include the calculated field
   return includePrivateFields ? { ...userBase, ...user } : userBase
 }
 
-// Update user fields
 const updateUser = async (userId, updatedFields) => {
-  // Step 1: Validate the fields against the allowed field names (USER_FIELD_NAMES)
   const sanitizedFields = Object.keys(updatedFields)
-    .filter(fieldName => USER_FIELD_NAMES.includes(fieldName)) // Allow only valid fields
+    .filter(fieldName => USER_FIELD_NAMES.includes(fieldName))
 
   if (sanitizedFields.length === 0) {
-    throw new Error('No valid fields to update')
+    throw new Error('No valid fields to update.')
   }
 
-  // Step 2: Prepare the query dynamically based on sanitized fields
   const setClause = sanitizedFields
     .map((field, index) => `"${field}" = $${index + 1}`)
     .join(', ')
 
   const values = sanitizedFields.map(field => updatedFields[field])
 
-  // Step 3: Perform the update query
   const query = `
     UPDATE users
     SET ${setClause}
@@ -127,27 +159,24 @@ const updateUser = async (userId, updatedFields) => {
   const result = await db.query(query, [...values, userId])
 
   if (result.rowCount === 0) {
-    throw new Error('User not found or update failed')
+    throw new Error('User not found or update failed.')
   }
 
-  // Step 4: Return the updated user object
   return result.rows[0]
 }
 
 const verifyToken = async (token) => {
   try {
-    console.log('verify')
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     const userId = decoded.id
 
-    const user = await getUserByField('userId', userId)
+    const user = await getUserByField('userid', userId)
 
     if (!user) {
-      throw new Error('User not found')
+      throw new Error('User not found.')
     }
     return user
   } catch (error) {
-    console.log('Token verification failed:', error.message)
     console.error('Token verification failed:', error.message)
     return null
   }
@@ -166,15 +195,16 @@ const _getHasVerifiedOtp = (user) => {
 }
 
 const getAllUsers = async () => {
-  return await db.query('SELECT * FROM users')
+  const result = await db.query('SELECT * FROM users')
+  return result.rows.map(getUserPublicWithCalculatedFields);
 }
 
 const getUserPublicWithCalculatedFields = (user) => {
   return {
     ...user,
-    otp: null,
-    otpexpiry: null,
-    hashedpassword: null,
+    otp: undefined,
+    otpexpiry: undefined,
+    hashedpassword: undefined,
     hasVerifiedOtp: _getHasVerifiedOtp(user)
   }
 }
@@ -189,21 +219,21 @@ const randomInt = (min, max) => {
 
   const range = max - min
 
-  // Generate a random integer between 0 (inclusive) and range (exclusive)
-  const randomBytes = crypto.randomBytes(4) // 4 bytes for a 32-bit integer
-  const randomInt = randomBytes.readUInt32BE(0) // Read as an unsigned 32-bit integer
+  const randomBytes = crypto.randomBytes(4)
+  const randomValue = randomBytes.readUInt32BE(0)
 
-  // Scale the random integer into the desired range
-  return min + (randomInt % range)
+  return min + (randomValue % range)
 }
 
-export default { 
+export default {
   createUser,
   getUserByField,
+  addUserPhoto,
   updateUser,
   comparePasswords,
   getAllUsers,
   validateOtp,
   getUserPublicWithCalculatedFields,
   verifyToken,
+  uploadUserProfilePhoto,
 }

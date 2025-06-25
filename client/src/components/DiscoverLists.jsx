@@ -16,7 +16,6 @@ const DiscoverLists = () => {
       setLoading(true)
       try {
         const lists = await getDiscoverLists(searchText)
-        debugger
         setLists(lists)
       } catch (err) {
         console.error('Error fetching my lists:', err)

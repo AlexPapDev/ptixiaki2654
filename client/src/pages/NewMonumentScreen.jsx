@@ -11,6 +11,7 @@ import NewMonumentMap from '../components/NewMonumentMap'
 import NewMonumentForm from '../components/NewMonumentForm'
 import AddMonumentEraForm from '../components/AddMonumentEraForm'
 
+import useEras from '../hooks/useEras'
 const NewMonument = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { lat, lng } = Object.fromEntries(searchParams)
@@ -29,28 +30,8 @@ const NewMonument = () => {
   })
 
   const [monumentEras, setMonumentEras] = useState([])
-  const [availableEras, setAvailableEras] = useState([])
+  const { availableEras, loadingEras, errorEras } = useEras()
 
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001';
-
-  useEffect(() => {
-    const fetchEras = async () => {
-      try {
-        setLoading(true); // You might want a separate loading state for this, or just re-use.
-        const response = await getEras() // Adjust API endpoint based on your backend
-        if (!response.data) {
-          throw new Error('Failed to fetch eras');
-        }
-        setAvailableEras(response.data); // Assuming data is an array of { eraId, name, description }
-      } catch (err) {
-        console.error('Error fetching eras:', err);
-        toast.error('Failed to load eras. Please try again.', { position: 'top-right' });
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchEras()
-  }, [API_BASE_URL])
 
   const handleMarkerDragEnd = useCallback(
     (event) => {
@@ -103,14 +84,14 @@ const NewMonument = () => {
           )} // Filter out eras already added
           onAdd={(newEraDetails) => {
             setMonumentEras((prev) => [...prev, newEraDetails]);
-            modals.closeAll(); // Close the modal after adding
+            modals.closeAll() // Close the modal after adding
           }}
         />
       ),
       centered: true,
       size: 'lg',
-    });
-  };
+    })
+  }
 
   // Function to handle removing an era description
   const handleRemoveEra = (eraIdToRemove) => {

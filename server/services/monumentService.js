@@ -104,23 +104,49 @@ const addMonumentCategories = async (monumentId, categoryIds, isUpdate = false) 
   }
 }
 
-const addMonumentEras = async (monumentId, monumentEras) => {
-  const placeholders = monumentEras.map((_, index) => {
+const addMonumentEras = async (monumentId, newMonumentEras = []) => {
+  const placeholders = newMonumentEras.map((_, index) => {
     const eraIdPlaceholder = `$${2 * index + 2}`; // eraid starts from $2, then $4, etc.
     const descriptionPlaceholder = `$${2 * index + 3}`; // description starts from $3, then $5, etc.
     return `($1, ${eraIdPlaceholder}, ${descriptionPlaceholder})`;
   }).join(', ');
 
-  const values = monumentEras.flatMap(era => [era.eraid, era.description])
-  console.log(monumentId, values, placeholders)
-  const query = `
+  const values = newMonumentEras.flatMap(era => [era.eraId, era.eraMonumentDescription])
+
+  const insertQuery = `
     INSERT INTO monumenteradetails (monumentid, eraid, eramonumentdescription)
     VALUES ${placeholders}
     RETURNING *;
   `
 
-  const result = await db.query(query, [monumentId, ...values]);
-  return result.rows
+  try {
+    await db.query(insertQuery, [monumentId, ...values]);
+
+    const fetchErasQuery = `
+      SELECT
+        json_agg(
+          DISTINCT jsonb_build_object(
+            'id', med.id,
+            'monumentId', med.monumentId,
+            'eraId', med.eraId,
+            'eraMonumentDescription', med.eraMonumentDescription,
+            'eraDescription', e.eradescription,
+            'eraName', e.name,
+            'eraOrder', e.eraorder
+          )
+        ) FILTER (WHERE med.id IS NOT NULL) AS monumenteras
+      FROM monumenteradetails med
+      LEFT JOIN eras e ON med.eraId = e.eraId
+      WHERE med.monumentId = $1;
+    `;
+
+    const result = await db.query(fetchErasQuery, [monumentId])
+
+    return result.rows[0]?.monumenteras || []
+  } catch (error) {
+    console.error('Error adding monument eras:', error);
+    throw error; // Re-throw the error for handling by the caller
+  }
 }
 
 const updateMonumentEra = async (id, eramonumentdescription) => {

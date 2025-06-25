@@ -18,7 +18,6 @@ const AddToListButton = ({loggedIn = false, monumentId, isIcon = false}) => {
     })
   }
   const openCreateListModal = () => {
-    debugger
     const id = modals.openModal({
       title: 'Create New List',
       centered: true,

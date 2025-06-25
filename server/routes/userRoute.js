@@ -4,7 +4,7 @@ import userService from '../services/userService.js'
 import { body, validationResult } from 'express-validator'
 import jwt from 'jsonwebtoken'
 import upload from '../utils/fileUpload.js'
-import { uploadToCloudinary } from '../utils/helpers.js'
+
 
 dotenv.config()
 const router = express.Router()
@@ -26,6 +26,39 @@ router.get('/', async (req, res) => {
     res.status(500).send({ error: 'Internal server error' })
   }
 })
+
+router.post('/:userId/add-photo', upload.single('image'), async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    if (!userId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Missing userId in the request parameters.',
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'No image file provided for upload.',
+      });
+    }
+
+    await userService.uploadUserProfilePhoto(userId, req.file.buffer)
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Photo added successfully to user profile.',
+    });
+  } catch (error) {
+    console.error('Error in /:userId/add-photo route:', error.message);
+    res.status(500).json({
+      status: 'error',
+      message: `Failed to add user photo: ${error.message}`,
+    });
+  }
+});
 
 // Route to create a new user (POST /users)
 router.post('/', [

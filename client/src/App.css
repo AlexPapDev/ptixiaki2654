@@ -224,3 +224,13 @@ li {
   height: calc(100vh - var(--map-height-top-distance_no-categories) + 2px);
   overflow: hidden;
 }
+
+.profile-height {
+  padding: 0px;
+  position: sticky;
+  /* width: 35vw; */
+  top: calc(var(--map-height-top-distance_no-categories));
+  height: calc(100vh - var(--map-height-top-distance_no-categories) - 14px);
+  min-height: calc(100vh - var(--map-height-top-distance_no-categories + 16px));
+  overflow-y: hidden;
+}
