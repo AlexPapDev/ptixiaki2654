@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Text, Textarea, Stack, Group, Button } from '@mantine/core'
 import EditButton from './EditButton'
 import useDataStore from '../utils/DataStore'
-const ListDetailDescription = ({ listId, initialDescription, onSave }) => {
+const ListDetailDescription = ({ listId, initialDescription, showEdit }) => {
   const { editList } = useDataStore()
   const [isEditing, setIsEditing] = useState(false)
   const [editedDescription, setEditedDescription] = useState(initialDescription)
@@ -33,7 +33,7 @@ const ListDetailDescription = ({ listId, initialDescription, onSave }) => {
       {!isEditing ? (
         <Group style={{ position: 'relative' }} justify="space-between">
           <Text fw={600} style={{maxWidth: '85%'}}>{savedDescription || 'No description available.'}</Text>
-          <EditButton onEdit={handleEditClick} />
+          {showEdit && <EditButton onEdit={handleEditClick} />}
         </Group>
       ) : (
         <Stack>
