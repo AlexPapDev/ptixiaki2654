@@ -1,19 +1,21 @@
-import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Container, Divider, Textarea, Title, Radio, Group, Text, Button, TextInput } from '@mantine/core'
+import { Container, Textarea, Title, Button, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import useDataStore from '../utils/DataStore'
-const CreateListModal = ({ id, context, close, suppressNavigate = false }) => {
+import PrivacyToggle from './PrivacyToggle'
+
+const CreateListModal = ({ close, suppressNavigate = false }) => {
   const { createList } = useDataStore()
   const navigate = useNavigate()
+
   const form = useForm({
     initialValues: {
       listName: '',
       description: '',
-      privacy: 'public', 
+      privacy: 'public',
     },
-    rules: {
-      listName: (value) => value.trim().length > 0,
+    validate: {
+      listName: (value) => (value.trim().length > 0 ? null : 'List name cannot be empty'),
     },
   })
 
@@ -27,11 +29,13 @@ const CreateListModal = ({ id, context, close, suppressNavigate = false }) => {
 
     const { success, error, data } = await createList(dataPayload)
     if (success) {
-      const { listid } = data
-      if (!suppressNavigate) navigate(`/list/${listid}`)
+      const { listid } = data 
+      if (!suppressNavigate) {
+        navigate(`/list/${listid}`)
+      }
       close()
     } else {
-      console.log(error)
+      console.error('Failed to create list:', error)
     }
   }
 
@@ -46,6 +50,8 @@ const CreateListModal = ({ id, context, close, suppressNavigate = false }) => {
           required
           {...form.getInputProps('listName')}
         />
+        {form.errors.listName && <div style={{ color: 'red', fontSize: '0.8em', marginTop: '-10px', marginBottom: '10px' }}>{form.errors.listName}</div>}
+
         <Textarea
           label="Description"
           name="description"
@@ -55,17 +61,11 @@ const CreateListModal = ({ id, context, close, suppressNavigate = false }) => {
           mb="md"
           {...form.getInputProps('description')}
         />
-        <Radio.Group
-          name="privacy"
-          withAsterisk
-          defaultValue="public"
-          {...form.getInputProps('privacy')}
-        >
-          <Group mt="xs">
-            <Radio value="public" label="Public" />
-            <Radio value="private" label="Private" />
-          </Group>
-        </Radio.Group>
+
+        <PrivacyToggle
+          value={form.values.privacy}
+          onChange={(value) => form.setFieldValue('privacy', value)}
+        />
         <Button type="submit" mt="md">Create List</Button>
       </form>
     </Container>
