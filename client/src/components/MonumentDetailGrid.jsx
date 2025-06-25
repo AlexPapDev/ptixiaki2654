@@ -3,7 +3,6 @@ import { getCloudinaryUrl } from '../utils/helpers'
 import { DEFAULT_IMAGE } from '../utils/constants'
 
 const MonumentDetailGrid = ({ images = [] }) => {
-  // const images = getCloudinaryUrl(images, { width: 1000 })
   const imageUrls = [...getCloudinaryUrl(images, { width: 1000 }), ...Array(Math.max(0, 5 - images.length)).fill(DEFAULT_IMAGE)]
   return (
     <Box mt="md" className="test-box" style={{
