@@ -38,8 +38,9 @@ router.post('/get-address', async (req, res) => {
 router.post('/add-monument-era', async (req, res) => {
   console.log('add monument era')
   const { monumentid, description, eraid } = req.body
+  console.log('req.body', req.body)
   try {
-    const data = await monumentService.addMonumentEras(monumentid, [{description, eraid}])
+    const data = await monumentService.addMonumentEras(monumentid, [{eraMonumentDescription: description, eraId: eraid}])
     console.log('monumentService.addMonumentEras result', data)
     return res.status(201).json({
       status: 'success',
@@ -53,6 +54,42 @@ router.post('/add-monument-era', async (req, res) => {
     })
   }
 })
+
+router.patch('/edit-monument-era/:id', async (req, res) => {
+  console.log('edit monument era');
+  const { id } = req.params;
+  const { description } = req.body;
+
+  if (!description) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Description is required.',
+    });
+  }
+
+  try {
+    const updatedEra = await monumentService.updateMonumentEra(id, description);
+
+    if (!updatedEra) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Monument era not found.',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: { era: updatedEra },
+    });
+  } catch (error) {
+    console.error(`Error updating monument era: ${error.message}`);
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to update monument era.',
+    });
+  }
+});
+
 
 // Create a new monument
 router.post('/', upload.array('image', 5), async (req, res) => {

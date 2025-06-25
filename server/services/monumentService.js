@@ -153,8 +153,7 @@ const updateMonumentEra = async (id, eramonumentdescription) => {
   try {
     const query = `
       UPDATE monumenteradetails
-      SET eramonumentdescription = $1,
-        updatedDate = CURRENT_TIMESTAMP
+      SET eramonumentdescription = $1
       WHERE id = $2
       RETURNING *;
     `;

@@ -316,6 +316,21 @@ const useDataStore = create((set, get) => ({
     } catch (error) {
       console.error('Error adding monument eras', error)
     }
+  },
+
+  updateMonumentEra: async (monumentEraId, newDescription) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.patch(
+        `${API_BASE_URL}/api/monuments/edit-monument-era/${monumentEraId}`,
+        { description: newDescription },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      return response;
+    } catch (error) {
+      console.error('Error updating monument era:', error)
+      throw error;
+    }
   }
 }))
 
