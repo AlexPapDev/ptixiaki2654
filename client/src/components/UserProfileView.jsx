@@ -11,7 +11,8 @@ import useUserStore from '../stores/domain/UserStore'
 import EditButton from '../components/EditButton'
 import ConfirmButtonIcon from './ConfirmButtonIcon'
 import CancelButtonIcon from './CancelButtonIcon'
-const EditableText = ({ initialValue, label, fieldKey, onSave }) => {
+import useAuthStore from '../utils/AuthStore'
+const EditableText = ({ initialValue, label, fieldKey, onSave, canEdit = false }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [value, setValue] = useState(initialValue)
 
@@ -50,17 +51,15 @@ const EditableText = ({ initialValue, label, fieldKey, onSave }) => {
             style={{ flexGrow: 1 }}
             autoFocus // Automatically focus the input when in edit mode
           />
-          {/* Save button */}
+
           <ConfirmButtonIcon handleSave={handleSave} />
-          {/* Cancel button */}
           <CancelButtonIcon onClickCustom={() => { setValue(initialValue); setIsEditing(false); }} />
         </>
       ) : (
         <>
-          {/* Display mode */}
           <Text size="sm" fw={500} style={{ minWidth: '60px' }}>{label}:</Text>
           <Text size="md" style={{ flexGrow: 1 }}>{value}</Text>
-          <EditButton onEdit={() => setIsEditing(true)} />
+          {canEdit && <EditButton onEdit={() => setIsEditing(true)} />}
         </>
       )}
     </Group>
@@ -79,17 +78,19 @@ const ProfileActionButton = ({ text, Icon, onClick }) => {
   )
 }
 
-const UserProfileView = ({ user }) => {
+const UserProfileView = ({ user: profileUser }) => {
   const theme = useMantineTheme()
   const fileDialog = useFileDialog()
-  const imageSrc = getCloudinaryUrl(user.profileimageurl)
+  const { user } = useAuthStore()
+  const isOwnProfile = user && user?.userid === profileUser?.userid
+  const imageSrc = getCloudinaryUrl(profileUser.profileimageurl)
 
-  // Get updateUserProfile from your user store
+  // Get updateUserProfile from your profileUser store
   const { updateUserProfile } = useUserStore()
 
   // Callback for updating a single field
   const handleFieldUpdate = async (fieldKey, newValue) => {
-    const result = await updateUserProfile(user.userid, { [fieldKey]: newValue });
+    const result = await updateUserProfile(profileUser.userid, { [fieldKey]: newValue });
     if (result.success) {
       toast.success(`${fieldKey} updated successfully!`, { position: 'top-right' });
     } else {
@@ -97,7 +98,7 @@ const UserProfileView = ({ user }) => {
     }
   };
 
-  const { addProfilePhoto } = useAddPhoto(user.userid, () => {
+  const { addProfilePhoto } = useAddPhoto(profileUser.userid, () => {
     toast.success('Photo added successfully!', { position: 'top-right' })
     // Reloading window might be disruptive. Consider updating `currentUser` state directly if possible.
     window.location.reload()
@@ -115,9 +116,9 @@ const UserProfileView = ({ user }) => {
     addPhoto()
   }, [fileDialog?.files, addProfilePhoto, fileDialog])
 
-  if (!user) return <Text>Loading user data...</Text>
+  if (!profileUser) return <Text>Loading profileUser data...</Text>
 
-  const { firstname, lastname, email, role, createddate } = user
+  const { firstname, lastname, email, role, createddate } = profileUser
 
   return (
     <Grid className="full-height">
@@ -132,6 +133,7 @@ const UserProfileView = ({ user }) => {
               label="First Name"
               fieldKey="firstname"
               onSave={handleFieldUpdate}
+              canEdit={isOwnProfile}
             />
 
             {/* Editable Last Name */}
@@ -140,6 +142,7 @@ const UserProfileView = ({ user }) => {
               label="Last Name"
               fieldKey="lastname"
               onSave={handleFieldUpdate}
+              canEdit={isOwnProfile}
             />
 
             {/* Editable Email */}
@@ -148,6 +151,7 @@ const UserProfileView = ({ user }) => {
               label="Email"
               fieldKey="email"
               onSave={handleFieldUpdate}
+              canEdit={isOwnProfile}
             />
 
             {/* Non-editable fields like Role and Member Since */}
