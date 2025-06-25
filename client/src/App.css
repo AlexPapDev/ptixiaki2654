@@ -229,8 +229,8 @@ li {
   padding: 0px;
   position: sticky;
   /* width: 35vw; */
-  top: calc(var(--map-height-top-distance_no-categories));
-  height: calc(100vh - var(--map-height-top-distance_no-categories) - 14px);
+  top: 0px;
+  height: calc(100vh - var(--map-height-top-distance_no-categories));
   min-height: calc(100vh - var(--map-height-top-distance_no-categories + 16px));
   overflow-y: hidden;
 }
