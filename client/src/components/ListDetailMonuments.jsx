@@ -7,7 +7,7 @@ const ListDetailMonuments = ({ monuments = [] }) => {
   // const imageUrls = [...getCloudinaryUrl(images, { width: 1000 }), ...Array(Math.max(0, 5 - images.length)).fill(DEFAULT_IMAGE)]
   return (<Stack px="lg" py="lg" gap="sm" >
     <Text>{monuments.length} monuments</Text>
-    {monuments.map(monument => <ListMonumentCard monument={monument} />)}
+    {monuments.map(monument => <ListMonumentCard key={monument.monumentid} monument={monument} />)}
   </Stack>)
 }
 export default ListDetailMonuments
