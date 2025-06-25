@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TabButton from '../components/TabButton'
-import { TextInput, Button, Text, Container, Title, Group } from '@mantine/core'
+import { TextInput, Button, Text, Container, Title, Group,Divider } from '@mantine/core'
 import { Search, Newspaper, Library, Landmark } from 'lucide-react'
 import useAppStore from '../utils/AppStore'
+import DiscoverLists from '../components/DiscoverLists'
 const Home = () => {
   const [activeTab, setActiveTab] = useState('monuments')
   const [inputTerm, setInputTerm] = useState('')
@@ -11,7 +12,7 @@ const Home = () => {
   const { setSearchTerm } = useAppStore()
   const placeholder = `Search ${activeTab}`
 
-  const handleTabChange = (tab: string) => {
+  const handleTabChange = (tab) => {
     setActiveTab(tab)
   }
 
@@ -58,7 +59,7 @@ const Home = () => {
           Articles
         </TabButton>
       </Group>
-      <Group justify="center">
+      <Group justify="center" mb="lg">
         <TextInput
           mt="md"
           radius="100px"
@@ -84,6 +85,9 @@ const Home = () => {
           }
         />
       </Group>
+
+      
+      <DiscoverLists hideSearch />
     </Container>
   )
 }

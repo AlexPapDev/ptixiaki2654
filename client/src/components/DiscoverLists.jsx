@@ -5,7 +5,7 @@ import { Grid, Card,Group, Image, Box, ActionIcon, Text, TextInput } from '@mant
 import { Search } from 'lucide-react'
 
 import useDataStore from '../utils/DataStore'
-const DiscoverLists = () => {
+const DiscoverLists = ({hideSearch}) => {
   const [lists, setLists] = useState([])
   const [tempSearchText, setTempSearchText] = useState('')
   const [searchText, setSearchText] = useState(tempSearchText)
@@ -31,7 +31,7 @@ const DiscoverLists = () => {
     setSearchText(tempSearchText)
   }
   return (<Box >
-    <Group mt="lg" mb="md" justify="space-between">
+    {!hideSearch && <Group mt="lg" mb="md" justify="space-between">
       <Text size="lg" fw={700}>Search lists of other users</Text>
       <TextInput
         placeholder="e.g churches"
@@ -42,7 +42,7 @@ const DiscoverLists = () => {
           </ActionIcon>
         }
       />
-    </Group>
+    </Group>}
 
     <Text mb="sm">Latest lists</Text>
     <Grid>
