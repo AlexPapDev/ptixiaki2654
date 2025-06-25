@@ -7,10 +7,10 @@ const CreateListButton = ({loggedIn = false}) => {
   const modals = useModals()
 
   const openCreateListModal = () => {
-    modals.openModal({
+    const id = modals.openModal({
       title: 'Create New List',
       centered: true,
-      children: <CreateListModal />,
+      children: <CreateListModal close={() => modals.closeModal(id)}/>,
     })
   }
   return (
