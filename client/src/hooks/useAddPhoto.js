@@ -32,7 +32,7 @@ const useAddPhoto = (objectId, onSuccess) => {
     })
     try {
       debugger
-      const resulct = await axios.post(
+      const result = await axios.post(
         `${API_BASE_URL}/api/users/${objectId}/add-photo`,
         formData,
         {
