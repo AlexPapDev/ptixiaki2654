@@ -119,8 +119,8 @@ router.put('/:listId', authenticateUser, async (req, res) => {
     const fieldValue = req.body[fieldToUpdate]
     const allowedFields = ['name', 'description', 'is_public']
 
-    if (!allowedFields.includes(fieldName)) {
-      return res.status(400).json({ error: `Invalid field '${fieldName}' for update.` })
+    if (!allowedFields.includes(fieldToUpdate)) {
+      return res.status(400).json({ error: `Invalid field '${fieldToUpdate}' for update.` })
     }
 
     const updatedList = await listService.updateList(listId, userid, fieldToUpdate, fieldValue)

@@ -63,11 +63,6 @@ function MainLayout() {
 
   const showNavLinks = !isBiggerThanSm && (isMonumentsPage || isHomePage)
 
-  // Get the mainScrollRef from the context
-
-
-  console.log('isScrolledPastThreshold', isScrolledPastThreshold)
-
   // Now you can use textInputTopOffset and scrollPosition here to react in MainLayout or pass down to Navbar
   // Example: Log when the TextInput is within 50px of the viewport top
   const isTextInputNearTop = textInputTopOffset !== null && (textInputTopOffset - scrollPosition <= 100);
