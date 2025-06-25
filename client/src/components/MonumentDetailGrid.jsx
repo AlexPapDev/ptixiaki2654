@@ -1,7 +1,6 @@
-import React from 'react'
-import { Grid, Group, Image,Box, AspectRatio } from '@mantine/core'
+import { Grid, Image,Box, AspectRatio } from '@mantine/core'
 import { getCloudinaryUrl } from '../utils/helpers'
-const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
+import { DEFAULT_IMAGE } from '../utils/constants'
 
 const MonumentDetailGrid = ({ images = [] }) => {
   // const images = getCloudinaryUrl(images, { width: 1000 })

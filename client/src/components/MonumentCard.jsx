@@ -4,8 +4,7 @@ import { Text, Group, Card, Badge } from '@mantine/core'
 import MonumentMenu from './MonumentMenu'
 import { getCloudinaryUrl } from '../utils/helpers'
 import SquareImage from '../components/SquareImage'
-
-const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
+import { DEFAULT_IMAGE } from '../utils/constants'
 
 const MonumentCard = ({ monument, selected = false }) => {
   const { monumentid, name, description, address, images, categories } = monument

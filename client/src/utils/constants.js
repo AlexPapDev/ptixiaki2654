@@ -8,8 +8,12 @@ const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYWxleHBhcDI2NTQiLCJhIjoiY20ybHY0OTJoMGZq
 
 const CATEGORIES = ['Ancient', 'Roman', 'Ottoman', 'Byzantine', 'Christian', 'Jewish', 'Neoclassical', 'Contemporary', 'UNESCO Heritage', 'Industrial']
 
+const DEFAULT_IMAGE =
+  "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000";
+
 export {
   INIT_MAP_STATE,
   MAPBOX_ACCESS_TOKEN,
   CATEGORIES,
+  DEFAULT_IMAGE,
 }

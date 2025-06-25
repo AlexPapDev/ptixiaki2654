@@ -2,11 +2,10 @@ import React from 'react'
 import { Popup } from 'react-map-gl'
 import { Card, Image, Text} from '@mantine/core'
 import { getCloudinaryUrl } from '../utils/helpers'
-
+import { DEFAULT_IMAGE } from '../utils/constants'
 const MapMarkerPopup = ({markerPopupInfo, setMarkerPopupInfo}) => {
   const { longitude, latitude, name, description, images, main_image_url } = markerPopupInfo || {}
   const url = getCloudinaryUrl(images?.[0] || main_image_url, { width: 300 })
-  const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
 
   return (
     markerPopupInfo && <Popup

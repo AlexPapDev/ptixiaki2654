@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Card, Image, Grid, Text } from '@mantine/core'
 import SquareImage from '../components/SquareImage'
 import { getCloudinaryUrl } from '../utils/helpers'
-const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
+import { DEFAULT_IMAGE } from '../utils/constants'
 
 const ListCard = ({ list }) => {
   const { createdBy, listid } = list

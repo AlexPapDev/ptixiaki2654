@@ -2,7 +2,7 @@ import { AspectRatio, Text, Stack, Divider, Group, Image,Box } from '@mantine/co
 import { getCloudinaryUrl } from '../utils/helpers'
 import AddToListButton from './AddToListButton'
 import SquareImage from './SquareImage'
-const DEFAULT_IMAGE = "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000"
+import { DEFAULT_IMAGE } from '../utils/constants'
 
 const ListMonumentCard = ({ monument }) => {
   const imageUrl = getCloudinaryUrl(monument.main_image_url, { width: 300 })
