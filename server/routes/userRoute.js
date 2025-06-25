@@ -11,13 +11,14 @@ const router = express.Router()
 
 // Route to get all users (GET /users)
 router.get('/', async (req, res) => {
+  console.log('get user(s)', req.query)
   const userId = parseInt(req.query.id)
   const email = req.query.email
 
   let users
   try {
     if (!userId && !email) users = await userService.getAllUsers()
-    if (userId) users = await userService.getUserByField('userId', userId)
+    if (userId) users = await userService.getUserByField('userid', userId)
     if (email) users = await userService.getUserByField('email', email)
 
     res.json({ data: users })
@@ -115,7 +116,7 @@ router.post('/login', async (req, res) => {
 })
 
 // Route to update user information (PATCH /users/:userId)
-router.patch('/:userId', upload.single('image'), async (req, res) => {
+router.patch('/:userId', async (req, res) => {
   try {
     const { userId } = req.params
     const updatedFields = req.body
@@ -126,18 +127,6 @@ router.patch('/:userId', upload.single('image'), async (req, res) => {
         status: 'error',
         message: 'Missing required fields.',
       })
-    }
-
-    // If image is provided, upload it to Cloudinary
-    let imageUrl = null
-    console.log(req.body)
-    if (req.file) {
-      imageUrl = await uploadToCloudinary(req.file.buffer, 'user-profiles')
-    }
-
-    // Add imageUrl to updated fields if an image was uploaded
-    if (imageUrl) {
-      updatedFields.profileimageurl = imageUrl
     }
 
     // Update the user in the database

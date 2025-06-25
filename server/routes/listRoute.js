@@ -23,7 +23,6 @@ router.get('/me', authenticateUser, async (req, res) => {
     console.log('/lists/me')
     const { searchText } = req.query
     const lists = await listService.getListsByUser(req.user.userid, searchText)
-    console.log('my lists', req.user.userid, lists)
     res.json(lists)
   } catch (err) {
     console.error(err)
@@ -37,7 +36,6 @@ router.get('/following', authenticateUser, async (req, res) => {
     console.log('/lists/following')
     const { searchText } = req.query
     const lists = await listService.getFollowedListsByUser(req.user.userid, searchText)
-    console.log('my lists', req.user.userid, lists)
     res.json(lists)
   } catch (err) {
     console.error(err)

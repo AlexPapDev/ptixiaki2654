@@ -125,11 +125,8 @@ const validateOtp = async (email, otp) => {
 }
 
 const getUserByField = async (fieldName, fieldValue, includePrivateFields = false) => {
-  console.log('getUserByField', fieldName, fieldValue)
   const result = await db.query(`SELECT * FROM users WHERE "${fieldName}" = $1`, [fieldValue])
-  console.log('result', result)
   if (result.rowCount === 0) return null
-  console.log('here')
   const user = result.rows[0]
   const userBase = getUserPublicWithCalculatedFields(user)
   return includePrivateFields ? { ...userBase, ...user } : userBase
