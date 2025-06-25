@@ -48,14 +48,6 @@ const UserProfile = () => {
     }
   }
 
-  if (!isLoggedIn()) {
-    return (
-      <Container>
-        <Text>Log in to see this page</Text>
-      </Container>
-    )
-  }
-
   if (notFound) {
     return (
       <Container>
