@@ -3,50 +3,52 @@ import { Title, Group, Badge, Button, MultiSelect } from '@mantine/core'
 import EditButton from './EditButton'
 import { CATEGORIES } from '../utils/constants'
 import useDataStore from '../utils/DataStore'
+
 const MonumentDetailCategories = ({ monumentId, initialCategories = [], canEdit }) => {
   const [categories, setCategories] = useState(initialCategories);
   const [editing, setEditing] = useState(false);
   const [newCategories, setNewCategories] = useState(initialCategories)
   const { editMonumentCategories } = useDataStore()
+
   const handleEditClick = () => {
     setEditing(true)
-  };
+  }
 
   const handleCancelClick = () => {
     setEditing(false);
     setNewCategories(categories)
-  };
+  }
 
   const handleSaveClick = async () => {
     console.log(newCategories)
     const response = await editMonumentCategories(monumentId, newCategories)
-    // onSave(newCategories); // Call the onSave prop with the updated categories
     setCategories(newCategories)
     setEditing(false);
-  };
+  }
 
   const handleCategoriesChange = (values) => {
     setNewCategories(values);
-  };
+  }
 
-  // Assuming you have a way to fetch all available categories
   const availableCategories = CATEGORIES
 
-  return (
-    <>
-      <Group justify="space-between">
-        <Title order={3} pb="sm">Categories</Title>
-        {!editing ? (
-          <EditButton onEdit={handleEditClick} />
-        ) : (
-          <Group spacing="xs">
-            <Button onClick={handleSaveClick} size="sm">Save</Button>
-            <Button onClick={handleCancelClick} color="gray" size="sm">Cancel</Button>
-          </Group>
-        )}
-      </Group>
 
-      {editing ? (
+  const renderActionButtons = (canEdit) => {
+    if (editing) {
+      return (
+        <Group spacing="xs">
+          <Button onClick={handleSaveClick} size="sm">Save</Button>
+          <Button onClick={handleCancelClick} color="gray" size="sm">Cancel</Button>
+        </Group>
+      );
+    }
+    if (canEdit) return <EditButton onEdit={handleEditClick} />
+    return null
+  }
+
+  const renderCategoriesContent = () => {
+    if (editing) {
+      return (
         <MultiSelect
           label="Edit Categories"
           data={availableCategories} // Replace with your actual data source
@@ -63,18 +65,28 @@ const MonumentDetailCategories = ({ monumentId, initialCategories = [], canEdit 
             // Optionally update availableCategories here
           }}
         />
-      ) : (
-        <Group>
-          {categories && categories.map((categoryName) => (
-            <Badge key={`badge-${monumentId}-${categoryName}`} size="lg" color="green">
-              {categoryName}
-            </Badge>
-          ))}
-          {categories.length === 0 && <Badge color="dimmed">No categories assigned</Badge>}
-        </Group>
-      )}
-    </>
-  );
-};
+      );
+    }
+    return (
+      <Group>
+        {categories && categories.map((categoryName) => (
+          <Badge key={`badge-${monumentId}-${categoryName}`} size="lg" color="green">
+            {categoryName}
+          </Badge>
+        ))}
+        {categories.length === 0 && <Badge color="dimmed">No categories assigned</Badge>}
+      </Group>
+    )
+  }
 
+  return (
+    <>
+      <Group justify="space-between">
+        <Title order={3} pb="sm">Categories</Title>
+        {renderActionButtons(canEdit)}
+      </Group>
+      {renderCategoriesContent()}
+    </>
+  )
+}
 export default MonumentDetailCategories;
