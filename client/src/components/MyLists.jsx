@@ -16,7 +16,6 @@ const MyLists = () => {
       setLoading(true)
       try {
         const lists = await getUserLists(searchText)
-        debugger
         setLists(lists)
       } catch (err) {
         console.error('Error fetching my lists:', err)
