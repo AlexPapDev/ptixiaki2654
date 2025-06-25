@@ -13,7 +13,7 @@ const links = [
   { link: '/articles', label: 'Articles' },
 ]
 
-const Navbar = ({ isTextInputNearTop = false, toggleNavbar, navbarOpened }) => {
+const Navbar = ({ isTextInputNearTop = false, isHomePage, toggleNavbar, navbarOpened }) => {
   // console.log('isTextInputNearTop', isTextInputNearTop)
   const theme = useMantineTheme()
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
@@ -37,7 +37,7 @@ const Navbar = ({ isTextInputNearTop = false, toggleNavbar, navbarOpened }) => {
           
         </Group>
 
-        {!isTextInputNearTop && <Box px="md" style={{
+        {(!isTextInputNearTop || !isHomePage) && <Box px="md" style={{
           flex: '1 0 auto',
           minWidth: !isSmOrSmaller ? '348px' : null,
           maxWidth: !isSmOrSmaller ? '500px' : null,

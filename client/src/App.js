@@ -93,7 +93,7 @@ function MainLayout() {
     >
       <AppShell.Header>
         <Paper shadow="sm" radius="none">
-          <Navbar navbarOpened={navbarOpened} toggleNavbar={() => setNavbarOpened((o) => !o)} isTextInputNearTop={!isScrolledPastThreshold} />
+          <Navbar navbarOpened={navbarOpened} toggleNavbar={() => setNavbarOpened((o) => !o)} isTextInputNearTop={!isScrolledPastThreshold} isHomePage={isHomePage}/>
           {showCategoriesBar && <CategoriesBar hideClearFilters={isHomePage}/>}
           {showNavLinks && <CompactNav />}
         </Paper>
