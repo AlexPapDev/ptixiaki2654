@@ -37,8 +37,8 @@ const MonumentDetailCategories = ({ monumentId, initialCategories = [], canEdit 
     if (editing) {
       return (
         <Group spacing="xs">
-          <Button onClick={handleSaveClick} size="sm">Save</Button>
-          <Button onClick={handleCancelClick} color="gray" size="sm">Cancel</Button>
+          <Button onClick={handleSaveClick} color="teal" size="xs" >Save</Button>
+          <Button onClick={handleCancelClick} color="gray" size="xs">Cancel</Button>
         </Group>
       );
     }

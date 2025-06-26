@@ -26,7 +26,7 @@ const EditableStackItem = ({ day, hour, index, isPublic, onHourChange }) => {
           <Grid>
             <Grid.Col span={6}>
               <TextInput
-                size="sm"
+                size="xs"
                 label="Open"
                 type="time"
                 value={hour?.open_time || ''}
@@ -35,7 +35,7 @@ const EditableStackItem = ({ day, hour, index, isPublic, onHourChange }) => {
             </Grid.Col>
             <Grid.Col span={6}>
               <TextInput
-                size="sm"
+                size="xs"
                 label="Close"
                 type="time"
                 value={hour?.close_time || ''}
@@ -146,8 +146,8 @@ const WorkingHoursEditor = ({ initialHoursData, onSave, onCancel }) => {
         />
       ))}
       <Stack direction="row" justify="flex-end" mt="md">
-        <Button variant="outline" onClick={onCancel}>Cancel</Button>
-        <Button onClick={() => onSave(formatHoursForBackend())}>Save</Button>
+        <Button size="xs" variant="outline" onClick={onCancel}>Cancel</Button>
+        <Button size="xs" color="teal" onClick={() => onSave(formatHoursForBackend())}>Save</Button>
       </Stack>
     </Stack>
   )
