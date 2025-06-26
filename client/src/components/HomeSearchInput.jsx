@@ -1,41 +1,41 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { TextInput, Button, Text, Group } from '@mantine/core';
-import { Search, Newspaper, Library, Landmark } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { TextInput, Button, Text, Group, Paper } from '@mantine/core'
+import { Search, Newspaper, Library, Landmark } from 'lucide-react'
 import TabButton from './TabButton'
 
 const HomeSearchInput = ({ initialTab = 'monuments', onSearch, setTextInputTopOffset }) => {
-  const [activeTab, setActiveTab] = useState(initialTab);
-  const [inputTerm, setInputTerm] = useState('');
-  const placeholder = `Search ${activeTab}`;
+  const [activeTab, setActiveTab] = useState(initialTab)
+  const [inputTerm, setInputTerm] = useState('')
+  const placeholder = `Search ${activeTab}`
 
-  const textInputRef = useRef(null);
+  const textInputRef = useRef(null)
 
   useEffect(() => {
     if (textInputRef.current && setTextInputTopOffset) {
       const observer = new ResizeObserver(() => {
-        setTextInputTopOffset(textInputRef.current.offsetTop);
-      });
+        setTextInputTopOffset(textInputRef.current.offsetTop)
+      })
 
-      observer.observe(textInputRef.current);
+      observer.observe(textInputRef.current)
 
       return () => {
-        observer.disconnect();
+        observer.disconnect()
       };
     }
-  }, [setTextInputTopOffset]);
+  }, [setTextInputTopOffset])
 
   // Handle search action
   const handleSearch = useCallback(() => {
-    if (!inputTerm.trim()) return;
-    onSearch(activeTab, inputTerm.trim()); // Call the prop function
-  }, [activeTab, inputTerm, onSearch]);
+    if (!inputTerm.trim()) return
+    onSearch(activeTab, inputTerm.trim())
+  }, [activeTab, inputTerm, onSearch])
 
   // Handle Enter key press for search
   const handleKeyPress = useCallback((event) => {
     if (event.key === 'Enter') {
-      handleSearch();
+      handleSearch()
     }
-  }, [handleSearch]);
+  }, [handleSearch])
 
   return (
     <>
@@ -64,15 +64,16 @@ const HomeSearchInput = ({ initialTab = 'monuments', onSearch, setTextInputTopOf
       </Group>
 
       <Group justify="center" mb="lg">
+        <Paper shadow="xs" radius="100px" mt="md">
         <TextInput
           ref={textInputRef}
-          mt="md"
+
           radius="100px"
           placeholder={placeholder}
-          rightSectionWidth={116}
+          rightSectionWidth={120}
           onChange={(e) => setInputTerm(e.target.value)}
           value={inputTerm}
-          style={{ width: '840px', maxWidth: '100%' }}
+          style={{ width: '850px', maxWidth: '100%' }}
           size="xl"
           leftSection={<Search size={24} />}
           rightSection={
@@ -80,6 +81,7 @@ const HomeSearchInput = ({ initialTab = 'monuments', onSearch, setTextInputTopOf
               size="lg"
               radius="100px"
               color="primary"
+              variant="filled"
               onClick={handleSearch}
               disabled={!inputTerm.trim()}
             >
@@ -87,7 +89,7 @@ const HomeSearchInput = ({ initialTab = 'monuments', onSearch, setTextInputTopOf
             </Button>
           }
           onKeyDown={handleKeyPress}
-        />
+        /></Paper>
       </Group>
     </>
   );
