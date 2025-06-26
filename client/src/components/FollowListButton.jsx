@@ -9,7 +9,7 @@ const FollowListButton = ({ listId, isInitiallyFollowing = false }) => {
   const { followList, unfollowList } = useDataStore()
   const [isFollowing, setIsFollowing] = useState(isInitiallyFollowing)
   const [isLoading, setIsLoading] = useState(false)
-  const { openLoginModal, } = useAuthModals()
+  const { openLoginModal } = useAuthModals()
   const { isLoggedIn } = useAuthStore()
   useEffect(() => {
     setIsFollowing(isInitiallyFollowing)
