@@ -86,8 +86,8 @@ const sendOtp = async (email, otp) => {
     port: 465,
     secure: true,
     auth: {
-      user: 'ptixiaki2654@gmail.com',
-      pass: 'awco ozhh qzgm ilib',
+      user: process.env.NODEMAILER_EMAIL,
+      pass: process.env.NODEMAILER_APP_PASSWORD, 
     },
   })
 
