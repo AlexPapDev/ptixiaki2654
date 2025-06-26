@@ -88,7 +88,6 @@ const MonumentEras = ({ monumentId, initialMonumentEras = [], canEdit }) => {
   const erasAvailableToAdd = availableEras.filter(
     (era) => !monumentEras.some((me) => me.eraId === era.eraid)
   )
-  console.log('erasAvailableToAdd', erasAvailableToAdd)
 
   const isViewing = !isEditing && !isAdding
 

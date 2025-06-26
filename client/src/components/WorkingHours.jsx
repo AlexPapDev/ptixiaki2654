@@ -12,6 +12,9 @@ const initialHoursState = Array(7).fill({
 })
 
 const EditableStackItem = ({ day, hour, index, isPublic, onHourChange }) => {
+  const formattedOpenHour = hour.open_time?.slice(0, 5)
+  const formattedCloseHour = hour.close_time?.slice(0, 5)
+
   return (
     <Grid>
       <Grid.Col span={5} py="xs">
@@ -29,7 +32,7 @@ const EditableStackItem = ({ day, hour, index, isPublic, onHourChange }) => {
                 size="xs"
                 label="Open"
                 type="time"
-                value={hour?.open_time || ''}
+                value={formattedOpenHour || ''}
                 onChange={(event) => onHourChange(index, { ...hour, open_time: event.currentTarget.value })}
               />
             </Grid.Col>
@@ -38,7 +41,7 @@ const EditableStackItem = ({ day, hour, index, isPublic, onHourChange }) => {
                 size="xs"
                 label="Close"
                 type="time"
-                value={hour?.close_time || ''}
+                value={formattedCloseHour || ''}
                 onChange={(event) => onHourChange(index, { ...hour, close_time: event.currentTarget.value })}
               />
             </Grid.Col>
@@ -51,7 +54,7 @@ const EditableStackItem = ({ day, hour, index, isPublic, onHourChange }) => {
 
 const StackItem = ({ day, hour }) => {
   const formattedHours = hour && !hour.is_open_24_hours && !hour.is_closed
-    ? `${hour?.open_time || 'Unknown'} - ${hour?.close_time || 'Unknown'}`
+    ? `${hour?.open_time?.slice(0, 5) || 'Unknown'} - ${hour?.close_time?.slice(0, 5) || 'Unknown'}`
     : null
 
   return (
