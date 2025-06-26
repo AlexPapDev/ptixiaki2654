@@ -47,8 +47,6 @@ router.get('/following', authenticateUser, async (req, res) => {
 router.get('/:listId', attachUserIfLoggedIn, async (req, res) => {
   try {
     console.log('get list info')
-    const { user } = req
-    console.log(user)
     const list = await listService.getListInfo(req.params.listId, req.user?.userid)
     if (!list) {
       return res.status(404).json({ error: 'List not found' })

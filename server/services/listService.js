@@ -14,14 +14,16 @@ const getAllLists = async (searchText) => {
           )
         ) FILTER (WHERE m.monumentId IS NOT NULL),
         '[]'::json
-      ) AS monuments
+      ) AS monuments,
+      TRIM(CONCAT(u.firstname, ' ', u.lastname)) AS full_name
     FROM Lists l
+    LEFT JOIN Users u ON l.userId = u.userId
     LEFT JOIN listmonuments lm ON l.listId = lm.listId
     LEFT JOIN monuments m ON lm.monumentId = m.monumentId
     LEFT JOIN monumentimages mi ON m.monumentId = mi.monumentid AND mi.ismain = true
     WHERE (NULLIF($1, '') IS NULL OR l.name ILIKE '%' || $1 || '%')
       AND l.is_public = TRUE
-    GROUP BY l.listId
+    GROUP BY l.listId, u.firstname, u.lastname
     ORDER BY l.createdDate DESC
     LIMIT 9
     `,

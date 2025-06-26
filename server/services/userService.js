@@ -154,6 +154,7 @@ const updateUser = async (userId, fieldName, fieldValue) => {
 
 const verifyToken = async (token) => {
   try {
+    console.log('token', token)
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
     const userId = decoded.id
 
