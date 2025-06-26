@@ -11,9 +11,9 @@ const useAuthStore = create(
     (set, get) => ({
       user: null,
       token: null,
-      
+
       isLoggedIn: () => {
-        const token = localStorage.getItem('token')
+        const token = get().token
         if (token) {
           try {
             const decoded = jwtDecode(token)
@@ -24,8 +24,6 @@ const useAuthStore = create(
         }
         return false
       },
-      
-      // loginUser: ({ user, token }) => set({ user, token }),
       loginUser: async (email, password) => {
         try {
           const res = await axios.post(
@@ -33,12 +31,6 @@ const useAuthStore = create(
             { email, password },
           )
           const { token, user } = res.data
-
-          // Decode JWT payload
-          const payload = JSON.parse(atob(token.split('.')[1]))
-          debugger
-          const { id, role } = payload
-          // const user = { id, role }
 
           localStorage.setItem('token', token)
           set({ user, token })
@@ -75,14 +67,32 @@ const useAuthStore = create(
       })),
 
       getRole: () => {
-        const storedData = JSON.parse(localStorage.getItem('auth-storage'))
-        const { role } = storedData.state.user
-        return role
+        const { user } = get()
+        return user?.role || null
       }
     }),
     {
       name: 'auth-storage',
       partialize: (state) => ({ user: state.user, token: state.token }),
+      onRehydrateStorage: (state) => {
+        if (state.token) {
+          try {
+            const decoded = jwtDecode(state.token)
+            if (decoded.exp * 1000 < Date.now()) {
+              console.log("Persisted token expired. Logging out automatically.")
+              return (currentState) => {
+                currentState.logoutUser() 
+              }
+            }
+          } catch (error) {
+            console.error("Error decoding persisted token. Logging out.", error)
+            return (currentState) => {
+                currentState.logoutUser()
+            }
+          }
+        }
+        return undefined
+      },
     }
   )
 )
