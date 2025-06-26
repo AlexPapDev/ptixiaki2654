@@ -1,20 +1,13 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Image, Group, Container, Text, Anchor, Box, Burger } from '@mantine/core'
+import { Image, Group, Container, Text, Box, Burger } from '@mantine/core'
 import SearchInput from './SearchInput'
 import ProfileNav from './ProfileNav'
 import NavLinks from './NavLinks'
 import NavDrawer from './NavDrawer'
 import { useMediaQuery, useDisclosure } from '@mantine/hooks'
 import { useMantineTheme } from '@mantine/core'
-const links = [
-  { link: '/monuments', label: 'Monuments' },
-  { link: '/lists', label: 'Lists' },
-  { link: '/articles', label: 'Articles' },
-]
 
 const Navbar = ({ isTextInputNearTop = false, isHomePage, toggleNavbar, navbarOpened }) => {
-  // console.log('isTextInputNearTop', isTextInputNearTop)
   const theme = useMantineTheme()
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false);
   const isXlOrBigger = useMediaQuery(`(min-width: ${theme.breakpoints.sm})`)
@@ -29,7 +22,7 @@ const Navbar = ({ isTextInputNearTop = false, isHomePage, toggleNavbar, navbarOp
           <Image visibleFrom="md" height={30} width={30} src="/ancient-greece.png" />
           <Box visibleFrom="md">
             <Link to="/" style={{ textDecoration: 'none' }} >
-              <Text color="primary" size="md" fw={600}>
+              <Text c="primary" size="md" fw={600}>
                 Monuma
               </Text>
             </Link>

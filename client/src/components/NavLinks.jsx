@@ -5,7 +5,7 @@ import { Box, Text, Anchor, Group } from '@mantine/core'
 const navLinks = [
   { link: '/monuments', label: 'Monuments' },
   { link: '/lists', label: 'Lists' },
-  { link: '/articles', label: 'Articles' },
+  { link: '/articles', label: 'Articles', disabled: 'true' },
 ]
 
 const NavLinks = () => {
@@ -20,7 +20,7 @@ const NavLinks = () => {
             borderRadius: '4px',
           }}
         >
-          <Anchor component={Link} to={link.link}>
+          <Anchor component={Link} to={link.link} disabled={link.disabled}>
             <Text>{link.label}</Text>
           </Anchor>
         </Box>
