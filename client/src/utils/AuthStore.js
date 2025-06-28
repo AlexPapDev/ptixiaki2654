@@ -11,10 +11,12 @@ const useAuthStore = create(
     (set, get) => ({
       user: null,
       token: null,
-      _hasHydrated: false,
 
-      setIsHydrated: (state) => {
-        set({ _hasHydrated: state })
+      getUser: () => {
+        if (get().isLoggedIn()) {
+          return get().user
+        }
+        return null
       },
 
       isLoggedIn: () => {
@@ -91,21 +93,14 @@ const useAuthStore = create(
               console.log("Persisted token expired during rehydration. Logging out automatically.")
               return (currentState) => {
                 currentState.logoutUser()
-                currentState.setIsHydrated(true)
               }
             }
           } catch (error) {
             console.error("Error decoding persisted token during rehydration. Logging out.", error)
             return (currentState) => {
               currentState.logoutUser()
-              currentState.setIsHydrated(true)
             }
           }
-        }
-
-        return (currentState) => {
-          console.log("Store rehydration complete. Setting _hasHydrated to true.")
-          currentState.setIsHydrated(true)
         }
       },
     }

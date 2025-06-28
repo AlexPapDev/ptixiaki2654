@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
-import { Button, Box, Text, Alert, Container, LoadingOverlay } from '@mantine/core'
+import { Box, Alert, Container, LoadingOverlay } from '@mantine/core'
 import UserProfileEdit from '../components/UserProfileEdit'
 import UserProfileView from '../components/UserProfileView'
 import UserNotFound from '../components/UserNotFound'
@@ -9,7 +9,8 @@ import useUserStore from '../stores/domain/UserStore'
 import { toast } from 'react-toastify'
 
 const UserProfile = () => {
-  const { user, isLoggedIn, updateUser } = useAuthStore()
+  const { getUser, updateUser } = useAuthStore()
+  const user = getUser()
   const { userId } = useParams()
   const [pageUser, setPageUser] = useState(null)
   const [isEditMode, setIsEditMode] = useState(false)

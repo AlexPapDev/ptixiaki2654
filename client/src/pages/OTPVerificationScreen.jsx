@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import useAuthStore from '../utils/AuthStore'
 
 const OTPVerificationScreen = () => {
@@ -15,7 +14,6 @@ const OTPVerificationScreen = () => {
 
   const navigate = useNavigate()
 
-  // Get the email parameter from the URL query string
   useEffect(() => {
     const emailFromUrl = searchParams.get('email')
     if (emailFromUrl) {
@@ -46,18 +44,17 @@ const OTPVerificationScreen = () => {
 
   const handlePaste = (e) => {
     const pastedValue = e.clipboardData.getData('Text')
-    const digits = pastedValue.replace(/\D/g, '').slice(0, 6) // Get only numbers and limit to 6 digits
+    const digits = pastedValue.replace(/\D/g, '').slice(0, 6)
 
     if (digits.length === 6) {
       setOtp(digits.split(''))
     }
-    e.preventDefault() // Prevent the default paste action
+    e.preventDefault()
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
     const otpValue = otp.join('')
 
-    // Check if the OTP has a length of 6
     if (otpValue.length === 6) {
       try {
         const result = await verifyOtp(email, otpValue)
@@ -67,7 +64,6 @@ const OTPVerificationScreen = () => {
           loginUser({ user, token })
           navigate('/')
         } else {
-          // Handle the error case
           setErrorMessage(result.message)
         }
       } catch (error) {

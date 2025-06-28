@@ -5,7 +5,8 @@ import { Search } from 'lucide-react'
 import ListCard from './ListCard'
 import useDataStore from '../utils/DataStore'
 const FollowingLists = ({hideSearch = false}) => {
-  const { user } = useAuthStore()
+  const { getUser } = useAuthStore()
+  const user = getUser()
   const [lists, setLists] = useState([])
   const [tempSearchText, setTempSearchText] = useState('')
   const [searchText, setSearchText] = useState(tempSearchText)

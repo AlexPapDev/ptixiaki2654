@@ -8,7 +8,8 @@ import MenuItemLink from './MenuItemLink'
 import useAuthModals from '../hooks/useAuthModals'
 
 export default function ProfileNav() {
-  const { isLoggedIn, user, logoutUser } = useAuthStore()
+  const { isLoggedIn, getUser, logoutUser } = useAuthStore()
+  const user = getUser()
   const [opened, setOpened] = useState(false)
   const loggedIn = isLoggedIn()
   const navigate = useNavigate()

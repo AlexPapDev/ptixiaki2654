@@ -1,6 +1,5 @@
-import React from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
-import { Grid, Stack, Text, Box, Radio, Group } from '@mantine/core'
+import { useParams, Link } from 'react-router-dom'
+import { Grid, Stack, Text, Box } from '@mantine/core'
 import MonumentsMap from '../components/MonumentsMap'
 import ListDetailMonuments from '../components/ListDetailMonuments'
 import ListDetailTitle from '../components/ListDetailTitle'
@@ -13,7 +12,8 @@ import ListPrivacyToggle from '../components/ListPrivacyToggle'
 const ListDetail = () => {
   const { listId } = useParams()
   const { list, loading, error } = useListDetail(listId)
-  const { user } = useAuthStore()
+  const { getUser } = useAuthStore()
+  const user = getUser()
   const { user: listUser, monuments = [] } = list || {}
 
   const isOwnList = list && list?.userid === user?.userid
