@@ -12,6 +12,10 @@ const useAuthStore = create(
       user: null,
       token: null,
 
+      setIsHydrated: (state) => {
+        set({ _hasHydrated: state })
+      },
+
       isLoggedIn: () => {
         const token = get().token
         if (token) {
@@ -75,6 +79,7 @@ const useAuthStore = create(
       name: 'auth-storage',
       partialize: (state) => ({ user: state.user, token: state.token }),
       onRehydrateStorage: (state) => {
+        useAuthStore.setState({ _hasHydrated: false })
         if (state.token) {
           try {
             const decoded = jwtDecode(state.token)
@@ -91,7 +96,8 @@ const useAuthStore = create(
             }
           }
         }
-        return undefined
+        useAuthStore.setState({ _hasHydrated: true })
+        return state
       },
     }
   )
