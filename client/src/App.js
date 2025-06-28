@@ -26,7 +26,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import ProfileRedirect from './utils/ProfileRedirect'
 import ProtectedRoutes from './utils/ProtectedRoutes'
 import { ToastContainer } from 'react-toastify'
-import useAuthStore from './utils/AuthStore'
 
 // Styles
 import './App.css'
@@ -58,35 +57,11 @@ function MainLayout() {
   const isBiggerThanSm = useMediaQuery('(min-width: 48em)')
   const isMonumentsPage = (location.pathname.startsWith('/monuments') && location.pathname !== '/monuments/new') 
   const isHomePage = location.pathname === '/'
-  const { mainScrollRef, textInputTopOffset, scrollPosition, isScrolledPastThreshold } = useContext(ScrollContext);
+  const { mainScrollRef, isScrolledPastThreshold } = useContext(ScrollContext);
   const showCategoriesBar = isBiggerThanMd && (isMonumentsPage || isHomePage)
   const headerHeight = showCategoriesBar ? 112 : 74
 
   const showNavLinks = !isBiggerThanSm && (isMonumentsPage || isHomePage)
-
-  // Now you can use textInputTopOffset and scrollPosition here to react in MainLayout or pass down to Navbar
-  // Example: Log when the TextInput is within 50px of the viewport top
-  const isTextInputNearTop = textInputTopOffset !== null && (textInputTopOffset - scrollPosition <= 100);
-
-  // You can pass this 'isTextInputNearTop' state to your Navbar component
-  // or trigger other changes here based on the condition.
-  // For example, if Navbar needs to know:
-  // <Navbar navbarOpened={navbarOpened} toggleNavbar={() => setNavbarOpened((o) => !o)} isTextInputNearTop={isTextInputNearTop} />
-
-  // Optional: Console log for demonstration
-  // useEffect(() => {
-  //   if (isTextInputNearTop) {
-  //     console.log('TextInput is 50px or less from the top of AppShell.Main viewport!');
-  //   } else {
-  //     console.log('TextInput is NOT near the top.');
-  //   }
-  // }, [isTextInputNearTop]);
-
-  const { _hasHydrated } = useAuthStore()
-  console.log('_hasHydrated', _hasHydrated)
-  if (!_hasHydrated) {
-    return null
-  }
 
   return (
     <AppShell
