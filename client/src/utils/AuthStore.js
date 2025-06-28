@@ -11,6 +11,7 @@ const useAuthStore = create(
     (set, get) => ({
       user: null,
       token: null,
+      _hasHydrated: false,
 
       setIsHydrated: (state) => {
         set({ _hasHydrated: state })
@@ -23,11 +24,13 @@ const useAuthStore = create(
             const decoded = jwtDecode(token)
             return decoded.exp * 1000 > Date.now()
           } catch (error) {
+            console.error("Error decoding token:", error)
             return false
           }
         }
         return false
       },
+
       loginUser: async (email, password) => {
         try {
           const res = await axios.post(
@@ -79,25 +82,31 @@ const useAuthStore = create(
       name: 'auth-storage',
       partialize: (state) => ({ user: state.user, token: state.token }),
       onRehydrateStorage: (state) => {
-        useAuthStore.setState({ _hasHydrated: false })
-        if (state.token) {
+        console.log("onRehydrateStorage initiated. State being rehydrated:", state)
+
+        if (state && state.token) {
           try {
             const decoded = jwtDecode(state.token)
             if (decoded.exp * 1000 < Date.now()) {
-              console.log("Persisted token expired. Logging out automatically.")
+              console.log("Persisted token expired during rehydration. Logging out automatically.")
               return (currentState) => {
-                currentState.logoutUser() 
+                currentState.logoutUser()
+                currentState.setIsHydrated(true)
               }
             }
           } catch (error) {
-            console.error("Error decoding persisted token. Logging out.", error)
+            console.error("Error decoding persisted token during rehydration. Logging out.", error)
             return (currentState) => {
-                currentState.logoutUser()
+              currentState.logoutUser()
+              currentState.setIsHydrated(true)
             }
           }
         }
-        useAuthStore.setState({ _hasHydrated: true })
-        return state
+
+        return (currentState) => {
+          console.log("Store rehydration complete. Setting _hasHydrated to true.")
+          currentState.setIsHydrated(true)
+        }
       },
     }
   )
