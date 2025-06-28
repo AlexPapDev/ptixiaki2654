@@ -26,6 +26,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import ProfileRedirect from './utils/ProfileRedirect'
 import ProtectedRoutes from './utils/ProtectedRoutes'
 import { ToastContainer } from 'react-toastify'
+import useAuthStore from './utils/AuthStore'
 
 // Styles
 import './App.css'
@@ -81,6 +82,11 @@ function MainLayout() {
   //   }
   // }, [isTextInputNearTop]);
 
+  const _hasHydrated = useAuthStore((state) => state._hasHydrated)
+
+  if (!_hasHydrated) {
+    return null
+  }
 
   return (
     <AppShell
