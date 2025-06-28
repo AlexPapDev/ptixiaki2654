@@ -1,4 +1,3 @@
-// App.js (inside MainLayout function)
 import { useState, useContext } from 'react' // Import useContext
 import { AppShell, Paper } from '@mantine/core'
 import { ModalsProvider } from '@mantine/modals'
@@ -33,15 +32,14 @@ import 'react-toastify/dist/ReactToastify.css'
 import '@mantine/core/styles.css'
 import '@mantine/dropzone/styles.css'
 
-// Import ScrollProvider and ScrollContext
-import { ScrollProvider, ScrollContext } from './contexts/ScrollContext'; // Adjust path if needed
+import { ScrollProvider, ScrollContext } from './contexts/ScrollContext'
 
 function App() {
   return (
     <MantineThemeProvider>
       <Router>
         <ModalsProvider>
-          <ScrollProvider threshold={120}> {/* You can adjust this global threshold if needed */}
+          <ScrollProvider threshold={120}>
             <MainLayout />
           </ScrollProvider>
         </ModalsProvider>
@@ -75,13 +73,12 @@ function MainLayout() {
         </Paper>
       </AppShell.Header>
       
-      {/* Attach the mainScrollRef to AppShell.Main and ensure it's scrollable */}
       <AppShell.Main
-        ref={mainScrollRef} // Attach the ref here
+        ref={mainScrollRef}
         style={{
           backgroundColor: '#fff',
-          overflowY: 'auto', // Make sure this area is scrollable
-          height: 'calc(100vh - var(--app-shell-header-height, 0px))', // Ensure it takes full height to be scrollable
+          overflowY: 'auto',
+          height: 'calc(100vh - var(--app-shell-header-height, 0px))',
         }}
       >
         <ToastContainer position='top-right' autoClose={5000} hideProgressBar newestOnTop closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
