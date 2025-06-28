@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react"
-import axios from "axios"
+import { useEffect, useState, useRef } from "react"
 import useMonumentStore from '../stores/domain/MonumentStore'
 import { toast } from 'react-toastify'
 
@@ -8,9 +7,6 @@ const ApprovalScreen = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { getPendingMonuments, approveMonument, rejectMonument } = useMonumentStore()
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001"
-  const token = localStorage.getItem("token")
-  const hasFetched = useRef(false) // Prevents useEffect from running twice in Strict Mode
 
   useEffect(() => {
     fetchPendingMonuments()

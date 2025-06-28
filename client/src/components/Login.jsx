@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
-import useAppStore from '../utils/AppStore'
 import {
   TextInput,
   PasswordInput,

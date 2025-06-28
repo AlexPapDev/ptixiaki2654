@@ -1,6 +1,5 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
-import { Card, Image, Grid, Text } from '@mantine/core'
+import { Card, Grid, Text } from '@mantine/core'
 import SquareImage from '../components/SquareImage'
 import { getCloudinaryUrl } from '../utils/helpers'
 import { DEFAULT_IMAGE } from '../utils/constants'

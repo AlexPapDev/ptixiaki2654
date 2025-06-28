@@ -1,4 +1,3 @@
-import React from 'react'
 import { INIT_MAP_STATE, MAPBOX_ACCESS_TOKEN } from '../utils/constants'
 import { Map } from 'react-map-gl'
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { notifications } from '@mantine/notifications'
 import useDataStore from '../utils/DataStore'
 import PrivacyToggle from './PrivacyToggle'

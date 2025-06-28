@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { Text, Group, Card, Badge } from '@mantine/core'
 import MonumentMenu from './MonumentMenu'

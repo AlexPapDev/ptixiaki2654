@@ -1,5 +1,4 @@
 import { useModals } from '@mantine/modals'
-import { Button, Text } from '@mantine/core'
 
 export default function useConfirmModal() {
   const modals = useModals()

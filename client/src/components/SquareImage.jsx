@@ -1,4 +1,3 @@
-import React from 'react'
 import { Image, AspectRatio } from '@mantine/core'
 
 const SquareImage = ({ src, alt = "Image", fallbackSrc, height, radius, outerStyle = {} }) => (

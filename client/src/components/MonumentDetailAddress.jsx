@@ -1,12 +1,10 @@
 import { useState } from 'react'
 import { Text, Group, TextInput, Stack, Button } from '@mantine/core'
-import EditButton from './EditButton'
 
 const MonumentDetailAddress = ({ initialAddress, onSave }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [editedAddress, setEditedAddress] = useState({ ...initialAddress })
 
-  const handleEditClick = () => setIsEditing(true)
   const handleCancelClick = () => {
     setEditedAddress({ ...initialAddress })
     setIsEditing(false)

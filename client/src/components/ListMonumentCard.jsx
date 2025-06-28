@@ -1,4 +1,4 @@
-import { AspectRatio, Text, Stack, Divider, Group, Image,Box } from '@mantine/core'
+import { Text, Stack, Divider, Group } from '@mantine/core'
 import { getCloudinaryUrl } from '../utils/helpers'
 import useAuthStore from '../utils/AuthStore'
 import AddToListButton from './AddToListButton'

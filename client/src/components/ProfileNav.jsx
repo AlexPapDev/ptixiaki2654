@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Menu, Button, Avatar, Divider, Text } from "@mantine/core"
+import { Menu, Button, Avatar, Divider } from "@mantine/core"
 import { Menu as MenuIcon } from "lucide-react"
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'

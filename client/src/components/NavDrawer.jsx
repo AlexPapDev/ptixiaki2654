@@ -1,13 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
-  Image,
-  Group,
-  Container,
-  Text,
-  Anchor,
   Box,
-  Burger,
   Drawer,
   Divider,
   ScrollArea,
@@ -15,7 +7,7 @@ import {
 import SearchInput from './SearchInput'
 import ProfileNav from './ProfileNav'
 import NavLinks from './NavLinks'
-import { useMediaQuery, useDisclosure } from '@mantine/hooks'
+import { useMediaQuery } from '@mantine/hooks'
 import { useMantineTheme } from '@mantine/core'
 
 const NavDrawer = ({drawerOpened, closeDrawer}) => {

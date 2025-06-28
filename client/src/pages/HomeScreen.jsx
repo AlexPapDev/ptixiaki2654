@@ -1,32 +1,31 @@
-// pages/HomeScreen.jsx
-import { useContext } from 'react'; // Removed unused imports
-import { useNavigate } from 'react-router-dom';
-import { Box,Container, Title } from '@mantine/core'; // Removed TextInput, Button, Text, Group as they are now in HomeSearchInput
-import useAppStore from '../utils/AppStore';
-import DiscoverLists from '../components/DiscoverLists';
-import { ScrollContext } from '../contexts/ScrollContext';
-import WelcomeText from '../components/WelcomeText';
-import HomeSearchInput from '../components/HomeSearchInput'; // Import the new component
+
+import { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Box,Container, Title } from '@mantine/core'
+import useAppStore from '../utils/AppStore'
+import DiscoverLists from '../components/DiscoverLists'
+import { ScrollContext } from '../contexts/ScrollContext'
+import WelcomeText from '../components/WelcomeText'
+import HomeSearchInput from '../components/HomeSearchInput'
 
 const Home = () => {
-  const navigate = useNavigate();
-  const { setSearchTerm } = useAppStore();
-  const { setTextInputTopOffset, isScrolledPastThreshold } = useContext(ScrollContext);
+  const navigate = useNavigate()
+  const { setSearchTerm } = useAppStore()
+  const { setTextInputTopOffset } = useContext(ScrollContext)
 
-  // This function will be passed down to HomeSearchInput to handle the actual navigation
   const handleSearchNavigation = (activeTab, searchTerm) => {
     const routeMap = {
       monuments: '/monuments',
       lists: '/lists',
       articles: '/articles',
-    };
-
-    const path = routeMap[activeTab];
-    if (path) {
-      setSearchTerm(searchTerm);
-      navigate(`${path}?q=${encodeURIComponent(searchTerm)}`);
     }
-  };
+
+    const path = routeMap[activeTab]
+    if (path) {
+      setSearchTerm(searchTerm)
+      navigate(`${path}?q=${encodeURIComponent(searchTerm)}`)
+    }
+  }
 
   return (
     <Container align="center" style={{ alignItems: 'center', justifyContent: 'center', padding: '32px', textAlign: 'center' }}>
@@ -44,7 +43,7 @@ const Home = () => {
         <DiscoverLists hideSearch />
       </Box>
     </Container>
-  );
-};
+  )
+}
 
 export default Home

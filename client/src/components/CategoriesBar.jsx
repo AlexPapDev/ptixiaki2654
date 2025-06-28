@@ -1,4 +1,3 @@
-import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'
 import { Container, Group, Button, Paper } from '@mantine/core'

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { FileButton, Button } from '@mantine/core'
 import { Camera } from 'lucide-react'
 const AddImagesButton = ({onChange}) => {

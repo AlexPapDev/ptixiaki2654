@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Text, Box, Title, Tabs, Container } from '@mantine/core'
 import { Binoculars, Library, Star } from 'lucide-react'
@@ -15,7 +14,6 @@ const ListsScreen = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // Determine current tab
   const currentTab = location.pathname.split('/')[2] || 'discover'
 
   const handleTabChange = (value) => {
@@ -39,20 +37,9 @@ const ListsScreen = () => {
             <Text m="xs">Followed Lists</Text>
           </Tabs.Tab>
         </Tabs.List>
-      {/* </Container> */}
-        {/* <Tabs.Panel value="discover">
-          Find lists 
-        </Tabs.Panel>
-        <Tabs.Panel value="myLists">
-          Gallery tab content
-        </Tabs.Panel>
-        <Tabs.Panel value="liked">
-          Liked lists
-        </Tabs.Panel> */}
       </Tabs>
       <Routes>
         <Route index element={<Navigate to="discover" replace />} />
-          {/* <Route index element={<Navigate to="discover" replace />} /> */}
         <Route path="discover" element={<DiscoverLists />} />
         <Route path="myLists" element={<MyLists />} />
         <Route path="following" element={<FollowingLists />} />

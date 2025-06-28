@@ -24,13 +24,12 @@ const OTPVerificationScreen = () => {
 
   const handleChange = (index, event) => {
     const value = event.target.value
-    if (!/^\d?$/.test(value)) return // Allow only a single digit
+    if (!/^\d?$/.test(value)) return //single digit check
 
     const newOtp = [...otp]
     newOtp[index] = value
     setOtp(newOtp)
 
-    // Move to the next input if a digit is entered
     if (value && index < 5) {
       inputRefs.current[index + 1]?.focus()
     }

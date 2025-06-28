@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button, ActionIcon } from '@mantine/core'
 import { useModals } from '@mantine/modals'
 import AddToListModal from './AddToListModal'

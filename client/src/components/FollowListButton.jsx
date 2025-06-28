@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Text, Box, LoadingOverlay } from '@mantine/core' // Added Text, Box, LoadingOverlay for feedback
+import { useState, useEffect } from 'react'
+import { Button, Box, LoadingOverlay } from '@mantine/core' // Added Text, Box, LoadingOverlay for feedback
 import { Heart, X } from 'lucide-react' // Added X for unfollow icon (or keep Heart)
 import useDataStore from '../utils/DataStore' // Adjust path as needed
 import { notifications } from '@mantine/notifications' // For nice toast notifications

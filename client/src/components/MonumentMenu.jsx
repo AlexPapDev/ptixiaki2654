@@ -1,5 +1,3 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
 import { Menu, ActionIcon, Divider } from '@mantine/core'
 // import { DotsVerticalIcon } from '@mantine/icons'
 import { EllipsisVertical } from "lucide-react"

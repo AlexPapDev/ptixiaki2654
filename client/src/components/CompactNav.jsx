@@ -1,5 +1,4 @@
-import React from 'react'
-import { Box, Group, Menu, Button } from '@mantine/core'
+import { Group, Menu, Button } from '@mantine/core'
 import NavLinks from './NavLinks'
 import MenuItemLink from './MenuItemLink'
 import { CATEGORIES } from '../utils/constants'

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import MonumentsMap from '../components/MonumentsMap'
 import { useSearchParams } from 'react-router-dom'
 import useAppStore from '../utils/AppStore'

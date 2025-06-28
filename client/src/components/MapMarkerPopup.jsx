@@ -1,4 +1,3 @@
-import React from 'react'
 import { Popup } from 'react-map-gl'
 import { Card, Image, Text} from '@mantine/core'
 import { getCloudinaryUrl } from '../utils/helpers'

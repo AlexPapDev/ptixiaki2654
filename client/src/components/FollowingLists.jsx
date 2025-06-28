@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import useAuthStore from '../utils/AuthStore'
-import { Box, Grid, TextInput, Text, Card,  Group, Title, Button, ActionIcon } from '@mantine/core'
+import { Box, Grid, TextInput, Text,  Group, ActionIcon } from '@mantine/core'
 import { Search } from 'lucide-react'
 import ListCard from './ListCard'
 import useDataStore from '../utils/DataStore'

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Popup } from 'react-map-gl'
 import { Button, Text, Stack, Group } from '@mantine/core'
 import { Plus } from 'lucide-react'

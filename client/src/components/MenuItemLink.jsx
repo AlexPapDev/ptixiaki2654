@@ -1,4 +1,3 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { Text, Menu, Anchor } from '@mantine/core'
 import { ExternalLink } from 'lucide-react'

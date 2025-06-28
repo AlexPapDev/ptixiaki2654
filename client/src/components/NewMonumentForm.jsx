@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useForm } from '@mantine/form'
 import { Title, Stack, Group, TextInput, Textarea, MultiSelect, Button} from '@mantine/core'
 import FileDropzone from './FileDropzone'

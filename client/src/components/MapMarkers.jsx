@@ -1,4 +1,3 @@
-import React from 'react'
 import { Marker } from 'react-map-gl'
 import Pin from './Pin'
 import useAppStore from '../utils/AppStore'

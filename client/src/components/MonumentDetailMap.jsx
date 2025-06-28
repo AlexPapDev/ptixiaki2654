@@ -1,6 +1,3 @@
-import React from 'react'
-import { Grid, Group, Image,Box } from '@mantine/core'
-import { getCloudinaryUrl } from '../utils/helpers'
 import GenericMap from './GenericMap'
 import Pin from './Pin'
 import { GeolocateControl, NavigationControl, Marker } from 'react-map-gl'

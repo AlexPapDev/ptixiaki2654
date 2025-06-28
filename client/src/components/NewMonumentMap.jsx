@@ -1,4 +1,3 @@
-import React from 'react'
 import { Marker, GeolocateControl, NavigationControl } from 'react-map-gl'
 import GenericMap from './GenericMap'
 import Pin from '../components/Pin'

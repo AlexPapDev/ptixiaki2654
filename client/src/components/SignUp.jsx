@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import useAuthStore from '../utils/AuthStore'
 import useUserStore from '../stores/domain/UserStore'
 import {
