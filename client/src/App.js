@@ -82,8 +82,8 @@ function MainLayout() {
   //   }
   // }, [isTextInputNearTop]);
 
-  const _hasHydrated = useAuthStore((state) => state._hasHydrated)
-
+  const { _hasHydrated } = useAuthStore((state) => state._hasHydrated)
+  console.log('_hasHydrated', _hasHydrated)
   if (!_hasHydrated) {
     return null
   }
