@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
+import useAuthForm from '../hooks/useAuthForm'
+import FormInput from './FormInput'
 import {
-  TextInput,
-  PasswordInput,
   Button,
   Paper,
   Title,
@@ -13,11 +13,14 @@ import {
 } from '@mantine/core'
 
 const Login = ({onClose}) => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loginError, setLoginError] = useState('')
   const { loginUser, isLoggedIn } = useAuthStore()
   const navigate = useNavigate()
+  const {
+    formData,
+    errorMessage,
+    setErrorMessage,
+    handleChange,
+  } = useAuthForm({ email: '', password: '' })
 
   useEffect(() => {
     if (isLoggedIn()) {
@@ -27,12 +30,10 @@ const Login = ({onClose}) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoginError('')
-
+    setErrorMessage('')
     try {
-      const result = await loginUser(email, password)
+      const result = await loginUser(formData.email, formData.password)
       if (!result.success) throw new Error(result.message)
-
       const { user } = result
       if (!user.hasVerifiedOtp) {
         return navigate({
@@ -40,11 +41,10 @@ const Login = ({onClose}) => {
           search: `?email=${user.email}`,
         })
       }
-
       navigate(`/user/${user.userid}`)
       onClose()
     } catch (error) {
-      setLoginError(error.message || 'Login failed. Please try again.')
+      setErrorMessage(error.message || 'Login failed. Please try again.')
     }
   }
 
@@ -53,32 +53,29 @@ const Login = ({onClose}) => {
       <Title align='center' order={2}>
         Welcome back
       </Title>
-
       <Paper radius='md'>
         <form onSubmit={handleSubmit}>
           <Stack>
-            <TextInput
+            <FormInput
               label='Email'
-              placeholder='you@example.com'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
+              name='email'
+              value={formData.email}
+              onChange={handleChange}
+              type='text'
             />
-            <PasswordInput
+            <FormInput
               label='Password'
-              placeholder='Your password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
+              name='password'
+              value={formData.password}
+              onChange={handleChange}
+              type='password'
             />
           </Stack>
-
-          {loginError && (
+          {errorMessage && (
             <Text color='red' size='sm' mt='md' align='center'>
-              {loginError}
+              {errorMessage}
             </Text>
           )}
-
           <Button fullWidth mt='xl' type='submit' color="teal">
             Login
           </Button>

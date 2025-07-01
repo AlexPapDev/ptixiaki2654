@@ -1,27 +1,23 @@
 import { useModals } from '@mantine/modals'
-import Login from '../components/Login'
-import SignUp from '../components/SignUp'
 
-export default function useAuthModals () {
-  const modals = useModals()
+export default function useAuthModals() {
+    const modals = useModals()
 
-  const openLoginModal = () => {
-    const id = modals.openModal({
-      title: 'Login',
-      centered: true,
-      children: <Login onClose={() => modals.closeModal(id)}/>,
-    })
-    return id
-  }
+    const openModalWithComponent = (Component, title = '', props = {}) => {
+        const id = modals.openModal({
+            title,
+            centered: true,
+            children: < Component {...props }
+            onClose = {
+                () => modals.closeModal(id) }
+            />,
+        })
+        return id
+    }
 
-  const openSignUpModal = () => {
-    const id = modals.openModal({
-      title: 'Sign Up',
-      centered: true,
-      children: <SignUp onClose={() => modals.closeModal(id)}/>,
-    })
-    return id
-  }
+    // For backward compatibility
+    const openLoginModal = () => openModalWithComponent(require('../components/Login').default, 'Login')
+    const openSignUpModal = () => openModalWithComponent(require('../components/SignUp').default, 'Sign Up')
 
-  return { openLoginModal, openSignUpModal }
+    return { openLoginModal, openSignUpModal, openModalWithComponent }
 }
