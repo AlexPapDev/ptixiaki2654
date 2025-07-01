@@ -1,10 +1,10 @@
-import { ActionIcon} from '@mantine/core'
+import IconButton from './IconButton'
 import { Pencil } from 'lucide-react'
-const EditButton = ({onEdit}) => {
+
+const EditButton = ({ onEdit }) => {
   return (
-    <ActionIcon variant="outline" aria-label="Settings" onClick={onEdit}>
-      <Pencil size={18} />
-    </ActionIcon>
+    <IconButton Icon={Pencil} color="blue" size="sm" title="Edit" onClick={onEdit} />
   )
 }
+
 export default EditButton
