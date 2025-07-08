@@ -221,8 +221,8 @@ li {
 }
 
 .full-height {
-  height: calc(100vh - var(--map-height-top-distance_no-categories) + 2px);
-  overflow: hidden;
+  height: calc(100vh - var(--map-height-top-distance_no-categories) );
+  /* overflow: hidden; */
 }
 
 .profile-height {
@@ -231,6 +231,7 @@ li {
   /* width: 35vw; */
   top: 0px;
   height: calc(100vh - var(--map-height-top-distance_no-categories) + 20px);
-  min-height: calc(100vh - var(--map-height-top-distance_no-categories + 16px));
+  /* min-height: calc(100vh - var(--map-height-top-distance_no-categories + 16px)); */
   overflow-y: hidden;
+  overflow-x: hidden;
 }

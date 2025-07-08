@@ -121,7 +121,7 @@ const UserProfileView = ({ user: profileUser }) => {
   const { firstname, lastname, email, role, createddate } = profileUser
 
   return (
-    <Grid className="full-height">
+    <Grid className="full-height" style={{overflow: 'hidden'}}>
       <Grid.Col span={{ base: 12, md: 6, lg: 6 }} style={{ padding: 0 }}>
         <Container size={480} mt="xl">
           <Stack align="center" justify="center" my="xl">
