@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Text, Title, Stack, Group, Button } from '@mantine/core'
+import { Text, Title, Stack, Group, Button, TextInput } from '@mantine/core'
 import EditButton from './EditButton'
 import useDataStore from '../utils/DataStore'
-const ListDetailTitle = ({ monumentId, initialTitle, onSave, showEdit = false }) => {
+const ListDetailTitle = ({ listId, initialTitle, onSave, showEdit = false }) => {
   const { editList } = useDataStore()
   const [isEditing, setIsEditing] = useState(false)
   const [editedTitle, setEditedTitle] = useState(initialTitle)
@@ -17,7 +17,8 @@ const ListDetailTitle = ({ monumentId, initialTitle, onSave, showEdit = false })
   }
   const handleSaveClick = async () => {
     // onSave(editedTitle)
-    const result = await editList(monumentId, 'Title', editedTitle)
+    const result = await editList(listId, 'name', editedTitle)
+
     if (result.success) {
       // toast.success('Record created successfully!', { position: 'top-right' })
       // setTimeout(() => navigate('/monuments'), 1500)
@@ -38,7 +39,7 @@ const ListDetailTitle = ({ monumentId, initialTitle, onSave, showEdit = false })
         </Group>
       ) : (
         <Stack>
-          <Text
+          <TextInput
             label="Title"
             value={editedTitle || ''}
             onChange={handleInputChange}
