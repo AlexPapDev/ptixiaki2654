@@ -113,9 +113,9 @@ const validateOtp = async (email, otp) => {
     'SELECT userid FROM users WHERE email = $1 AND otp = $2 AND otpExpiry > NOW()',
     [email, otp]
   )
-
+  console.log(result.rows)
   if (result.rows.length === 0) {
-    return { success: false, message: "Invalid OTP or expired" }
+    return { success: false, message: "Invalid OTP or expired", user: {} }
   }
 
   await db.query('UPDATE users SET otp = NULL, otpexpiry = NULL WHERE email = $1', [email])
