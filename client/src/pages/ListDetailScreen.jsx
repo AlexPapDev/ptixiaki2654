@@ -17,6 +17,7 @@ const ListDetail = () => {
   const { user: listUser, monuments = [] } = list || {}
 
   const isOwnList = list && list?.userid === user?.userid
+  
   if (!list && !loading) return <>
     <Text pt="md">List Not Found!</Text>
   </>
@@ -34,7 +35,7 @@ const ListDetail = () => {
             <Text c="gray.5" component={Link} to={`/user/${listUser?.userid}`}>
               By {list?.full_name}
             </Text>
-            <FollowListButton listId={listId} isInitiallyFollowing={list?.is_followed_by_current_user}/>
+            {!isOwnList && <FollowListButton listId={listId} isInitiallyFollowing={list?.is_followed_by_current_user}/>}
             
           </Stack>
           <ListDetailMonuments monuments={monuments}/>
