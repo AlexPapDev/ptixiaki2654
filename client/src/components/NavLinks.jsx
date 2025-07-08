@@ -20,7 +20,7 @@ const NavLinks = () => {
             borderRadius: '4px',
           }}
         >
-          <Anchor component={Link} to={link.link} disabled={link.disabled}>
+          <Anchor component={Link} to={link.link}>
             <Text>{link.label}</Text>
           </Anchor>
         </Box>
