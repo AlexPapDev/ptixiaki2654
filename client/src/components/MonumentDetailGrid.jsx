@@ -7,7 +7,7 @@ const MonumentDetailGrid = ({ images = [] }) => {
   return (
     <Box mt="md" className="test-box" style={{
       width: '100%',
-      height: 'calc(60vh - 64px)',
+      // height: 'calc(60vh - 64px)',
     }}>
       <Grid padding="none" className="grid-test" gutter="xs" type="media" style={{ borderRadius: '10px', maxHeight: 'calc(60vh - 64px)', height: '100%', width: '100%' }}>
         <Grid.Col span={6} style={{ maxHeight: 'calc(60vh - 64px)' }}>
