@@ -10,7 +10,7 @@ CREATE TABLE Users (
   lastname VARCHAR(255),
   hashedpassword VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
-  profileimageurl TEXT
+  profileimageurl TEXT,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   role VARCHAR(20) CHECK (role IN ('normal_user', 'ambassador', 'admin')) NOT NULL,
@@ -31,15 +31,15 @@ CREATE TABLE Monuments (
   latitude	DECIMAL(9, 6),
   longitude	DECIMAL(9, 6),
   status TEXT CHECK (status IN ('pending', 'approved', 'rejected')) NOT NULL DEFAULT 'pending',
-  approved_by INT REFERENCES users(userId) NULL,
-  created_by INT REFERENCES users(userId) NULL,
+  approved_by INT REFERENCES Users(userId) NULL,
+  created_by INT REFERENCES Users(userId) NULL,
   createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE MonumentImages (
   monumentimageid SERIAL PRIMARY KEY,
-  monumentid INT NOT NULL REFERENCES monuments(monumentId) ON DELETE CASCADE,
+  monumentId INT NOT NULL REFERENCES Monuments(monumentId) ON DELETE CASCADE,
   imageurl TEXT NOT NULL,
   ismain BOOLEAN DEFAULT FALSE,
   createdat TIMESTAMP DEFAULT now()
@@ -76,14 +76,14 @@ CREATE TABLE categories (
 );
 
 CREATE TABLE monumentcategories (
-  monumentid INT REFERENCES monuments(monumentid) ON DELETE CASCADE,
+  monumentId INT REFERENCES Monuments(monumentId) ON DELETE CASCADE,
   categoryid INT REFERENCES categories(categoryid) ON DELETE CASCADE,
-  PRIMARY KEY (monumentid, categoryid)
+  PRIMARY KEY (monumentId, categoryid)
 );
 
 CREATE TABLE monumenthours (
   id SERIAL PRIMARY KEY,
-  monumentid INT REFERENCES monuments(monumentid) ON DELETE CASCADE,
+  monumentId INT REFERENCES Monuments(monumentId) ON DELETE CASCADE,
   day_of_week smallint,
   open_time time without time zone,
   close_time time without time zone,
@@ -110,8 +110,8 @@ CREATE TABLE Eras (
 
 CREATE TABLE monumenteradetails (
   id SERIAL PRIMARY KEY,
-  monumentid INT REFERENCES monuments(monumentid) ON DELETE CASCADE,
-  eraid INT REFERENCES eras(eraid) ON DELETE CASCADE,
+  monumentId INT REFERENCES Monuments(monumentId) ON DELETE CASCADE,
+  eraid INT REFERENCES Eras(eraid) ON DELETE CASCADE,
   eramonumentdescription TEXT
 )
 
