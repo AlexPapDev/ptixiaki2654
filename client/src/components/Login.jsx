@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
 import useAuthForm from '../hooks/useAuthForm'
@@ -10,10 +10,12 @@ import {
   Text,
   Container,
   Stack,
+  LoadingOverlay
 } from '@mantine/core'
 
 const Login = ({onClose}) => {
   const { loginUser, isLoggedIn } = useAuthStore()
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
   const {
     formData,
@@ -31,6 +33,7 @@ const Login = ({onClose}) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorMessage('')
+    setLoading(true)
     try {
       const result = await loginUser(formData.email, formData.password)
       if (!result.success) throw new Error(result.message)
@@ -45,6 +48,8 @@ const Login = ({onClose}) => {
       onClose()
     } catch (error) {
       setErrorMessage(error.message || 'Login failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -54,6 +59,7 @@ const Login = ({onClose}) => {
         Welcome back
       </Title>
       <Paper radius='md'>
+        <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
         <form onSubmit={handleSubmit}>
           <Stack>
             <FormInput
@@ -72,7 +78,7 @@ const Login = ({onClose}) => {
             />
           </Stack>
           {errorMessage && (
-            <Text color='red' size='sm' mt='md' align='center'>
+            <Text c='red' size='sm' mt='lg' align='center'>
               {errorMessage}
             </Text>
           )}

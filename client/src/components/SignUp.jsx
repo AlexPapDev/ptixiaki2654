@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../utils/AuthStore'
 import useUserStore from '../stores/domain/UserStore'
@@ -11,6 +11,7 @@ import {
   Text,
   Container,
   Stack,
+  LoadingOverlay
 } from '@mantine/core'
 
 const inputs = [
@@ -22,6 +23,7 @@ const inputs = [
 ]
 
 const SignUp = ({ onClose }) => {
+  const [loading, setLoading] = useState(false)
   const { isLoggedIn } = useAuthStore()
   const navigate = useNavigate()
   const { signupUser } = useUserStore()
@@ -47,33 +49,42 @@ const SignUp = ({ onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErrorMessage('')
+    setLoading(true)
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage('Passwords do not match')
       return
     }
-    const result = await signupUser({
-      firstname: formData.firstname,
-      lastname: formData.lastname,
-      email: formData.email,
-      password: formData.password,
-    })
-    if (result.success) {
-      navigate({
-        pathname: '/otpverification',
-        search: `?email=${formData.email}`,
+    try {
+      const result = await signupUser({
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        email: formData.email,
+        password: formData.password,
       })
-      onClose()
-    } else {
-      setErrorMessage(result.error)
+      if (result.success) {
+        navigate({
+          pathname: '/otpverification',
+          search: `?email=${formData.email}`,
+        })
+        onClose()
+      } else {
+        console.log(result)
+        setErrorMessage(result.error)
+      }
+    } catch (error) {
+      setErrorMessage(error.message || 'Signup failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <Container size={420} mb={20}>
-      <Title align="center" order={2}>
+      <Title align="center" order={2} mb="md">
         Create a New Account
       </Title>
       <Paper>
+        <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: 'sm', blur: 2 }} />
         <form onSubmit={handleSubmit}>
           <Stack>
             {inputs.map(({ label, name, type = 'text' }) => (
@@ -88,7 +99,7 @@ const SignUp = ({ onClose }) => {
             ))}
           </Stack>
           {errorMessage && (
-            <Text color="red" size="sm" mt="md" align="center">
+            <Text c="red" size="sm" mt="lg" align="center">
               {errorMessage}
             </Text>
           )}
