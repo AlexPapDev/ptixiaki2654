@@ -12,8 +12,8 @@ const initialHoursState = Array(7).fill({
 })
 
 const EditableStackItem = ({ day, hour, index, isPublic, onHourChange }) => {
-  const formattedOpenHour = hour.open_time?.slice(0, 5)
-  const formattedCloseHour = hour.close_time?.slice(0, 5)
+  const formattedOpenHour = hour?.open_time?.slice(0, 5)
+  const formattedCloseHour = hour?.close_time?.slice(0, 5)
 
   return (
     <Grid>
