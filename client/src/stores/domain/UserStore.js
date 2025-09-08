@@ -68,7 +68,7 @@ const useUserStore = create((set) => ({
         isLoading: false, 
         error: error.response?.data?.error || 'Failed to sign up'
       })
-      return { success: false, error: `${error.response?.data.errors.map(e => e.msg)}` || 'Failed to sign up' }
+      return { success: false, error: error.response?.data.error || 'Failed to sign up' }
     }
   }
 }))
