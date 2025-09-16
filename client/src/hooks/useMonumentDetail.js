@@ -10,7 +10,7 @@ const useMonumentDetail = (monumentId) => {
   useEffect(() => {
     const fetchMonument = async () => {
       try {
-        const result = await axios.get(`${API_BASE_URL}/api/monuments/${monumentId}`)
+        const result = await axios.get(`${API_BASE_URL}/api/monuments/${monumentId}`, {headers: { 'ngrok-skip-browser-warning': true }})
         const monumentData = result.data.data.monument
         setMonument(monumentData)
       } catch (err) {

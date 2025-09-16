@@ -12,6 +12,7 @@ const removeGreekTonos = (str) => {
 const getAddressDetails = async (lat, lon) => {
   try {
     const response = await axios.get(CONSTANTS.GEOCODE_API_URL, {
+      headers: { 'ngrok-skip-browser-warning': true }, 
       params: {
         lat,
         lon,

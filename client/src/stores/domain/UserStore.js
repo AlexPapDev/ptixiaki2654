@@ -14,7 +14,7 @@ const useUserStore = create((set) => ({
     set({ isLoading: true, error: null })
     try {
       const result = await axios.get(`${API_BASE_URL}/api/users/`, { 
-        params: { id: userId }
+        params: { id: userId }, headers: { 'ngrok-skip-browser-warning': true }
       })
       set({ isLoading: false, currentUser: result.data })
       return { success: true, data: result.data }
@@ -59,7 +59,7 @@ const useUserStore = create((set) => ({
   signupUser: async (userData) => {
     set({ isLoading: true, error: null })
     try {
-      const result = await axios.post(`${API_BASE_URL}/api/users/`, userData)
+      const result = await axios.post(`${API_BASE_URL}/api/users/`, userData, { headers: { 'ngrok-skip-browser-warning': true }})
       set({ isLoading: false })
       return { success: true, data: result.data }
     } catch (error) {

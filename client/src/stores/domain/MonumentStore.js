@@ -20,7 +20,7 @@ const useMonumentStore = create((set, get) => ({
     try {
       const token = localStorage.getItem('token')
       const response = await axios.post(`${API_BASE_URL}/api/monuments/`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
+        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
       })
       set({ isCreatingMonument: false })
       return { success: true, data: response.data }
@@ -39,7 +39,7 @@ const useMonumentStore = create((set, get) => ({
         `${API_BASE_URL}/api/monuments/${monumentId}`, 
         { [fieldName]: fieldValue },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
         })
       set({ isEditingMonument: false })
       return { success: true, data: response.data }
@@ -58,7 +58,7 @@ const useMonumentStore = create((set, get) => ({
         `${API_BASE_URL}/api/monuments/${monumentId}/categories`, 
         { categories },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
         })
       set({ isEditingMonument: false })
       return { success: true, data: response.data }
@@ -77,7 +77,7 @@ const useMonumentStore = create((set, get) => ({
         `${API_BASE_URL}/api/monuments/${monumentId}/hours`,
         { hours: hoursData },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
         }
       )
       set({ isEditingMonumentHours: false })
@@ -103,7 +103,7 @@ const useMonumentStore = create((set, get) => ({
     try {
       const token = localStorage.getItem('token')
       const result = await axios.get(`${API_BASE_URL}/api/monuments/pending`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true }
       })
       set({ pendingMonuments: result.data, loadingPendingMonuments: false })
       return { success: true, data: result.data }
@@ -120,7 +120,7 @@ const useMonumentStore = create((set, get) => ({
       const response = await axios.patch(
         `${API_BASE_URL}/api/monuments/${monumentId}/approve`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true } }
       )
       // Update pending monuments cache
       set((state) => ({
@@ -139,7 +139,7 @@ const useMonumentStore = create((set, get) => ({
       const response = await axios.patch(
         `${API_BASE_URL}/api/monuments/${monumentId}/reject`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true } }
       )
       // Update pending monuments cache
       set((state) => ({
@@ -154,7 +154,7 @@ const useMonumentStore = create((set, get) => ({
 
   getMonumentAddress: async (data) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/monuments/get-address`, data)
+      const response = await axios.post(`${API_BASE_URL}/api/monuments/get-address`, data, { headers: { 'ngrok-skip-browser-warning': true }})
       return { success: true, data: response.data }
     } catch (error) {
       console.error('Error getting monument address:', error)

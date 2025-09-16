@@ -10,7 +10,7 @@ const useDeleteMonument = (monumentId, onSuccess) => {
   const deleteMonument = async () => {
     try {
       await axios.delete(`${API_BASE_URL}/api/monuments/${monumentId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
       })
       onSuccess()
     } catch (err) {

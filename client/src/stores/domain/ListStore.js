@@ -37,7 +37,7 @@ const useListStore = create((set, get) => ({
     try {
       const token = localStorage.getItem('token')
       const response = await axios.post(`${API_BASE_URL}/api/lists`, listData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true  },
       })
       set({ creatingList: false, currentList: null })
       return { success: true, data: response.data }
@@ -77,7 +77,7 @@ const useListStore = create((set, get) => ({
       const response = await axios.post(
         `${API_BASE_URL}/api/lists/${listId}/monuments/${monumentId}`,
         { monumentId },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true } }
       )
       set({ addingMonumentToList: false })
       return { success: true, data: response.data }

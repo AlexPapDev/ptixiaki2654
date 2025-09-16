@@ -24,6 +24,7 @@ const useFetchList = (passedTerm, category, mapBounds) => {
     try {
       const result = await axios.get(`${API_BASE_URL}/api/lists/`, {
         signal: controller.signal,
+        headers: { 'ngrok-skip-browser-warning': true },
         params: {
           query: passedTerm,
           category,

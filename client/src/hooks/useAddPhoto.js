@@ -16,7 +16,7 @@ const useAddPhoto = (objectId, onSuccess) => {
         `${API_BASE_URL}/api/monuments/${objectId}/photos`,
         formData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
         }
       )
       onSuccess()
@@ -36,7 +36,7 @@ const useAddPhoto = (objectId, onSuccess) => {
         `${API_BASE_URL}/api/users/${objectId}/add-photo`,
         formData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
         }
       )
       console.log(result)

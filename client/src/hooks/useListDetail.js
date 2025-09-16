@@ -13,7 +13,7 @@ const useListDetail = (listId) => {
         setLoading(true)
         const token = localStorage.getItem('token')
         const result = await axios.get(`${API_BASE_URL}/api/lists/${listId}`, {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
         })
         const listData = result.data
         setList(listData)

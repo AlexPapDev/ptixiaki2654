@@ -75,7 +75,7 @@ const useDataStore = create((set, get) => ({
       const token = localStorage.getItem('token')
       const response = await axios.post(`${API_BASE_URL}/api/monuments/`, 
         formData, 
-        { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` }})
+        { headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}`, headers: { 'ngrok-skip-browser-warning': true } }})
       set({ isCreatingMonument: false })
       return { success: true, data: response.data }
     } catch (error) {
@@ -156,7 +156,7 @@ const useDataStore = create((set, get) => ({
     try {
       const token = localStorage.getItem('token')
       const response = await axios.post(`${API_BASE_URL}/api/lists`, listData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true  },
       })
       set({ creatingList: false, currentList: null })
       return { success: true, data: response.data }
@@ -191,7 +191,7 @@ const useDataStore = create((set, get) => ({
       const response = await axios.post(
         `${API_BASE_URL}/api/lists/${listId}/monuments`,
         { listId, monumentId },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true  } }
       )
       set({
         addingMonumentToList: false,
@@ -230,7 +230,7 @@ const useDataStore = create((set, get) => ({
       const token = localStorage.getItem('token')
       const response = await axios.post(`${API_BASE_URL}/api/lists/follow`, 
         { listId },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true } }
       )
       return { success: true, data: response.data }
     } catch (error) {
@@ -242,7 +242,7 @@ const useDataStore = create((set, get) => ({
     try {
       const token = localStorage.getItem('token')
       const response = await axios.delete(`${API_BASE_URL}/api/lists/unfollow/${listId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
       })
       return { success: true, data: response.data }
     } catch (error) {
@@ -255,8 +255,8 @@ const useDataStore = create((set, get) => ({
     try {
       const token = localStorage.getItem('token')
       const response = await axios.get(`${API_BASE_URL}/api/lists/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-        params: { searchText }
+        headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true },
+        params: { searchText },
       })
       // set({ lists: response.data, loadingLists: false })
       return response.data
@@ -271,7 +271,7 @@ const useDataStore = create((set, get) => ({
     try {
       const token = localStorage.getItem('token')
       const response = await axios.get(`${API_BASE_URL}/api/lists/following`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true  },
         params: { searchText }
       })
       // set({ lists: response.data, loadingLists: false })
@@ -285,7 +285,8 @@ const useDataStore = create((set, get) => ({
   getDiscoverLists: async (searchText = '') => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/lists/discover`, {
-        params: { searchText }
+        params: { searchText },
+        headers: { 'ngrok-skip-browser-warning': true }
       })
       return response.data
     } catch (error) {
@@ -296,7 +297,7 @@ const useDataStore = create((set, get) => ({
 
   getEras: async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/api/monuments/eras`)
+      const response = await axios.get(`${API_BASE_URL}/api/monuments/eras`, { headers: { 'ngrok-skip-browser-warning': true } })
       debugger
       return response.data
       // return []
@@ -310,7 +311,7 @@ const useDataStore = create((set, get) => ({
       const token = localStorage.getItem('token')
       const response = await axios.post(`${API_BASE_URL}/api/monuments/add-monument-era`, 
         { monumentid, ...monumentEra },
-        { headers: { Authorization: `Bearer ${token}` }}
+        { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': true  }}
       )
       return response
     } catch (error) {

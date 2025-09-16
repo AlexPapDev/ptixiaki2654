@@ -37,7 +37,8 @@ const useAuthStore = create(
         try {
           const res = await axios.post(
             `${API_BASE_URL}/api/users/login`,
-            { email, password },
+            { email, password }, 
+            { headers: { 'ngrok-skip-browser-warning': true }}
           )
           const { token, user } = res.data
 
@@ -53,7 +54,8 @@ const useAuthStore = create(
         try {
           const res = await axios.post(
             `${API_BASE_URL}/api/users/validate-otp`,
-            { email, otp }
+            { email, otp }, 
+            { headers: { 'ngrok-skip-browser-warning': true }}
           )
           const { token, user } = res.data.data
 

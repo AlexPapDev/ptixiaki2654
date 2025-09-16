@@ -25,6 +25,7 @@ const useFetchMonuments = (passedTerm, category, mapBounds) => {
     try {
       const result = await axios.get(`${API_BASE_URL}/api/monuments/`, {
         signal: controller.signal,
+        headers: { 'ngrok-skip-browser-warning': true },
         params: {
           query: passedTerm,
           category,
