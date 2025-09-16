@@ -10,10 +10,12 @@ const CATEGORIES = ['Ancient', 'Roman', 'Ottoman', 'Byzantine', 'Christian', 'Je
 
 const DEFAULT_IMAGE =
   "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg?w=2000";
+const DEFAULT_BACKEND_ENDOINT = 'https://64cd584dbbc3.ngrok-free.app' 
 
 export {
   INIT_MAP_STATE,
   MAPBOX_ACCESS_TOKEN,
   CATEGORIES,
   DEFAULT_IMAGE,
+  DEFAULT_BACKEND_ENDOINT,
 }

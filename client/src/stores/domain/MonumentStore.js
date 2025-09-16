@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import axios from 'axios'
-
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
+import { DEFAULT_BACKEND_ENDOINT } from '../../utils/constants'
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || DEFAULT_BACKEND_ENDOINT
 
 const useMonumentStore = create((set, get) => ({
   // State

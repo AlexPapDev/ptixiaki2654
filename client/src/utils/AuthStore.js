@@ -3,8 +3,8 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import axios from 'axios'
 import {jwtDecode} from 'jwt-decode'
-
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
+import { DEFAULT_BACKEND_ENDOINT } from './constants'
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || DEFAULT_BACKEND_ENDOINT
 
 const useAuthStore = create(
   persist(

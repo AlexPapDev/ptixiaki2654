@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-
+import { DEFAULT_BACKEND_ENDOINT } from '../utils/constants'
 const useMonumentDetail = (monumentId) => {
   const [monument, setMonument] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5001'
+  const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || DEFAULT_BACKEND_ENDOINT
 
   useEffect(() => {
     const fetchMonument = async () => {
