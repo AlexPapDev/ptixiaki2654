@@ -122,7 +122,8 @@ router.post('/', upload.array('image', 5), async (req, res) => {
       return res.status(404).json({ status: 'error', message: 'User not found.' })
     }
 
-    const isApproved = INSTANT_CREATION_ROLES.includes(user.role)
+    // TEMP FOR DEMO
+    const isApproved = true || INSTANT_CREATION_ROLES.includes(user.role)
     const status = isApproved ? 'approved' : 'pending'
 
     const address = await getAddressDetails(lat, lon)
