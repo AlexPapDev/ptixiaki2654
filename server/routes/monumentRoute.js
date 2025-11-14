@@ -256,6 +256,49 @@ router.post('/:monumentId/photos', upload.array('image', 5), async (req, res) =>
   }
 })
 
+router.delete('/:monumentId/photos/:imageId', async (req, res) => {
+  console.log('delete monument photo')
+  const { monumentId, imageId } = req.params
+
+  try {
+    if (!monumentId || !imageId) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Missing monumentId or imageId in the request parameters.',
+      })
+    }
+
+    // Validate if the monument exists
+    const existingMonument = await monumentService.getMonumentById(monumentId)
+    if (!existingMonument) {
+      return res.status(404).json({
+        status: 'error',
+        message: `Monument with ID ${monumentId} not found.`,
+      })
+    }
+
+    // Delete the image
+    await monumentService.deleteMonumentImage(imageId)
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Photo deleted successfully from the monument.',
+    })
+  } catch (error) {
+    console.error(`Error deleting photo ${imageId} from monument ${monumentId}: ${error.message}`)
+    if (error.message.includes('Image not found')) {
+      return res.status(404).json({
+        status: 'error',
+        message: error.message,
+      })
+    }
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to delete photo from the monument.',
+    })
+  }
+})
+
 router.get('/eras', async (req, res) => {
   try {
     console.log('eras')

@@ -16,6 +16,7 @@ const createUser = async (firstname, lastname, email, password, role) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10)
+  
   const otp = randomInt(100000, 999999).toString()
   const otpExpiry = _minutesFromNow(30)
 
@@ -152,6 +153,29 @@ const updateUser = async (userId, fieldName, fieldValue) => {
   return result.rows[0]
 }
 
+const changeUserRole = async (userId, newRole) => {
+  const validRoles = ['normal_user', 'ambassador', 'admin']
+  
+  if (!validRoles.includes(newRole)) {
+    throw new Error(`Invalid role: ${newRole}. Must be one of: ${validRoles.join(', ')}`)
+  }
+
+  const query = `
+    UPDATE users
+    SET role = $1
+    WHERE userid = $2
+    RETURNING *;
+  `
+
+  const result = await db.query(query, [newRole, userId])
+
+  if (result.rowCount === 0) {
+    throw new Error('User not found.')
+  }
+
+  return result.rows[0]
+}
+
 const verifyToken = async (token) => {
   try {
     console.log('token', token)
@@ -218,6 +242,7 @@ export default {
   getUserByField,
   addUserPhoto,
   updateUser,
+  changeUserRole,
   comparePasswords,
   getAllUsers,
   validateOtp,

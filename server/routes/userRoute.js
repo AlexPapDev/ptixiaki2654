@@ -159,6 +159,47 @@ router.patch('/:userId', async (req, res) => {
   }
 })
 
+// Route to change user role (PATCH /users/:userId/role)
+router.patch('/:userId/role', async (req, res) => {
+  try {
+    const { userId } = req.params
+    const { role } = req.body
+
+    if (!role) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Role is required.',
+      })
+    }
+
+    const updatedUser = await userService.changeUserRole(userId, role)
+
+    res.status(200).json({
+      status: 'success',
+      message: 'User role updated successfully',
+      user: updatedUser,
+    })
+  } catch (err) {
+    console.error('Error changing user role:', err.message)
+    if (err.message.includes('User not found')) {
+      return res.status(404).json({
+        status: 'error',
+        message: err.message,
+      });
+    }
+    if (err.message.includes('Invalid role')) {
+      return res.status(400).json({
+        status: 'error',
+        message: err.message,
+      })
+    }
+    res.status(500).json({
+      status: 'error',
+      message: 'Failed to change user role.',
+    })
+  }
+})
+
 // Route to delete a user (DELETE /users/:userId)
 router.delete('/:userId', async (req, res) => {
   const { userId } = req.params

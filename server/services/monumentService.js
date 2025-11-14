@@ -73,6 +73,19 @@ const addMonumentImage = async (monumentId, imageUrl, isMain) => {
   )
 }
 
+const deleteMonumentImage = async (imageId) => {
+  const result = await db.query(
+    `DELETE FROM monumentimages WHERE monumentimageid = $1 RETURNING *`,
+    [imageId]
+  )
+  
+  if (result.rowCount === 0) {
+    throw new Error('Image not found.')
+  }
+  
+  return result.rows[0]
+}
+
 const getCategoryIds = async (categoryNames) => {
   console.log('getCategoryIds', categoryNames, typeof categoryNames)
   const categories = await db.query(
@@ -288,6 +301,7 @@ export default {
   updateMonument,
   createMonumentHours,
   addMonumentImage,
+  deleteMonumentImage,
   getCategoryIds,
   addMonumentCategories,
   addMonumentEras,
